@@ -9,7 +9,30 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>default</LangVersion>
-    <RootNamespace>Wolfgang.DnD</RootNamespace>
+	  <Version>0.1.0</Version>
+	  <Title>$(AssemblyName)</Title>
+	  <Authors>Chris Wolfgang</Authors>
+	  <Description>Contains class for generating random numbers by simulating rolling of dice with various number of sides</Description>
+	  <RootNamespace>Wolfgang.DnD</RootNamespace>
+	  <Copyright>Copyright 2025 Chris Wolfgang </Copyright>
+	  <PackageProjectUrl>https://github.com/Chris-Wolfgang/Dnd-Dice</PackageProjectUrl>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <AssemblyVersion>1.0.0</AssemblyVersion>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	  <SignAssembly>False</SignAssembly>
   </PropertyGroup>
+
+	<PropertyGroup>
+		<PackageTags>d20;dice</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>
