@@ -1,2 +1,8 @@
-# Dnd-Dice
-Dungeons and Dragons dice code
+# Dungeons and Dragons Dice
+
+## Installation
+```bash
+dotnet add package Dnd-Dice
+```
+
+
