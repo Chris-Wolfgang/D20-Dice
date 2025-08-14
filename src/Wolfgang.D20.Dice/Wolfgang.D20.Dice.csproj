@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFrameworks> 
+	  	net462;net472;net48;net481;
+		netstandard2.0;netstandard2.1;
+		net8.0;net9.0
+	  </TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>default</LangVersion>
+	  <Version>0.1.0</Version>
+	  <Title>$(AssemblyName)</Title>
+	  <Authors>Chris Wolfgang</Authors>
+	  <Description>Contains class for generating random numbers by simulating rolling of dice with various number of sides</Description>
+	  <RootNamespace>Wolfgang.D20</RootNamespace>
+	  <Copyright>Copyright 2025 Chris Wolfgang </Copyright>
+	  <PackageProjectUrl>https://github.com/Chris-Wolfgang/D20-Dice</PackageProjectUrl>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <AssemblyVersion>1.0.0</AssemblyVersion>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	  <SignAssembly>False</SignAssembly>
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<PackageTags>d20;dice</PackageTags>
+		<ApplicationIcon>assets\d20-dice.ico</ApplicationIcon>
+		<PackageIcon>d20-dice.png</PackageIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Include="assets\d20-dice.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="assets\d20-dice.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+</Project>
