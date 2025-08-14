@@ -9,7 +9,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>default</LangVersion>
-	  <Version>0.1.1</Version>
+	  <Version>0.1.2</Version>
 	  <Title>$(AssemblyName)</Title>
 	  <Authors>Chris Wolfgang</Authors>
 	  <Description>Contains class for generating random numbers by simulating rolling of dice with various number of sides</Description>
