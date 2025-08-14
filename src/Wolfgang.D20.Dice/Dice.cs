@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Wolfgang.DnD;
+namespace Wolfgang.D20;
 
 /// <summary>
 /// Represents a number of dice, each with the specified number of sides and an optional modifier.

@@ -1,7 +1,7 @@
 ﻿using Xunit;
 // ReSharper disable RedundantArgumentDefaultValue
 
-namespace Wolfgang.DnD.Tests.Unit
+namespace Wolfgang.D20.Tests.Unit
 {
 
 

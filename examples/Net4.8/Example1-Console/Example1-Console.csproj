@@ -50,9 +50,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Wolfgang.Dnd.Dice\Wolfgang.Dnd.Dice.csproj">
-      <Project>{1bb68da1-4e78-17ca-7829-edf78dcb2031}</Project>
-      <Name>Wolfgang.Dnd.Dice</Name>
+    <ProjectReference Include="..\..\..\src\Wolfgang.D20.Dice\Wolfgang.D20.Dice.csproj">
+      <Project>{ff79eb0f-541d-a124-a4b0-a1db4370b76a}</Project>
+      <Name>Wolfgang.D20.Dice</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

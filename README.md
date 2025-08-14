@@ -7,7 +7,7 @@ dotnet add package Wolfgang.D20Dice
 
 ## Usage
 ```csharp
-using DndDice;
+using Wolfgang.D20;
 
 internal class Program
 {
@@ -17,7 +17,7 @@ internal class Program
         const int sideCount = 6;
         const int modifier = -2;
 
-        var dice = new DndDice.Dice(dieCount, sideCount, modifier);
+        var dice = new Dice(dieCount, sideCount, modifier);
         Console.WriteLine($"Rolling {dieCount}d{sideCount}{(modifier != 0 ? (modifier > 0 ? "+" : "") + modifier : "")}:");
         Console.WriteLine($"Result: {dice.Roll()}");
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using Wolfgang.D20;
 
 namespace Example1_Console
 {
@@ -17,7 +18,7 @@ namespace Example1_Console
             var modifier = int.Parse(Console.ReadLine());
 
 
-            var dice = new Wolfgang.DnD.Dice(dieCount, sideCount, modifier);
+            var dice = new Dice(dieCount, sideCount, modifier);
 
             Console.WriteLine($"Rolling {dieCount}d{sideCount}{(modifier != 0 ? (modifier > 0 ? "+" : "") + modifier : "")}:");
             Console.WriteLine($"Result: {dice.Roll()}");

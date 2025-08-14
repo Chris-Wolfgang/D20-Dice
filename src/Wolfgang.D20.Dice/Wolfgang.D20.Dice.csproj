@@ -13,9 +13,9 @@
 	  <Title>$(AssemblyName)</Title>
 	  <Authors>Chris Wolfgang</Authors>
 	  <Description>Contains class for generating random numbers by simulating rolling of dice with various number of sides</Description>
-	  <RootNamespace>Wolfgang.DnD</RootNamespace>
+	  <RootNamespace>Wolfgang.D20</RootNamespace>
 	  <Copyright>Copyright 2025 Chris Wolfgang </Copyright>
-	  <PackageProjectUrl>https://github.com/Chris-Wolfgang/Dnd-Dice</PackageProjectUrl>
+	  <PackageProjectUrl>https://github.com/Chris-Wolfgang/D20-Dice</PackageProjectUrl>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <AssemblyVersion>1.0.0</AssemblyVersion>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>

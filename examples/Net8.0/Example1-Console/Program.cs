@@ -15,7 +15,7 @@
             var modifier = int.Parse(Console.ReadLine());
 
 
-            var dice = new Wolfgang.DnD.Dice(dieCount, sideCount, modifier);
+            var dice = new Wolfgang.D20.Dice(dieCount, sideCount, modifier);
 
             Console.WriteLine($"Rolling {dieCount}d{sideCount}{(modifier != 0 ? (modifier > 0 ? "+" : "") + modifier : "")}:");
             Console.WriteLine($"Result: {dice.Roll()}");

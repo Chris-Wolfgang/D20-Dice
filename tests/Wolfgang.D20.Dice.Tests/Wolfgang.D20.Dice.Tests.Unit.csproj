@@ -14,7 +14,7 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
 	  <Copyright>Copyright 2025 Chris Wolfgang</Copyright>
-	  <RootNamespace>Wolfgang.DnD.Tests.Unit</RootNamespace>
+	  <RootNamespace>Wolfgang.D20.Tests.Unit</RootNamespace>
 
   </PropertyGroup>
 
@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Wolfgang.Dnd.Dice\Wolfgang.Dnd.Dice.csproj" />
+    <ProjectReference Include="..\..\src\Wolfgang.D20.Dice\Wolfgang.D20.Dice.csproj" />
   </ItemGroup>
 
 </Project>
