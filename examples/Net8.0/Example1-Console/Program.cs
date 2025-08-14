@@ -1,4 +1,6 @@
-﻿namespace Example1_Console
+﻿using Wolfgang.D20;
+
+namespace Example1_Console
 {
     internal class Program
     {
@@ -15,7 +17,7 @@
             var modifier = int.Parse(Console.ReadLine());
 
 
-            var dice = new Wolfgang.D20.Dice(dieCount, sideCount, modifier);
+            var dice = new Dice(dieCount, sideCount, modifier);
 
             Console.WriteLine($"Rolling {dieCount}d{sideCount}{(modifier != 0 ? (modifier > 0 ? "+" : "") + modifier : "")}:");
             Console.WriteLine($"Result: {dice.Roll()}");
