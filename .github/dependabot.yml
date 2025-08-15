@@ -5,12 +5,29 @@
 
 version: 2
 updates:
-  - package-ecosystem: "dotnet-sdk" 
-    directory: "/" 
+  - package-ecosystem: "dotnet-sdk"
+    directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "dependabot"
+    commit-message:
+      prefix: "chore(deps)"
+    reviewers:
+      - "Chris-Wolfgang"
+    security-updates: true
   - package-ecosystem: "nuget"
-    directory: "/" 
+    directory: "/"
     schedule:
       interval: "weekly"
-
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "dependabot"
+    commit-message:
+      prefix: "chore(deps)"
+    reviewers:
+      - "Chris-Wolfgang"
+    security-updates: true
