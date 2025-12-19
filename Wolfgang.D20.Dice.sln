@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,6 +25,30 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfgang.D20.Dice", "src\Wolfgang.D20.Dice\Wolfgang.D20.Dice.csproj", "{FF79EB0F-541D-A124-A4B0-A1DB4370B76A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfgang.D20.Dice.Tests.Unit", "tests\Wolfgang.D20.Dice.Tests\Wolfgang.D20.Dice.Tests.Unit.csproj", "{21D64A82-6E15-ED75-4FDA-EFB8692050F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{FC1590B0-F06A-4106-B39A-F325BC9997C7}"
+	ProjectSection(SolutionItems) = preProject
+		.github\CODEOWNERS = .github\CODEOWNERS
+		.github\dependabot.yml = .github\dependabot.yml
+		.github\pull_request_template.md = .github\pull_request_template.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEMPLATE", "{D2C1A433-884B-49F1-BE0B-80D221D52774}"
+	ProjectSection(SolutionItems) = preProject
+		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
+		.github\ISSUE_TEMPLATE\BUG_REPORT.yaml = .github\ISSUE_TEMPLATE\BUG_REPORT.yaml
+		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{0F96FD9E-FD99-476A-99F7-DA4AE26D5359}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\create-labels.yaml = .github\workflows\create-labels.yaml
+		.github\workflows\deploy.yml = .github\workflows\deploy.yml
+		.github\workflows\docfx.yaml = .github\workflows\docfx.yaml
+		.github\workflows\pr.yaml = .github\workflows\pr.yaml
+		.github\workflows\release.yaml = .github\workflows\release.yaml
+		.github\workflows\security-scanning.yml = .github\workflows\security-scanning.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +83,8 @@ Global
 		{157AD7FD-A0C0-4C01-9F71-9D851A879893} = {786DF1C1-F335-4EC1-A7B9-3290D11B562E}
 		{FF79EB0F-541D-A124-A4B0-A1DB4370B76A} = {633CB622-C91A-4929-9E25-BE45475D8344}
 		{21D64A82-6E15-ED75-4FDA-EFB8692050F3} = {78ECF93C-D779-42F5-8905-7218FF1A49DA}
+		{D2C1A433-884B-49F1-BE0B-80D221D52774} = {FC1590B0-F06A-4106-B39A-F325BC9997C7}
+		{0F96FD9E-FD99-476A-99F7-DA4AE26D5359} = {FC1590B0-F06A-4106-B39A-F325BC9997C7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B6A8F7E-C08F-4BFB-AEC4-9A3844A09E75}
