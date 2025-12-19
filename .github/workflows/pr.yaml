@@ -53,7 +53,7 @@ jobs:
           # Build test project (excluding .NET Framework)
           for fw in netcoreapp3.1 net50 net6.0 net7.0 net8.0 net9.0 net10.0; do
             echo "Building tests for $fw"
-            dotnet build tests/Wolfgang.Etl.Abstractions.Tests.Unit/Wolfgang.Etl.Abstractions.Tests.Unit.csproj \
+            dotnet build tests/Wolfgang.D20.Dice.Tests/Wolfgang.D20.Dice.Tests.Unit.csproj \
               --no-restore \
               --configuration Release \
               --framework "$fw"
@@ -74,7 +74,7 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash
         run: |
-          dotnet test tests/Wolfgang.Etl.Abstractions.Tests.Unit/Wolfgang.Etl.Abstractions.Tests.Unit.csproj \
+          dotnet test tests/Wolfgang.D20.Dice.Tests/Wolfgang.D20.Dice.Tests.Unit.csproj \
             --configuration Release \
             --framework net8.0 \
             --no-restore \
@@ -85,7 +85,7 @@ jobs:
         if: runner.os == 'Windows'
         continue-on-error: true
         run: |
-          dotnet test tests/Wolfgang.Etl.Abstractions.Tests.Unit/Wolfgang.Etl.Abstractions.Tests.Unit.csproj `
+          dotnet test tests/Wolfgang.D20.Dice.Tests/Wolfgang.D20.Dice.Tests.Unit.csproj `
             --no-build `
             --configuration Release `
             --collect:"XPlat Code Coverage" `
