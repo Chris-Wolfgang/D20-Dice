@@ -40,7 +40,7 @@ jobs:
         run: |
           find ./tests -type f -name '*Test*.csproj' | while read proj; do
             echo "Running tests for $proj"
-            dotnet test "$proj" --no-build --configuration Release
+            dotnet test "$proj" --no-build --configuration Release --logger "trx" --results-directory "./TestResults"
           done
 
       - name: Upload test results
@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ matrix.os }}
-          path: '**/TestResults*.trx'
+          path: 'TestResults/**/*.trx'
 
   publish:
     name: Pack and Publish NuGet
@@ -76,10 +76,7 @@ jobs:
       - name: Pack NuGet Package for Each Project in Src (Release)
         shell: bash
         run: |
-            dotnet pack src/Wolfgang.DbContextBuilder-Core-EF6/Wolfgang.DbContextBuilder-Core-EF6.csproj --no-build --configuration Release --output ./nuget-packages 
-            dotnet pack src/Wolfgang.DbContextBuilder-Core-EF7/Wolfgang.DbContextBuilder-Core-EF7.csproj --no-build --configuration Release --output ./nuget-packages 
-            dotnet pack src/Wolfgang.DbContextBuilder-Core-EF8/Wolfgang.DbContextBuilder-Core-EF8.csproj --no-build --configuration Release --output ./nuget-packages 
-            dotnet pack src/Wolfgang.DbContextBuilder-Core-EF9/Wolfgang.DbContextBuilder-Core-EF9.csproj --no-build --configuration Release --output ./nuget-packages 
+            dotnet pack src/Wolfgang.D20.Dice/Wolfgang.D20.Dice.csproj --no-build --configuration Release --output ./nuget-packages 
             
       - name: Publish NuGet Package
         env:

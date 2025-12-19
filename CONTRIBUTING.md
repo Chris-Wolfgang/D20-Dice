@@ -1,4 +1,4 @@
-# Contributing to Preconfigured Console App Template
+# Contributing to D20 Dice
 
 Thank you for your interest in contributing! Your help is appreciated. Please follow these guidelines to make your contributions easy to review and integrate.
 
