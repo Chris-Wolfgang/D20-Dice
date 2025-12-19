@@ -49,6 +49,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\security-scanning.yml = .github\workflows\security-scanning.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{AFF42F38-A00E-4301-9B46-26E6EAF26B42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfgang.D20.Dice.Benchmarks", "benchmarks\Wolfgang.D20.Dice.Benchmarks\Wolfgang.D20.Dice.Benchmarks.csproj", "{75372F87-9926-45D5-C018-F4E3206478DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +75,10 @@ Global
 		{21D64A82-6E15-ED75-4FDA-EFB8692050F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21D64A82-6E15-ED75-4FDA-EFB8692050F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21D64A82-6E15-ED75-4FDA-EFB8692050F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75372F87-9926-45D5-C018-F4E3206478DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75372F87-9926-45D5-C018-F4E3206478DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75372F87-9926-45D5-C018-F4E3206478DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75372F87-9926-45D5-C018-F4E3206478DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +92,7 @@ Global
 		{21D64A82-6E15-ED75-4FDA-EFB8692050F3} = {78ECF93C-D779-42F5-8905-7218FF1A49DA}
 		{D2C1A433-884B-49F1-BE0B-80D221D52774} = {FC1590B0-F06A-4106-B39A-F325BC9997C7}
 		{0F96FD9E-FD99-476A-99F7-DA4AE26D5359} = {FC1590B0-F06A-4106-B39A-F325BC9997C7}
+		{75372F87-9926-45D5-C018-F4E3206478DB} = {AFF42F38-A00E-4301-9B46-26E6EAF26B42}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B6A8F7E-C08F-4BFB-AEC4-9A3844A09E75}
