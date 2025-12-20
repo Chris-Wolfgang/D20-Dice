@@ -2,19 +2,19 @@
 
 namespace Example1_Console
 {
-    internal class Program
+    internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
 
             Console.Write("Enter the number of sides: ");
-            var sideCount = int.Parse( Console.ReadLine());
+            var sideCount = int.Parse(Console.ReadLine()!);
 
             Console.Write("Enter the number of dice: ");
-            var dieCount = int.Parse(Console.ReadLine());
+            var dieCount = int.Parse(Console.ReadLine()!);
 
             Console.Write("Enter a modifier (default 0): ");
-            var modifier = int.Parse(Console.ReadLine());
+            var modifier = int.Parse(Console.ReadLine()!);
 
 
             var dice = new Dice(dieCount, sideCount, modifier);
