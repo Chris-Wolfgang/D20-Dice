@@ -329,9 +329,11 @@ namespace Wolfgang.D20.Tests.Unit
         [InlineData("2d10+1+2", 2, 10, 3)]
         [InlineData("2d10+0", 2, 10, 0)]
         [InlineData("2d10-0", 2, 10, 0)]
-        public void Can_create_Dice_using_dice_notation(string notation, int dieCount, int sideCount, int modifier)
+        public void Ctor_can_create_Dice_using_dice_notation(string notation, int dieCount, int sideCount, int modifier)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var sut = new Dice(notation);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             var expected = new Dice(dieCount, sideCount, modifier);
 
@@ -346,9 +348,11 @@ namespace Wolfgang.D20.Tests.Unit
         [InlineData("")]
         [InlineData("  ")]
         [InlineData(null)]
-        public void When_dice_notation_is_invalid_throws_ArgumentException(string notation)
+        public void Ctor_when_dice_notation_is_invalid_throws_ArgumentException(string? notation)
         {
-            var ex = Assert.Throws<ArgumentException>(() => new Dice(notation));
+#pragma warning disable CS0618 // Type or member is obsolete
+            var ex = Assert.Throws<ArgumentException>(() => new Dice(notation!));
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.Equal("notation", ex.ParamName);
         }
 
@@ -356,9 +360,11 @@ namespace Wolfgang.D20.Tests.Unit
 
         [Theory]
         [InlineData("0d6")]
-        public void When_dice_notation_dice_count_is_less_than_1_throws_ArgumentOutOfRangeException(string notation)
+        public void Ctor_when_dice_notation_dice_count_is_less_than_1_throws_ArgumentOutOfRangeException(string notation)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var ex = Assert.Throws<ArgumentException>(() => new Dice(notation));
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.Equal("notation", ex.ParamName);
             Assert.StartsWith("Die count must be greater than 0.", ex.Message);
         }
@@ -368,9 +374,11 @@ namespace Wolfgang.D20.Tests.Unit
         [Theory]
         [InlineData("1d1")]
         [InlineData("1d0")]
-        public void When_dice_notation_side_count_is_less_than_2_throws_ArgumentOutOfRangeException(string notation)
+        public void Ctor_when_dice_notation_side_count_is_less_than_2_throws_ArgumentOutOfRangeException(string notation)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var ex = Assert.Throws<ArgumentException>(() => new Dice(notation));
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.Equal("notation", ex.ParamName);
             Assert.StartsWith("Side count must be greater than 2.", ex.Message);
         }
@@ -381,7 +389,7 @@ namespace Wolfgang.D20.Tests.Unit
         public void EqualsDice_Null_ReturnsFalse()
         {
             var dice = new Dice(1, 6, 0);
-            Assert.False(dice.Equals((Dice?)null));
+            Assert.False(dice.Equals(null));
         }
 
         [Fact]
@@ -474,5 +482,84 @@ namespace Wolfgang.D20.Tests.Unit
 
             Assert.False(result);
         }
+
+
+
+
+        [Theory]
+        [InlineData("1d6", 1, 6, 0)]
+        [InlineData("2d8+3", 2, 8, 3)]
+        [InlineData("2d10-1", 2, 10, -1)]
+
+        [InlineData("2d10-1+2", 2, 10, 1)]
+        [InlineData("2d10-1-2", 2, 10, -3)]
+        [InlineData("2d10+1+2", 2, 10, 3)]
+        [InlineData("2d10+0", 2, 10, 0)]
+        [InlineData("2d10-0", 2, 10, 0)]
+        public void TryParse_when_notation_is_valid_returns_new_Dice(string notation, int dieCount, int sideCount, int modifier)
+        {
+            var result = Dice.TryParse(notation);
+
+            Assert.True(result.Succeeded);
+            Assert.Equal(dieCount, result.Value.DieCount);
+            Assert.Equal(sideCount, result.Value.SideCount);
+            Assert.Equal(modifier, result.Value.Modifier);
+        }
+
+
+
+        [Theory]
+        [InlineData("-1d6")] // negative die count
+        [InlineData("1d-1")]
+        [InlineData("")]
+        public void TryParse_when_dice_notation_is_invalid_returns_fails_with_error_message(string? notation)
+        {
+            var result = Dice.TryParse(notation!);
+
+            Assert.True(result.Failed);
+            Assert.Equal("Invalid dice notation format. Value must be in XdY+Z format.", result.ErrorMessage);
+        }
+
+
+
+        [Theory]
+        [InlineData("  ")]
+        [InlineData(null)]
+        [InlineData("")]
+        public void TryParse_when_dice_notation_is_null_or_whitespace(string? notation)
+        {
+            var result = Dice.TryParse(notation!);
+
+            Assert.True(result.Failed);
+            Assert.Equal("Value cannot be null or empty.", result.ErrorMessage);
+        }
+
+
+
+        [Theory]
+        [InlineData("0d6")]
+        public void TryParse_when_dice_notation_dice_count_is_less_than_1_fails_with_error_message(string notation)
+        {
+            var result = Dice.TryParse(notation);
+
+            Assert.True(result.Failed);
+            Assert.Equal("Die count must be greater than 0.", result.ErrorMessage);
+        }
+
+
+
+        [Theory]
+        [InlineData("1d1")]
+        [InlineData("1d0")]
+        public void TryParse_when_dice_notation_side_count_is_less_than_2__fails_with_error_message(string notation)
+        {
+            var result = Dice.TryParse(notation);
+
+            Assert.True(result.Failed);
+            Assert.Equal("Side count must be greater than 1.", result.ErrorMessage);
+        }
+
+
+
     }
 }

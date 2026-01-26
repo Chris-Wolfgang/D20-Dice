@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Wolfgang.TryPattern;
 
 namespace Wolfgang.D20;
 
@@ -41,46 +42,20 @@ public class Dice : IDice, IEquatable<Dice>
     /// </summary>
     /// <param name="notation">The string representation of the dice</param>
     /// <exception cref="ArgumentException">The notation is not in the correct format</exception>
+    [Obsolete("Use TryParse.")]
     public Dice(string notation)
     {
-        if (string.IsNullOrWhiteSpace(notation))
+
+        var result = TryParse(notation);
+
+        if (result.Failed)
         {
-            throw new ArgumentException("Value cannot be null or empty.", nameof(notation));
+            throw new ArgumentException(result.ErrorMessage, nameof(notation));
         }
 
-        var regex = new Regex(@"^(?<dieCount>\d+)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)*$");
-
-
-        var match = regex.Match(notation);
-        if (!match.Success)
-        {
-            throw new ArgumentException("Invalid dice notation format. Value must be in XdY+Z format", nameof(notation));
-        }
-
-
-        var dieCount = int.Parse(match.Groups["dieCount"].Value);
-        var sideCount = int.Parse(match.Groups["sideCount"].Value);
-        var modifier = match.Groups["modifier"].Value != ""
-            ? int.Parse(match.Groups["modifier"].Value)
-            : 0;
-
-        var modifier = match.Groups["modifier"].Captures
-            .Cast<Capture>()
-            .Sum(capture => int.Parse(capture.Value));
-
-        if (dieCount < 1)
-        {
-            throw new ArgumentException( "Die count must be greater than 0.", nameof(notation));
-        }
-
-        if (sideCount < 2)
-        {
-            throw new ArgumentException( "Side count must be greater than 2.", nameof(notation));
-        }
-        DieCount = dieCount;
-        SideCount = sideCount;
-        Modifier = modifier;
-
+        DieCount = result.Value.DieCount;
+        SideCount = result.Value.SideCount;
+        Modifier = result.Value.Modifier;
     }
 
 
@@ -234,4 +209,54 @@ public class Dice : IDice, IEquatable<Dice>
     }
 
 
+
+    /// <summary>
+    /// Tries to parse a string representation of dice notation into a <see cref="Dice"/> instance.
+    /// </summary>
+    /// <param name="notation">The string representation of the dice notation.</param>
+    /// <returns>A <see cref="Result{T}"/> containing the parsed <see cref="Dice"/> instance if successful; otherwise, an error.</returns>
+    public static Result<Dice> TryParse(string notation)
+    {
+        if (string.IsNullOrWhiteSpace(notation))
+        {
+            return Result<Dice>.Failure("Value cannot be null or empty.");
+        }
+
+        var regex = new Regex(@"^(?<dieCount>\d+)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)*$");
+
+        var match = regex.Match(notation);
+        if (!match.Success)
+        {
+            return Result<Dice>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
+
+        }
+
+        var dieCount = int.Parse(match.Groups["dieCount"].Value);
+        var sideCount = int.Parse(match.Groups["sideCount"].Value);
+
+        var modifier = match.Groups["modifier"].Captures
+            .Cast<Capture>()
+            .Sum(capture => int.Parse(capture.Value));
+
+        if (dieCount < 1)
+        {
+            return Result<Dice>.Failure("Die count must be greater than 0.");
+        }
+
+        if (sideCount < 2)
+        {
+            return Result<Dice>.Failure("Side count must be greater than 1.");
+        }
+        
+        try
+        {
+            var d = new Dice(dieCount, sideCount, modifier);
+
+            return Result<Dice>.Success(d);
+        }
+        catch (Exception e)
+        {
+            return Result<Dice>.Failure(e.Message);
+        }
+    }
 }
