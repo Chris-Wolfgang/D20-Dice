@@ -323,6 +323,12 @@ namespace Wolfgang.D20.Tests.Unit
         [InlineData("1d6", 1, 6, 0)]
         [InlineData("2d8+3", 2, 8, 3)]
         [InlineData("2d10-1", 2, 10, -1)]
+
+        [InlineData("2d10-1+2", 2, 10, 1)]
+        [InlineData("2d10-1-2", 2, 10, -3)]
+        [InlineData("2d10+1+2", 2, 10, 3)]
+        [InlineData("2d10+0", 2, 10, 0)]
+        [InlineData("2d10-0", 2, 10, 0)]
         public void Can_create_Dice_using_dice_notation(string notation, int dieCount, int sideCount, int modifier)
         {
             var sut = new Dice(notation);

@@ -48,7 +48,7 @@ public class Dice : IDice, IEquatable<Dice>
             throw new ArgumentException("Value cannot be null or empty.", nameof(notation));
         }
 
-        var regex = new Regex(@"^(?<dieCount>\d+)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)?$");
+        var regex = new Regex(@"^(?<dieCount>\d+)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)*$");
 
 
         var match = regex.Match(notation);
@@ -63,6 +63,10 @@ public class Dice : IDice, IEquatable<Dice>
         var modifier = match.Groups["modifier"].Value != ""
             ? int.Parse(match.Groups["modifier"].Value)
             : 0;
+
+        var modifier = match.Groups["modifier"].Captures
+            .Cast<Capture>()
+            .Sum(capture => int.Parse(capture.Value));
 
         if (dieCount < 1)
         {
