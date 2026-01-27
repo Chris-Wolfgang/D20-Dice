@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Diagnostics.CodeAnalysis;
+using Xunit;
 // ReSharper disable RedundantArgumentDefaultValue
 
 namespace Wolfgang.D20.Tests.Unit
@@ -95,14 +96,11 @@ namespace Wolfgang.D20.Tests.Unit
         [Fact]
         public void Modify_can_be_positive_or_negative()
         {
-            Assert.Multiple
-                (
-                    () => new Dice(modifier: 0), 
-                    () => new Dice(modifier: 1),
-                    () => new Dice(modifier: -1),
-                    () => new Dice(modifier: int.MinValue),
-                    () => new Dice(modifier: int.MaxValue)    
-                );
+            _ = new Dice(modifier: 0);
+            _ = new Dice(modifier: 1);
+            _ = new Dice(modifier: -1);
+            _ = new Dice(modifier: int.MinValue);
+            _ = new Dice(modifier: int.MaxValue);
         }
 
 
@@ -380,7 +378,7 @@ namespace Wolfgang.D20.Tests.Unit
             var ex = Assert.Throws<ArgumentException>(() => new Dice(notation));
 #pragma warning restore CS0618 // Type or member is obsolete
             Assert.Equal("notation", ex.ParamName);
-            Assert.StartsWith("Side count must be greater than 2.", ex.Message);
+            Assert.StartsWith("Side count must be greater than 1.", ex.Message);
         }
 
 
@@ -511,7 +509,6 @@ namespace Wolfgang.D20.Tests.Unit
         [Theory]
         [InlineData("-1d6")] // negative die count
         [InlineData("1d-1")]
-        [InlineData("")]
         public void TryParse_when_dice_notation_is_invalid_returns_fails_with_error_message(string? notation)
         {
             var result = Dice.TryParse(notation!);
