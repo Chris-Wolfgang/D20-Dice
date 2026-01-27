@@ -53,9 +53,9 @@ public class Dice : IDice, IEquatable<Dice>
             throw new ArgumentException(result.ErrorMessage, nameof(notation));
         }
 
-        DieCount = result.Value.DieCount;
-        SideCount = result.Value.SideCount;
-        Modifier = result.Value.Modifier;
+        DieCount = result.Value!.DieCount;
+        SideCount = result.Value!.SideCount;
+        Modifier = result.Value!.Modifier;
     }
 
 
@@ -215,11 +215,11 @@ public class Dice : IDice, IEquatable<Dice>
     /// </summary>
     /// <param name="notation">The string representation of the dice notation.</param>
     /// <returns>A <see cref="Result{T}"/> containing the parsed <see cref="Dice"/> instance if successful; otherwise, an error.</returns>
-    public static Result<Dice> TryParse(string notation)
+    public static Result<Dice?> TryParse(string notation)
     {
         if (string.IsNullOrWhiteSpace(notation))
         {
-            return Result<Dice>.Failure("Value cannot be null or empty.");
+            return Result<Dice?>.Failure("Value cannot be null or empty.");
         }
 
         var regex = new Regex(@"^(?<dieCount>\d+)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)*$");
@@ -227,7 +227,7 @@ public class Dice : IDice, IEquatable<Dice>
         var match = regex.Match(notation);
         if (!match.Success)
         {
-            return Result<Dice>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
+            return Result<Dice?>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
 
         }
 
@@ -240,23 +240,23 @@ public class Dice : IDice, IEquatable<Dice>
 
         if (dieCount < 1)
         {
-            return Result<Dice>.Failure("Die count must be greater than 0.");
+            return Result<Dice?>.Failure("Die count must be greater than 0.");
         }
 
         if (sideCount < 2)
         {
-            return Result<Dice>.Failure("Side count must be greater than 1.");
+            return Result<Dice?>.Failure("Side count must be greater than 1.");
         }
         
         try
         {
             var d = new Dice(dieCount, sideCount, modifier);
 
-            return Result<Dice>.Success(d);
+            return Result<Dice?>.Success(d);
         }
         catch (Exception e)
         {
-            return Result<Dice>.Failure(e.Message);
+            return Result<Dice?>.Failure(e.Message);
         }
     }
 }
