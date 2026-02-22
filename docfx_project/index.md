@@ -1,5 +1,5 @@
 ---
-_layout: landing
+layout: landing
 ---
 
 # Wolfgang.D20-Dice Documentation
