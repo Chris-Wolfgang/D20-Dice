@@ -36,6 +36,7 @@
         ]
       }
     ],
+    // Note: "../docs" is used as the DocFX output directory for GitHub Actions deployment and is git-ignored for local builds.
     "output": "../docs",
     "template": [
       "default",

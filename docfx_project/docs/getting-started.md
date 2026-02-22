@@ -31,7 +31,7 @@ Install-Package Wolfgang.D20-Dice
 // Add your quick start code example here
 // This should show the simplest way to use your library
 
-using Wolfgang.D20-Dice;
+using Wolfgang.D20Dice;
 
 // Example usage
 ```
