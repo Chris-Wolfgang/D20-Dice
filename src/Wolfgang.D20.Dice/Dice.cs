@@ -210,6 +210,10 @@ public class Dice : IDice, IEquatable<Dice>
 
 
 
+    private static readonly Regex DiceNotationRegex = new Regex(
+        @"^(?<dieCount>\d+)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)*$",
+        RegexOptions.Compiled);
+
     /// <summary>
     /// Tries to parse a string representation of dice notation into a <see cref="Dice"/> instance.
     /// </summary>
@@ -222,9 +226,7 @@ public class Dice : IDice, IEquatable<Dice>
             return Result<Dice?>.Failure("Value cannot be null or empty.");
         }
 
-        var regex = new Regex(@"^(?<dieCount>\d+)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)*$");
-
-        var match = regex.Match(notation);
+        var match = DiceNotationRegex.Match(notation);
         if (!match.Success)
         {
             return Result<Dice?>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
