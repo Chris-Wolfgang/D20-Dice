@@ -357,7 +357,7 @@ namespace Wolfgang.D20.Tests.Unit
 
         [Theory]
         [InlineData("0d6")]
-        public void Ctor_when_dice_notation_dice_count_is_less_than_1_throws_ArgumentOutOfRangeException(string notation)
+        public void Ctor_when_dice_notation_dice_count_is_less_than_1_throws_ArgumentException(string notation)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             var ex = Assert.Throws<ArgumentException>(() => new Dice(notation));
@@ -371,7 +371,7 @@ namespace Wolfgang.D20.Tests.Unit
         [Theory]
         [InlineData("1d1")]
         [InlineData("1d0")]
-        public void Ctor_when_dice_notation_side_count_is_less_than_2_throws_ArgumentOutOfRangeException(string notation)
+        public void Ctor_when_dice_notation_side_count_is_less_than_2_throws_ArgumentException(string notation)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             var ex = Assert.Throws<ArgumentException>(() => new Dice(notation));
