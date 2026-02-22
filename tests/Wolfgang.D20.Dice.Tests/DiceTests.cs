@@ -1,4 +1,3 @@
-﻿using System.Diagnostics.CodeAnalysis;
 using Xunit;
 // ReSharper disable RedundantArgumentDefaultValue
 
@@ -511,7 +510,7 @@ namespace Wolfgang.D20.Tests.Unit
         [InlineData("1d-1")]
         public void TryParse_when_dice_notation_is_invalid_returns_fails_with_error_message(string? notation)
         {
-            var result = Dice.TryParse(notation!);
+            var result = Dice.TryParse(notation);
 
             Assert.True(result.Failed);
             Assert.Equal("Invalid dice notation format. Value must be in XdY+Z format.", result.ErrorMessage);
@@ -525,7 +524,7 @@ namespace Wolfgang.D20.Tests.Unit
         [InlineData("")]
         public void TryParse_when_dice_notation_is_null_or_whitespace(string? notation)
         {
-            var result = Dice.TryParse(notation!);
+            var result = Dice.TryParse(notation);
 
             Assert.True(result.Failed);
             Assert.Equal("Value cannot be null or empty.", result.ErrorMessage);
@@ -548,7 +547,7 @@ namespace Wolfgang.D20.Tests.Unit
         [Theory]
         [InlineData("1d1")]
         [InlineData("1d0")]
-        public void TryParse_when_dice_notation_side_count_is_less_than_2__fails_with_error_message(string notation)
+        public void TryParse_when_dice_notation_side_count_is_less_than_2_fails_with_error_message(string notation)
         {
             var result = Dice.TryParse(notation);
 
