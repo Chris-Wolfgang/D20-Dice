@@ -784,7 +784,7 @@ jobs:
           echo ""
           echo "✅ All compatible projects built successfully"
 
-      - name:  Run tests (.NET 6.0 - 10.0 only - ARM64 compatible)
+      - name: Run tests (.NET 6.0 - 10.0 only - ARM64 compatible)
         run: |
           # Find all test projects (C#, VB.NET, F#)
           test_projects=()
