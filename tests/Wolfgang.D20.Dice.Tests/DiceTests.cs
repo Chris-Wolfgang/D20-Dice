@@ -321,7 +321,11 @@ namespace Wolfgang.D20.Tests.Unit
         public void EqualsDice_Null_ReturnsFalse()
         {
             var dice = new Dice(1, 6, 0);
-            Assert.False(dice.Equals(null));
+            Dice? other = null;
+
+#pragma warning disable CA1508 // Avoid dead conditional code
+            Assert.False(dice.Equals(other));
+#pragma warning restore CA1508 // Avoid dead conditional code
         }
 
 
@@ -381,7 +385,10 @@ namespace Wolfgang.D20.Tests.Unit
         public void EqualsObject_Null_ReturnsFalse()
         {
             var dice = new Dice(1, 6, 0);
-            Assert.False(dice.Equals(null));
+            object? other = null;
+#pragma warning disable CA1508 // Avoid dead conditional code
+            Assert.False(dice.Equals(other));
+#pragma warning restore CA1508 // Avoid dead conditional code
         }
 
 
@@ -455,6 +462,7 @@ namespace Wolfgang.D20.Tests.Unit
             var result = Dice.TryParse(notation);
 
             Assert.True(result.Succeeded);
+            Assert.NotNull(result.Value);
             Assert.Equal(dieCount, result.Value.DieCount);
             Assert.Equal(sideCount, result.Value.SideCount);
             Assert.Equal(modifier, result.Value.Modifier);
