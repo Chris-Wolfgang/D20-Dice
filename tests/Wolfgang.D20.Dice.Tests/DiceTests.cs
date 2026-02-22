@@ -508,7 +508,7 @@ namespace Wolfgang.D20.Tests.Unit
         [Theory]
         [InlineData("-1d6")] // negative die count
         [InlineData("1d-1")]
-        public void TryParse_when_dice_notation_is_invalid_returns_fails_with_error_message(string? notation)
+        public void TryParse_when_dice_notation_is_invalid_fails_with_error_message(string? notation)
         {
             var result = Dice.TryParse(notation);
 
