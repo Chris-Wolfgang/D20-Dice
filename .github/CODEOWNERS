@@ -2,16 +2,17 @@
 # Update usernames or teams as appropriate for your project.
 
 # Set the default owner for everything in the repository
-* {{GITHUB_USERNAME}}
+* @Chris-Wolfgang
 
 # Example: Assign a team or user to a specific directory
-# /src/ {{GITHUB_USERNAME}}
+# /src/ @Chris-Wolfgang
 
 # Example: Assign a different owner to documentation files
-# /docs/ {{GITHUB_USERNAME}}
+# /docs/ @Chris-Wolfgang
 
 # Example: Assign an owner to GitHub Actions workflows
-# /.github/workflows/ {{GITHUB_USERNAME}}
+# /.github/workflows/ @Chris-Wolfgang
 
 # Example: Assign an owner to the .github folder to protect the CODEOWNERS file
-/.github/ {{GITHUB_USERNAME}}
+/.github/ @Chris-Wolfgang
+

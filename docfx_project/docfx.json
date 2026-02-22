@@ -43,15 +43,16 @@
       "modern-dark"
     ],
     "globalMetadata": {
-      "_appName": "{{PROJECT_NAME}}",
-      "_appTitle": "{{PROJECT_NAME}} Documentation",
+      "_appName": "Wolfgang.D20-Dice",
+      "_appTitle": "Wolfgang.D20-Dice Documentation",
       "_enableSearch": true,
       "_appFooter": "Made with DocFX",
       "_disableSidebar": false,
       "_disableTocFilter": false,
       "_enableDarkMode": true,
-      "_baseUrl": "{{DOCS_URL}}",
+      "_baseUrl": "https://Chris-Wolfgang.github.io/D20-Dice/",
       "pdf": true
     }
   }
 }
+
