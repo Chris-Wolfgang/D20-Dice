@@ -231,12 +231,33 @@ public class Dice : IDice, IEquatable<Dice>
 
         }
 
-        var dieCount = int.Parse(match.Groups["dieCount"].Value);
-        var sideCount = int.Parse(match.Groups["sideCount"].Value);
+        if (!int.TryParse(match.Groups["dieCount"].Value, out var dieCount))
+        {
+            return Result<Dice?>.Failure("Die count value is out of range.");
+        }
 
-        var modifier = match.Groups["modifier"].Captures
-            .Cast<Capture>()
-            .Sum(capture => int.Parse(capture.Value));
+        if (!int.TryParse(match.Groups["sideCount"].Value, out var sideCount))
+        {
+            return Result<Dice?>.Failure("Side count value is out of range.");
+        }
+
+        var modifier = 0;
+        foreach (Capture capture in match.Groups["modifier"].Captures)
+        {
+            if (!int.TryParse(capture.Value, out var part))
+            {
+                return Result<Dice?>.Failure("Modifier value is out of range.");
+            }
+
+            try
+            {
+                checked { modifier += part; }
+            }
+            catch (OverflowException)
+            {
+                return Result<Dice?>.Failure("Modifier value is out of range.");
+            }
+        }
 
         if (dieCount < 1)
         {
@@ -247,16 +268,7 @@ public class Dice : IDice, IEquatable<Dice>
         {
             return Result<Dice?>.Failure("Side count must be greater than 1.");
         }
-        
-        try
-        {
-            var d = new Dice(dieCount, sideCount, modifier);
 
-            return Result<Dice?>.Success(d);
-        }
-        catch (Exception e)
-        {
-            return Result<Dice?>.Failure(e.Message);
-        }
+        return Result<Dice?>.Success(new Dice(dieCount, sideCount, modifier));
     }
 }
