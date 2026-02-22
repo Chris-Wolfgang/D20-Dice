@@ -35,7 +35,26 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## 🚀 Quick Start
 
-{{QUICK_START_EXAMPLE}}
+```csharp
+using Wolfgang.D20;
+
+// Roll a single d20
+var d20 = new Dice(dieCount: 1, sideCount: 20);
+int result = d20.Roll();
+Console.WriteLine($"Rolled {d20}: {result}");  // e.g. "Rolled 1d20: 14"
+
+// Roll 2d6 with a +3 modifier
+var attackRoll = new Dice(dieCount: 2, sideCount: 6, modifier: 3);
+Console.WriteLine($"Attack ({attackRoll}): {attackRoll.Roll()}");  // e.g. "Attack (2d6+3): 11"
+Console.WriteLine($"Range: {attackRoll.MinValue}–{attackRoll.MaxValue}");  // "Range: 5–15"
+
+// Parse dice notation from a string
+var parseResult = Dice.TryParse("1d20+5");
+if (parseResult.IsSuccess)
+{
+    Console.WriteLine($"Parsed: {parseResult.Value} → {parseResult.Value.Roll()}");
+}
+```
 
 ---
 
