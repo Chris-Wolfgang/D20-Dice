@@ -181,8 +181,14 @@ jobs:
           persist-credentials: false
       
       - name: Fetch trusted configuration files from main branch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           echo "Fetching configuration files from main branch to prevent malicious overrides..."
+          
+          # Ensure origin uses an authenticated URL so fetch works on private repositories
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           
           # Create local ref from the already-checked-out main branch (no unauthenticated network fetch needed)
           git fetch "$RUNNER_TEMP/main-branch-checkout" HEAD:main-branch
@@ -357,7 +363,7 @@ jobs:
             frameworks=$(tr -d '\n\r' < "$test_proj" | grep -oP '<TargetFramework[s]?>\K[^<]+' | tr ';' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | grep -E '^(net(5\.0|6\.0|7\.0|8\.0|9\.0|10\.0)|netcoreapp[0-9]+\.[0-9]+)$' || true)
             
             if [ -z "$frameworks" ]; then
-              echo "⊘ Skipping: No compatible .NET target frameworks found"
+              echo "⊘ Skipping: No compatible .NET 5.0-10.0 target frameworks found"
               echo ""
               continue
             fi
@@ -547,7 +553,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
-            3.1.x
             5.0.x
             6.0.x
             7.0.x
@@ -648,6 +653,8 @@ jobs:
           persist-credentials: false
       
       - name: Fetch trusted configuration files from main branch
+        env:
+          REPO_URL: https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
         run: |
           echo "Fetching configuration files from main branch to prevent malicious overrides..."
           
@@ -786,7 +793,7 @@ jobs:
           echo ""
           echo "✅ All compatible projects built successfully"
 
-      - name: Run tests (.NET 6.0 - 10.0 only - ARM64 compatible)
+      - name:  Run tests (.NET 6.0 - 10.0 only - ARM64 compatible)
         run: |
           # Find all test projects (C#, VB.NET, F#)
           test_projects=()
