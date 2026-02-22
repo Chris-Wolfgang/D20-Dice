@@ -316,71 +316,6 @@ namespace Wolfgang.D20.Tests.Unit
         }
 
 
-        [Theory]
-        [InlineData("1d6", 1, 6, 0)]
-        [InlineData("2d8+3", 2, 8, 3)]
-        [InlineData("2d10-1", 2, 10, -1)]
-
-        [InlineData("2d10-1+2", 2, 10, 1)]
-        [InlineData("2d10-1-2", 2, 10, -3)]
-        [InlineData("2d10+1+2", 2, 10, 3)]
-        [InlineData("2d10+0", 2, 10, 0)]
-        [InlineData("2d10-0", 2, 10, 0)]
-        public void Ctor_can_create_Dice_using_dice_notation(string notation, int dieCount, int sideCount, int modifier)
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            var sut = new Dice(notation);
-#pragma warning restore CS0618 // Type or member is obsolete
-
-            var expected = new Dice(dieCount, sideCount, modifier);
-
-            Assert.Equal(expected, sut);
-        }
-
-
-
-        [Theory]
-        [InlineData("-1d6")] // negative die count
-        [InlineData("1d-1")]
-        [InlineData("")]
-        [InlineData("  ")]
-        [InlineData(null)]
-        public void Ctor_when_dice_notation_is_invalid_throws_ArgumentException(string? notation)
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            var ex = Assert.Throws<ArgumentException>(() => new Dice(notation!));
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Equal("notation", ex.ParamName);
-        }
-
-
-
-        [Theory]
-        [InlineData("0d6")]
-        public void Ctor_when_dice_notation_dice_count_is_less_than_1_throws_ArgumentException(string notation)
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            var ex = Assert.Throws<ArgumentException>(() => new Dice(notation));
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Equal("notation", ex.ParamName);
-            Assert.StartsWith("Die count must be greater than 0.", ex.Message);
-        }
-
-
-
-        [Theory]
-        [InlineData("1d1")]
-        [InlineData("1d0")]
-        public void Ctor_when_dice_notation_side_count_is_less_than_2_throws_ArgumentException(string notation)
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            var ex = Assert.Throws<ArgumentException>(() => new Dice(notation));
-#pragma warning restore CS0618 // Type or member is obsolete
-            Assert.Equal("notation", ex.ParamName);
-            Assert.StartsWith("Side count must be greater than 1.", ex.Message);
-        }
-
-
 
         [Fact]
         public void EqualsDice_Null_ReturnsFalse()
@@ -389,12 +324,16 @@ namespace Wolfgang.D20.Tests.Unit
             Assert.False(dice.Equals(null));
         }
 
+
+
         [Fact]
         public void EqualsDice_SameReference_ReturnsTrue()
         {
             var dice = new Dice(1, 6, 0);
             Assert.True(dice.Equals(dice));
         }
+
+
 
         [Fact]
         public void EqualsDice_SameValues_ReturnsTrue()
@@ -404,6 +343,8 @@ namespace Wolfgang.D20.Tests.Unit
             Assert.True(dice1.Equals(dice2));
         }
 
+
+
         [Fact]
         public void EqualsDice_DifferentDieCount_ReturnsFalse()
         {
@@ -411,6 +352,8 @@ namespace Wolfgang.D20.Tests.Unit
             var dice2 = new Dice(2, 6, 0);
             Assert.False(dice1.Equals(dice2));
         }
+
+
 
         [Fact]
         public void EqualsDice_DifferentSideCount_ReturnsFalse()
@@ -420,6 +363,8 @@ namespace Wolfgang.D20.Tests.Unit
             Assert.False(dice1.Equals(dice2));
         }
 
+
+
         [Fact]
         public void EqualsDice_DifferentModifier_ReturnsFalse()
         {
@@ -427,6 +372,8 @@ namespace Wolfgang.D20.Tests.Unit
             var dice2 = new Dice(1, 6, 1);
             Assert.False(dice1.Equals(dice2));
         }
+
+
 
         // Tests for Equals(object? obj)
 
@@ -437,12 +384,16 @@ namespace Wolfgang.D20.Tests.Unit
             Assert.False(dice.Equals(null));
         }
 
+
+
         [Fact]
         public void EqualsObject_SameReference_ReturnsTrue()
         {
             var dice = new Dice(1, 6, 0);
             Assert.True(dice.Equals((object)dice));
         }
+
+
 
         [Fact]
         public void EqualsObject_DifferentType_ReturnsFalse()
@@ -452,6 +403,8 @@ namespace Wolfgang.D20.Tests.Unit
             Assert.False(dice.Equals(notDice));
         }
 
+
+
         [Fact]
         public void EqualsObject_SameValues_ReturnsTrue()
         {
@@ -460,6 +413,8 @@ namespace Wolfgang.D20.Tests.Unit
             Assert.True(dice1.Equals((object)dice2));
         }
 
+
+
         [Fact]
         public void EqualsObject_DifferentValues_ReturnsFalse()
         {
@@ -467,6 +422,7 @@ namespace Wolfgang.D20.Tests.Unit
             var dice2 = new Dice(2, 6, 0);
             Assert.False(dice1.Equals((object)dice2));
         }
+
 
 
         [Fact]
@@ -480,21 +436,20 @@ namespace Wolfgang.D20.Tests.Unit
             Assert.False(result);
         }
 
-
-
+        
 
         [Theory]
         [InlineData("1d6", 1, 6, 0)]
         [InlineData("2d8+3", 2, 8, 3)]
         [InlineData("2d10-1", 2, 10, -1)]
-
         [InlineData("2d10-1+2", 2, 10, 1)]
         [InlineData("2d10-1-2", 2, 10, -3)]
         [InlineData("2d10+1+2", 2, 10, 3)]
         [InlineData("2d10+0", 2, 10, 0)]
         [InlineData("2d10-0", 2, 10, 0)]
         [InlineData("d10", 1, 10, 0)]
-        [InlineData("d10+1", 1, 10, 1)]        
+        [InlineData("d10+3", 1, 10, 3)]
+        [InlineData("d6-1", 1, 6, -1)]
         public void TryParse_when_notation_is_valid_returns_new_Dice(string notation, int dieCount, int sideCount, int modifier)
         {
             var result = Dice.TryParse(notation);

@@ -37,30 +37,6 @@ public class Dice : IDice, IEquatable<Dice>
 
 
     /// <summary>
-    /// Creates a new instance of <see cref="Dice"/> from a string notation in the format "XdY+Z" where:
-    /// X is the number of dice, Y is the number of sides on each die, and Z is an optional modifier.
-    /// </summary>
-    /// <param name="notation">The string representation of the dice</param>
-    /// <exception cref="ArgumentException">The notation is not in the correct format</exception>
-    [Obsolete("Use TryParse.")]
-    public Dice(string notation)
-    {
-
-        var result = TryParse(notation);
-
-        if (result.Failed)
-        {
-            throw new ArgumentException(result.ErrorMessage, nameof(notation));
-        }
-
-        DieCount = result.Value.DieCount;
-        SideCount = result.Value.SideCount;
-        Modifier = result.Value.Modifier;
-    }
-
-
-
-    /// <summary>
     /// The number of dice to roll. Must be greater than 0.
     /// </summary>
     public int DieCount { get; }
@@ -210,9 +186,12 @@ public class Dice : IDice, IEquatable<Dice>
 
 
 
-    private static readonly Regex DiceNotationRegex = new Regex(
-        @"^(?<dieCount>\d+)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)*$",
-        RegexOptions.Compiled);
+    private static readonly Regex DiceNotationRegex = new 
+    (
+        @"^(?<dieCount>\d*)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)*$",
+        RegexOptions.Compiled
+    );
+
 
     /// <summary>
     /// Tries to parse a string representation of dice notation into a <see cref="Dice"/> instance.
@@ -227,24 +206,30 @@ public class Dice : IDice, IEquatable<Dice>
     {
         if (string.IsNullOrWhiteSpace(notation))
         {
-            return Result<Dice?>.Failure("Value cannot be null or empty.");
+            return Result<Dice>.Failure("Value cannot be null or empty.");
         }
 
         var match = DiceNotationRegex.Match(notation);
         if (!match.Success)
         {
-            return Result<Dice?>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
-
+            return Result<Dice>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
         }
 
-        if (!int.TryParse(match.Groups["dieCount"].Value, out var dieCount))
+        if (match.Groups["dieCount"].Value.Length > 9)
         {
-            return Result<Dice?>.Failure("Die count value is out of range.");
+            return Result<Dice>.Failure("Die count value is out of range.");
+        }
+
+        var dieCount = 1;
+
+        if (match.Groups["dieCount"].Value != "" && !int.TryParse(match.Groups["dieCount"].Value, out dieCount))
+        {
+            return Result<Dice>.Failure("Die count value is out of range.");
         }
 
         if (!int.TryParse(match.Groups["sideCount"].Value, out var sideCount))
         {
-            return Result<Dice?>.Failure("Side count value is out of range.");
+            return Result<Dice>.Failure("Side count value is out of range.");
         }
 
         var modifier = 0;
@@ -252,7 +237,7 @@ public class Dice : IDice, IEquatable<Dice>
         {
             if (!int.TryParse(capture.Value, out var part))
             {
-                return Result<Dice?>.Failure("Modifier value is out of range.");
+                return Result<Dice>.Failure("Modifier value is out of range.");
             }
 
             try
@@ -261,20 +246,20 @@ public class Dice : IDice, IEquatable<Dice>
             }
             catch (OverflowException)
             {
-                return Result<Dice?>.Failure("Modifier value is out of range.");
+                return Result<Dice>.Failure("Modifier value is out of range.");
             }
         }
 
         if (dieCount < 1)
         {
-            return Result<Dice?>.Failure("Die count must be greater than 0.");
+            return Result<Dice>.Failure("Die count must be greater than 0.");
         }
 
         if (sideCount < 2)
         {
-            return Result<Dice?>.Failure("Side count must be greater than 1.");
+            return Result<Dice>.Failure("Side count must be greater than 1.");
         }
 
-        return Result<Dice?>.Success(new Dice(dieCount, sideCount, modifier));
+        return Result<Dice>.Success(new Dice(dieCount, sideCount, modifier));
     }
 }
