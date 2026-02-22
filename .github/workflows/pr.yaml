@@ -54,7 +54,7 @@ jobs:
           echo "Fetching configuration files from main branch to prevent malicious overrides..."
           
           # Create local ref from the already-checked-out main branch (no unauthenticated network fetch needed)
-          git fetch "$RUNNER_TEMP/main-branch-checkout" HEAD:main-branch
+          git fetch origin main HEAD:main-branch
           
           # List of configuration files that should come from trusted main branch
           config_files=(
@@ -191,7 +191,7 @@ jobs:
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           
           # Create local ref from the already-checked-out main branch (no unauthenticated network fetch needed)
-          git fetch "$RUNNER_TEMP/main-branch-checkout" HEAD:main-branch
+          git fetch origin main HEAD:main-branch
           
           # List of configuration files that should come from trusted main branch
           config_files=(
@@ -659,7 +659,7 @@ jobs:
           echo "Fetching configuration files from main branch to prevent malicious overrides..."
           
           # Fetch the main branch from the local main-branch checkout (no network or token required)
-          git fetch "$RUNNER_TEMP/main-branch-checkout" HEAD:main-branch
+          git fetch origin main HEAD:main-branch
           
           # List of configuration files that should come from trusted main branch
           config_files=(
@@ -911,7 +911,7 @@ jobs:
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           
           # Create local ref from the already-checked-out main branch (no unauthenticated network fetch needed)
-          git fetch "$RUNNER_TEMP/main-branch-checkout" HEAD:main-branch
+          git fetch origin main HEAD:main-branch
           
           # List of configuration files that should come from trusted main branch
           config_files=(
