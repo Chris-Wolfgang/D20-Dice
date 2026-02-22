@@ -24,8 +24,8 @@ namespace Wolfgang.D20.Tests.Unit
         {
 
             // Arrange & Act & Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount:0));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount:-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: -1));
         }
 
 
@@ -35,7 +35,7 @@ namespace Wolfgang.D20.Tests.Unit
         {
             // Arrange & Act
             var dice = new Dice();
-            
+
             // Assert
             Assert.Equal(1, dice.DieCount);
         }
@@ -59,9 +59,9 @@ namespace Wolfgang.D20.Tests.Unit
         public void SideCount_less_than_2_throws_ArgumentOutOfRangeException()
         {
             // Arrange & Act & Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: 1,sideCount:0));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: 1,sideCount:1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: 1,sideCount: -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: 1, sideCount: 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: 1, sideCount: 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: 1, sideCount: -1));
         }
 
 
@@ -180,7 +180,7 @@ namespace Wolfgang.D20.Tests.Unit
         [InlineData(2, 8, 3, "2d8+3")]
         [InlineData(2, 10, -1, "2d10-1")]
         [InlineData(3, 4, -5, "3d4-5")]
-        public void ToString_returns_value_in_dice_notation(int dieCount,int sideCount, int modifier, string expectedValue)
+        public void ToString_returns_value_in_dice_notation(int dieCount, int sideCount, int modifier, string expectedValue)
         {
             // Arrange
             var dice = new Dice(dieCount, sideCount, modifier);
@@ -310,7 +310,7 @@ namespace Wolfgang.D20.Tests.Unit
             // Act
             var hash1 = dice1.GetHashCode();
             var hash2 = dice2.GetHashCode();
-            
+
             // Assert
             Assert.NotEqual(hash1, hash2);
         }
@@ -438,12 +438,14 @@ namespace Wolfgang.D20.Tests.Unit
             var dice = new Dice(1, 6, 0);
             object? obj = null;
 
+#pragma warning disable CA1508
             var result = dice.Equals(obj);
+#pragma warning restore CA1508
 
             Assert.False(result);
         }
 
-        
+
 
         [Theory]
         [InlineData("1d6", 1, 6, 0)]

@@ -20,11 +20,11 @@ namespace Example1_Console
             var dice = new Dice(dieCount, sideCount, modifier);
 
             var modifierString = modifier switch
-                {
-                    0 => string.Empty,
-                    > 0 => $"+{modifier}",
-                    < 0 => modifier.ToString()
-                };
+            {
+                0 => string.Empty,
+                > 0 => $"+{modifier}",
+                < 0 => modifier.ToString()
+            };
 
             Console.WriteLine($"Rolling {dieCount}d{sideCount}{modifierString}:");
             Console.WriteLine($"Result: {dice.Roll()}");

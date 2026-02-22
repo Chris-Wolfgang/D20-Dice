@@ -132,8 +132,8 @@ public class Dice : IDice, IEquatable<Dice>
         {
             return true;
         }
-        return DieCount == other.DieCount 
-               && SideCount == other.SideCount 
+        return DieCount == other.DieCount
+               && SideCount == other.SideCount
                && Modifier == other.Modifier;
     }
 
@@ -186,7 +186,7 @@ public class Dice : IDice, IEquatable<Dice>
 
 
 
-    private static readonly Regex DiceNotationRegex = new 
+    private static readonly Regex DiceNotationRegex = new
     (
         @"^(?<dieCount>\d*)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)*$",
         RegexOptions.Compiled
@@ -243,7 +243,8 @@ public class Dice : IDice, IEquatable<Dice>
 
             try
             {
-                checked { modifier += part; }
+                checked
+                { modifier += part; }
             }
             catch (OverflowException)
             {
