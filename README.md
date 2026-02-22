@@ -177,5 +177,8 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
 
 ## 🙏 Acknowledgments
 
-{{ACKNOWLEDGMENTS}}
-
+This project was made possible thanks to:
+- The .NET community and ecosystem, which provides the runtime and tooling used by this library.
+- [DocFX](https://dotnet.github.io/docfx/) for documentation generation.
+- [shields.io](https://shields.io/) for the badges used in this README.
+- All contributors who report issues, suggest improvements, or submit pull requests.
