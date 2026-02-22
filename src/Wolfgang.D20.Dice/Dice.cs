@@ -215,7 +215,7 @@ public class Dice : IDice, IEquatable<Dice>
     /// </summary>
     /// <param name="notation">The string representation of the dice notation.</param>
     /// <returns>A <see cref="Result{T}"/> containing the parsed <see cref="Dice"/> instance if successful; otherwise, an error.</returns>
-    public static Result<Dice?> TryParse(string notation)
+    public static Result<Dice?> TryParse(string? notation)
     {
         if (string.IsNullOrWhiteSpace(notation))
         {
