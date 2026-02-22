@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using Wolfgang.TryPattern;
 
 namespace Wolfgang.D20;
@@ -193,6 +193,7 @@ public class Dice : IDice, IEquatable<Dice>
     );
 
 
+
     /// <summary>
     /// Tries to parse a string representation of dice notation into a <see cref="Dice"/> instance.
     /// </summary>
@@ -202,34 +203,34 @@ public class Dice : IDice, IEquatable<Dice>
     /// otherwise, a failed result with <see cref="Wolfgang.TryPattern.Result.ErrorMessage"/> describing the failure.
     /// Accessing <see cref="Wolfgang.TryPattern.Result{T}.Value"/> on a failed result throws <see cref="InvalidOperationException"/>.
     /// </returns>
-    public static Result<Dice> TryParse(string? notation)
+    public static Result<Dice?> TryParse(string? notation)
     {
         if (string.IsNullOrWhiteSpace(notation))
         {
-            return Result<Dice>.Failure("Value cannot be null or empty.");
+            return Result<Dice?>.Failure("Value cannot be null or empty.");
         }
 
         var match = DiceNotationRegex.Match(notation);
         if (!match.Success)
         {
-            return Result<Dice>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
+            return Result<Dice?>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
         }
 
         if (match.Groups["dieCount"].Value.Length > 9)
         {
-            return Result<Dice>.Failure("Die count value is out of range.");
+            return Result<Dice?>.Failure("Die count value is out of range.");
         }
 
         var dieCount = 1;
 
         if (match.Groups["dieCount"].Value != "" && !int.TryParse(match.Groups["dieCount"].Value, out dieCount))
         {
-            return Result<Dice>.Failure("Die count value is out of range.");
+            return Result<Dice?>.Failure("Die count value is out of range.");
         }
 
         if (!int.TryParse(match.Groups["sideCount"].Value, out var sideCount))
         {
-            return Result<Dice>.Failure("Side count value is out of range.");
+            return Result<Dice?>.Failure("Side count value is out of range.");
         }
 
         var modifier = 0;
@@ -237,7 +238,7 @@ public class Dice : IDice, IEquatable<Dice>
         {
             if (!int.TryParse(capture.Value, out var part))
             {
-                return Result<Dice>.Failure("Modifier value is out of range.");
+                return Result<Dice?>.Failure("Modifier value is out of range.");
             }
 
             try
@@ -246,20 +247,20 @@ public class Dice : IDice, IEquatable<Dice>
             }
             catch (OverflowException)
             {
-                return Result<Dice>.Failure("Modifier value is out of range.");
+                return Result<Dice?>.Failure("Modifier value is out of range.");
             }
         }
 
         if (dieCount < 1)
         {
-            return Result<Dice>.Failure("Die count must be greater than 0.");
+            return Result<Dice?>.Failure("Die count must be greater than 0.");
         }
 
         if (sideCount < 2)
         {
-            return Result<Dice>.Failure("Side count must be greater than 1.");
+            return Result<Dice?>.Failure("Side count must be greater than 1.");
         }
 
-        return Result<Dice>.Success(new Dice(dieCount, sideCount, modifier));
+        return Result<Dice?>.Success(new Dice(dieCount, sideCount, modifier));
     }
 }
