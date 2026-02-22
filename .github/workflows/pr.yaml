@@ -326,7 +326,7 @@ jobs:
           echo ""
           echo "✅ All compatible projects built successfully"
 
-      - name: Run tests with coverage (.NET Core 5.0 - 10.0)
+      - name: Run tests with coverage (.NET Core 3.1 and .NET 5.0 - 10.0)
         run: |
           # Find all test projects (C#, VB.NET, F#)
           test_projects=()
