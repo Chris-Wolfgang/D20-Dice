@@ -239,6 +239,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
+            3.1.x
             5.0.x
             6.0.x
             7.0.x
@@ -332,7 +333,7 @@ jobs:
           echo ""
           echo "✅ All compatible projects built successfully"
 
-      - name: Run tests with coverage (.NET Core 5.0 - 10.0)
+      - name: Run tests with coverage (.NET Core 3.1 and .NET 5.0 - 10.0)
         run: |
           # Find all test projects (C#, VB.NET, F#)
           test_projects=()
@@ -359,10 +360,9 @@ jobs:
             # Extract target frameworks from the project file
             # Support both <TargetFramework> (single) and <TargetFrameworks> (multiple)
             # Use tr to collapse multi-line TargetFrameworks into a single line before grepping
-            frameworks=$(tr -d '\n\r' < "$test_proj" | grep -oP '<TargetFramework[s]?>\K[^<]+' | tr ';' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | grep -E '^net(5\.0|6\.0|7\.0|8\.0|9\.0|10\.0)$' || true)
+            frameworks=$(tr -d '\n\r' < "$test_proj" | grep -oP '<TargetFramework[s]?>\K[^<]+' | tr ';' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | grep -E '^(net(5\.0|6\.0|7\.0|8\.0|9\.0|10\.0)|netcoreapp[0-9]+\.[0-9]+)$' || true)
             
             if [ -z "$frameworks" ]; then
-              echo "⊘ Skipping: No compatible .NET 5.0-10.0 target frameworks found"
               echo ""
               continue
             fi
@@ -431,7 +431,7 @@ jobs:
               
               echo "Checking module: '$module' - Coverage: ${percent}%"
               
-              if [ "$percent" -lt "$threshold" ]; then
+              if (( percent < threshold )); then
                 echo "  ❌ FAIL: Below ${threshold}% threshold"
                 failed_projects="$failed_projects $module (${percent}%)"
               else
@@ -565,7 +565,7 @@ jobs:
       - name: Build solution
         run: dotnet build --no-restore --configuration Release
 
-      - name: Run all .NET tests (.NET 5.0-10.0 and Framework 4.6.2-4.8.1)
+      - name: Run all .NET tests (.NET 3.1 and 5.0-10.0 and Framework 4.6.2-4.8.1)
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -600,10 +600,10 @@ jobs:
             }
             
             # Split by semicolon for multi-targeting projects
-            $frameworks = $tfmMatch.Groups[1].Value -split ';' | ForEach-Object { $_.Trim() } | Where-Object { $_ -match '^net(5\.0|6\.0|7\.0|8\.0|9\.0|10\.0|462|47|471|472|48|481)$' }
+            $frameworks = $tfmMatch.Groups[1].Value -split ';' | ForEach-Object { $_.Trim() } | Where-Object { $_ -match '^((netcoreapp[0-9]+\.[0-9]+)|net(5\.0|6\.0|7\.0|8\.0|9\.0|10\.0|462|47|471|472|48|481))$' }
             
             if ($frameworks.Count -eq 0) {
-              Write-Host "⊘ Skipping: No compatible .NET 5.0-10.0 or Framework 4.6.2-4.8.1 target frameworks found" -ForegroundColor Yellow
+              Write-Host "⊘ Skipping: No compatible .NET Core (netcoreapp) or .NET 5.0-10.0 / Framework 4.6.2-4.8.1 target frameworks found" -ForegroundColor Yellow
               Write-Host ""
               continue
             }
@@ -657,11 +657,8 @@ jobs:
         run: |
           echo "Fetching configuration files from main branch to prevent malicious overrides..."
           
-          # Authenticate the origin remote using the GITHUB_TOKEN (works for private repos even with persist-credentials: false)
-          git remote set-url origin "$REPO_URL"
-          
-          # Fetch the main branch from the authenticated origin remote
-          git fetch origin main:main-branch
+          # Fetch the main branch from the local main-branch checkout (no network or token required)
+          git fetch "$RUNNER_TEMP/main-branch-checkout" HEAD:main-branch
           
           # List of configuration files that should come from trusted main branch
           config_files=(
@@ -866,7 +863,7 @@ jobs:
           echo "  - .NET 9.0 ✅"
           echo "  - .NET 10.0 ✅"
           echo ""
-          echo ".NET Core 5.0 are tested on Linux and Windows"
+          echo ".NET 5.0 is tested on Linux and Windows"
           echo ""
 
       - name: Summarize pipeline result
