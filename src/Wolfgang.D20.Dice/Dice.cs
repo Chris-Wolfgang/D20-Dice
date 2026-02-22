@@ -53,9 +53,9 @@ public class Dice : IDice, IEquatable<Dice>
             throw new ArgumentException(result.ErrorMessage, nameof(notation));
         }
 
-        DieCount = result.Value!.DieCount;
-        SideCount = result.Value!.SideCount;
-        Modifier = result.Value!.Modifier;
+        DieCount = result.Value.DieCount;
+        SideCount = result.Value.SideCount;
+        Modifier = result.Value.Modifier;
     }
 
 
@@ -223,7 +223,7 @@ public class Dice : IDice, IEquatable<Dice>
     /// otherwise, a failed result with <see cref="Wolfgang.TryPattern.Result.ErrorMessage"/> describing the failure.
     /// Accessing <see cref="Wolfgang.TryPattern.Result{T}.Value"/> on a failed result throws <see cref="InvalidOperationException"/>.
     /// </returns>
-    public static Result<Dice?> TryParse(string? notation)
+    public static Result<Dice> TryParse(string? notation)
     {
         if (string.IsNullOrWhiteSpace(notation))
         {
