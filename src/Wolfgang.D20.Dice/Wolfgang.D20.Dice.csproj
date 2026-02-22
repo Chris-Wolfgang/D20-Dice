@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks> 
-	  	net462;
-		netstandard2.0;
-		net8.0;net10.0
-	  </TargetFrameworks>
+	  <TargetFrameworks>net462;netstandard2.0;net8.0;net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>default</LangVersion>
-	  <Version>0.2.0</Version>
+	  <Version>0.3.0</Version>
 	  <Title>$(AssemblyName)</Title>
 	  <Authors>Chris Wolfgang</Authors>
 	  <Description>Contains class for generating random numbers by simulating rolling of dice with various number of sides</Description>
@@ -47,6 +43,10 @@
 	    <PackagePath>\</PackagePath>
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Wolfgang.TryPattern" Version="0.2.0" />
 	</ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Wolfgang.TryPattern;
 
 namespace Wolfgang.D20;
 
@@ -31,52 +32,6 @@ public class Dice : IDice, IEquatable<Dice>
         DieCount = dieCount;
         SideCount = sideCount;
         Modifier = modifier;
-    }
-
-
-
-    /// <summary>
-    /// Creates a new instance of <see cref="Dice"/> from a string notation in the format "XdY+Z" where:
-    /// X is the number of dice, Y is the number of sides on each die, and Z is an optional modifier.
-    /// </summary>
-    /// <param name="notation">The string representation of the dice</param>
-    /// <exception cref="ArgumentException">The notation is not in the correct format</exception>
-    public Dice(string notation)
-    {
-        if (string.IsNullOrWhiteSpace(notation))
-        {
-            throw new ArgumentException("Value cannot be null or empty.", nameof(notation));
-        }
-
-        var regex = new Regex(@"^(?<dieCount>\d+)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)?$");
-
-
-        var match = regex.Match(notation);
-        if (!match.Success)
-        {
-            throw new ArgumentException("Invalid dice notation format. Value must be in XdY+Z format", nameof(notation));
-        }
-
-
-        var dieCount = int.Parse(match.Groups["dieCount"].Value);
-        var sideCount = int.Parse(match.Groups["sideCount"].Value);
-        var modifier = match.Groups["modifier"].Value != ""
-            ? int.Parse(match.Groups["modifier"].Value)
-            : 0;
-
-        if (dieCount < 1)
-        {
-            throw new ArgumentException( "Die count must be greater than 0.", nameof(notation));
-        }
-
-        if (sideCount < 2)
-        {
-            throw new ArgumentException( "Side count must be greater than 2.", nameof(notation));
-        }
-        DieCount = dieCount;
-        SideCount = sideCount;
-        Modifier = modifier;
-
     }
 
 
@@ -230,4 +185,81 @@ public class Dice : IDice, IEquatable<Dice>
     }
 
 
+
+    private static readonly Regex DiceNotationRegex = new 
+    (
+        @"^(?<dieCount>\d*)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)*$",
+        RegexOptions.Compiled
+    );
+
+
+    /// <summary>
+    /// Tries to parse a string representation of dice notation into a <see cref="Dice"/> instance.
+    /// </summary>
+    /// <param name="notation">The string representation of the dice notation.</param>
+    /// <returns>
+    /// A <see cref="Result{T}"/> containing the parsed <see cref="Dice"/> instance if successful;
+    /// otherwise, a failed result with <see cref="Wolfgang.TryPattern.Result.ErrorMessage"/> describing the failure.
+    /// Accessing <see cref="Wolfgang.TryPattern.Result{T}.Value"/> on a failed result throws <see cref="InvalidOperationException"/>.
+    /// </returns>
+    public static Result<Dice> TryParse(string? notation)
+    {
+        if (string.IsNullOrWhiteSpace(notation))
+        {
+            return Result<Dice>.Failure("Value cannot be null or empty.");
+        }
+
+        var match = DiceNotationRegex.Match(notation);
+        if (!match.Success)
+        {
+            return Result<Dice>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
+        }
+
+        if (match.Groups["dieCount"].Value.Length > 9)
+        {
+            return Result<Dice>.Failure("Die count value is out of range.");
+        }
+
+        var dieCount = 1;
+
+        if (match.Groups["dieCount"].Value != "" && !int.TryParse(match.Groups["dieCount"].Value, out dieCount))
+        {
+            return Result<Dice>.Failure("Die count value is out of range.");
+        }
+
+        if (!int.TryParse(match.Groups["sideCount"].Value, out var sideCount))
+        {
+            return Result<Dice>.Failure("Side count value is out of range.");
+        }
+
+        var modifier = 0;
+        foreach (Capture capture in match.Groups["modifier"].Captures)
+        {
+            if (!int.TryParse(capture.Value, out var part))
+            {
+                return Result<Dice>.Failure("Modifier value is out of range.");
+            }
+
+            try
+            {
+                checked { modifier += part; }
+            }
+            catch (OverflowException)
+            {
+                return Result<Dice>.Failure("Modifier value is out of range.");
+            }
+        }
+
+        if (dieCount < 1)
+        {
+            return Result<Dice>.Failure("Die count must be greater than 0.");
+        }
+
+        if (sideCount < 2)
+        {
+            return Result<Dice>.Failure("Side count must be greater than 1.");
+        }
+
+        return Result<Dice>.Success(new Dice(dieCount, sideCount, modifier));
+    }
 }
