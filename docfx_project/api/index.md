@@ -1,9 +1,17 @@
-# API Documentation
+# API Reference
 
-This section contains the API reference documentation for Wolfgang D20 Dice library.
+Welcome to the {{PROJECT_NAME}} API documentation.
 
-Browse the API reference by namespace or use the search functionality to find specific classes, methods, and properties.
+This section contains the complete API reference, automatically generated from XML documentation comments in the source code.
 
-## Namespaces
+Browse the navigation menu to explore available namespaces and types.
 
-- **Wolfgang.D20**: Core namespace containing dice rolling functionality
+## Conventions
+
+- **Public APIs** are stable and follow semantic versioning
+- **Internal APIs** may change between minor versions
+- **Obsolete APIs** are marked with deprecation warnings
+
+## Getting Started
+
+For usage examples and guides, see the [Documentation](../docs/getting-started.md) section.

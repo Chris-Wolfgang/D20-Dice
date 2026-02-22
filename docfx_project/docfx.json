@@ -1,38 +1,31 @@
 {
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
   "metadata": [
     {
       "src": [
         {
           "files": [
-            "src/Wolfgang.D20.Dice/Wolfgang.D20.Dice.csproj"
+            "src/**/*.csproj"
           ],
-          "src": ".."
+          "src": "../"
         }
       ],
       "dest": "api",
-      "includePrivateMembers": false,
+      "properties": {
+        "TargetFramework": "net8.0"
+      },
       "disableGitFeatures": false,
-      "disableDefaultFilter": false,
-      "noRestore": false,
-      "namespaceLayout": "flattened",
-      "memberLayout": "samePage",
-      "allowCompilationErrors": false
+      "disableDefaultFilter": false
     }
   ],
   "build": {
     "content": [
       {
         "files": [
-          "api/**.yml",
-          "api/index.md"
-        ]
-      },
-      {
-        "files": [
-          "articles/**.md",
-          "articles/**/toc.yml",
-          "toc.yml",
-          "*.md"
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**"
         ]
       }
     ],
@@ -43,15 +36,22 @@
         ]
       }
     ],
-    "output": "_site",
-    "globalMetadataFiles": [],
-    "fileMetadataFiles": [],
+    "output": "../docs",
     "template": [
       "default",
-      "modern"
+      "modern",
+      "modern-dark"
     ],
-    "postProcessors": [],
-    "keepFileLink": false,
-    "disableGitFeatures": false
+    "globalMetadata": {
+      "_appName": "{{PROJECT_NAME}}",
+      "_appTitle": "{{PROJECT_NAME}} Documentation",
+      "_enableSearch": true,
+      "_appFooter": "Made with DocFX",
+      "_disableSidebar": false,
+      "_disableTocFilter": false,
+      "_enableDarkMode": true,
+      "_baseUrl": "{{DOCS_URL}}",
+      "pdf": true
+    }
   }
 }

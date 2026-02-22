@@ -1,36 +1,41 @@
-# Wolfgang D20 Dice Documentation
+---
+_layout: landing
+---
 
-Welcome to the Wolfgang D20 Dice library documentation!
+# {{PROJECT_NAME}} Documentation
 
-## Overview
+Welcome to the {{PROJECT_NAME}} documentation. This site contains comprehensive guides, API reference, and examples to help you get started.
 
-Wolfgang D20 Dice is a .NET library for generating random numbers by simulating rolling of dice with various number of sides.
+## Quick Links
 
-## Key Features
+- [Getting Started](docs/getting-started.md) - Learn the basics
+- [API Reference](api/index.md) - Complete API documentation
+- [GitHub Repository]({{GITHUB_REPO_URL}}) - View source code
 
-- Simple dice rolling simulation
-- Support for various dice types (d4, d6, d8, d10, d12, d20, d100)
-- Cross-platform support (.NET Framework 4.6.2+, .NET Standard 2.0, .NET 8.0+, .NET 10.0)
-- Easy to use API
+## About {{PROJECT_NAME}}
 
-## Getting Started
+{{PROJECT_DESCRIPTION}}
 
-Check out the [API Documentation](api/index.md) to learn how to use the library.
+## Installation
 
-## Quick Example
-
-```csharp
-using Wolfgang.D20;
-
-// Create a dice instance
-var dice = new Dice();
-
-// Roll a d20
-int result = dice.Roll(20);
+```bash
+dotnet add package {{PACKAGE_NAME}}
 ```
 
-## Resources
+## Documentation Sections
 
-- [GitHub Repository](https://github.com/Chris-Wolfgang/D20-Dice)
-- [NuGet Package](https://www.nuget.org/packages/Wolfgang.D20.Dice)
-- [License](https://github.com/Chris-Wolfgang/D20-Dice/blob/main/LICENSE)
+### 📖 [Documentation](docs/getting-started.md)
+Step-by-step guides and tutorials to help you use {{PROJECT_NAME}} effectively.
+
+### 📚 [API Reference](api/index.md)
+Complete API documentation automatically generated from source code XML comments.
+
+## Additional Resources
+
+- [Contributing Guidelines]({{GITHUB_REPO_URL}}/blob/main/CONTRIBUTING.md)
+- [Code of Conduct]({{GITHUB_REPO_URL}}/blob/main/CODE_OF_CONDUCT.md)
+- [License]({{GITHUB_REPO_URL}}/blob/main/LICENSE)
+
+---
+
+*Documentation built with [DocFX](https://dotnet.github.io/docfx/)*

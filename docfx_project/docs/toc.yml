@@ -1,0 +1,8 @@
+- name: Index
+  href: index.md
+- name: Introduction
+  href: introduction.md
+- name: Getting Started
+  href: getting-started.md
+- name: Project website
+  href: '{{GITHUB_REPO_URL}}'
