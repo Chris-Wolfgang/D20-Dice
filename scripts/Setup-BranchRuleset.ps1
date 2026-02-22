@@ -54,7 +54,7 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string]$Repository = "@Chris-Wolfgang/D20-Dice",
+    [string]$Repository = "Chris-Wolfgang/D20-Dice",
     
     [Parameter()]
     [string]$BranchName = "main"
@@ -83,7 +83,7 @@ try {
 }
 
 # Determine repository
-if ($Repository -eq "@Chris-Wolfgang/D20-Dice" -or -not $Repository) {
+if ($Repository -eq "Chris-Wolfgang/D20-Dice" -or -not $Repository) {
     # Placeholders not replaced or no repository specified - auto-detect
     Write-Host "🔍 Detecting current repository..." -ForegroundColor Cyan
     try {
@@ -91,7 +91,7 @@ if ($Repository -eq "@Chris-Wolfgang/D20-Dice" -or -not $Repository) {
         $Repository = $repoInfo.nameWithOwner
         Write-Host "✅ Using repository: $Repository" -ForegroundColor Green
     } catch {
-        if ($Repository -eq "@Chris-Wolfgang/D20-Dice") {
+        if ($Repository -eq "Chris-Wolfgang/D20-Dice") {
             Write-Error "❌ Could not detect repository. Please run the setup script (pwsh ./scripts/setup.ps1) first to replace placeholders, or specify -Repository parameter."
         } else {
             Write-Error "❌ Could not detect repository. Please run from within a git repository or specify -Repository parameter."
