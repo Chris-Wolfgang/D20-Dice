@@ -1,6 +1,6 @@
-# Contributing to {{PROJECT_NAME}}
+# Contributing to Wolfgang.D20-Dice
 
-Thank you for your interest in contributing to **{{PROJECT_NAME}}**! We welcome contributions to help improve this project.
+Thank you for your interest in contributing to **Wolfgang.D20-Dice**! We welcome contributions to help improve this project.
 
 ## How Can You Contribute?
 
@@ -237,3 +237,4 @@ Please be respectful and considerate in all interactions. See [CODE_OF_CONDUCT.m
 ---
 
 Thank you for contributing! 🎉
+

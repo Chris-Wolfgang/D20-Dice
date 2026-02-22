@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide will help you quickly get up and running with {{PROJECT_NAME}}.
+This guide will help you quickly get up and running with Wolfgang.D20-Dice.
 
 ## Prerequisites
 
@@ -14,13 +14,13 @@ This guide will help you quickly get up and running with {{PROJECT_NAME}}.
 ### Via NuGet Package Manager
 
 ```bash
-dotnet add package {{PACKAGE_NAME}}
+dotnet add package Wolfgang.D20-Dice
 ```
 
 ### Via Package Manager Console
 
 ```powershell
-Install-Package {{PACKAGE_NAME}}
+Install-Package Wolfgang.D20-Dice
 ```
 
 ## Quick Start
@@ -31,7 +31,7 @@ Install-Package {{PACKAGE_NAME}}
 // Add your quick start code example here
 // This should show the simplest way to use your library
 
-using {{PROJECT_NAME}};
+using Wolfgang.D20Dice;
 
 // Example usage
 ```
@@ -39,8 +39,8 @@ using {{PROJECT_NAME}};
 ## Next Steps
 
 - Explore the [API Reference](../api/index.md) for detailed documentation
-- Read the [Introduction](introduction.md) to learn more about {{PROJECT_NAME}}
-- Check out example projects in the [GitHub repository]({{GITHUB_REPO_URL}})
+- Read the [Introduction](introduction.md) to learn more about Wolfgang.D20-Dice
+- Check out example projects in the [GitHub repository](https://github.com/Chris-Wolfgang/D20-Dice)
 
 ## Common Issues
 
@@ -48,6 +48,6 @@ using {{PROJECT_NAME}};
 
 ## Additional Resources
 
-- [GitHub Repository]({{GITHUB_REPO_URL}})
-- [Contributing Guidelines]({{GITHUB_REPO_URL}}/blob/main/CONTRIBUTING.md)
-- [Report an Issue]({{GITHUB_REPO_URL}}/issues)
+- [GitHub Repository](https://github.com/Chris-Wolfgang/D20-Dice)
+- [Contributing Guidelines](https://github.com/Chris-Wolfgang/D20-Dice/blob/main/CONTRIBUTING.md)
+- [Report an Issue](https://github.com/Chris-Wolfgang/D20-Dice/issues)

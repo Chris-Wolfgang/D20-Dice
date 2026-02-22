@@ -1,10 +1,10 @@
 # Introduction
 
-Welcome to {{PROJECT_NAME}}!
+Welcome to Wolfgang.D20-Dice!
 
 ## Overview
 
-{{PROJECT_DESCRIPTION}}
+A random number generator that simulates d20 dice with modifier
 
 <!-- Add your project overview here -->
 
@@ -18,9 +18,9 @@ Welcome to {{PROJECT_NAME}}!
 
 ## Getting Help
 
-If you need help with {{PROJECT_NAME}}, please:
+If you need help with Wolfgang.D20-Dice, please:
 
 - Check the [Getting Started](getting-started.md) guide
 - Review the [API Reference](../api/index.md)
-- Visit the [GitHub repository]({{GITHUB_REPO_URL}})
-- Open an issue on [GitHub Issues]({{GITHUB_REPO_URL}}/issues)
+- Visit the [GitHub repository](https://github.com/Chris-Wolfgang/D20-Dice)
+- Open an issue on [GitHub Issues](https://github.com/Chris-Wolfgang/D20-Dice/issues)
