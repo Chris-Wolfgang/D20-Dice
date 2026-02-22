@@ -97,7 +97,7 @@ foreach ($label in $labels) {
     if ($LASTEXITCODE -eq 0) {
         Write-Host "   ✅ Created label: $($label.name)" -ForegroundColor Green
         $created++
-    } elseif ($response -like "*already_exists*" -or $response -like "*422*") {
+    } elseif ($response -like "*already_exists*") {
         Write-Host "   ⏭️  Label already exists, skipping: $($label.name)" -ForegroundColor Gray
         $skipped++
     } else {
