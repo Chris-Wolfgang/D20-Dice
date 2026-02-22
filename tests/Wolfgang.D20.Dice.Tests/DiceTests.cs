@@ -1,4 +1,3 @@
-﻿using System.Diagnostics.CodeAnalysis;
 using Xunit;
 // ReSharper disable RedundantArgumentDefaultValue
 
@@ -548,7 +547,7 @@ namespace Wolfgang.D20.Tests.Unit
         [Theory]
         [InlineData("1d1")]
         [InlineData("1d0")]
-        public void TryParse_when_dice_notation_side_count_is_less_than_2__fails_with_error_message(string notation)
+        public void TryParse_when_dice_notation_side_count_is_less_than_2_fails_with_error_message(string notation)
         {
             var result = Dice.TryParse(notation);
 
