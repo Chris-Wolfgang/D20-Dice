@@ -218,7 +218,11 @@ public class Dice : IDice, IEquatable<Dice>
     /// Tries to parse a string representation of dice notation into a <see cref="Dice"/> instance.
     /// </summary>
     /// <param name="notation">The string representation of the dice notation.</param>
-    /// <returns>A <see cref="Result{T}"/> containing the parsed <see cref="Dice"/> instance if successful; otherwise, an error.</returns>
+    /// <returns>
+    /// A <see cref="Result{T}"/> containing the parsed <see cref="Dice"/> instance if successful;
+    /// otherwise, a failed result with <see cref="Wolfgang.TryPattern.Result.ErrorMessage"/> describing the failure.
+    /// Accessing <see cref="Wolfgang.TryPattern.Result{T}.Value"/> on a failed result throws <see cref="InvalidOperationException"/>.
+    /// </returns>
     public static Result<Dice?> TryParse(string? notation)
     {
         if (string.IsNullOrWhiteSpace(notation))
