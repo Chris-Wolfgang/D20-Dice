@@ -493,6 +493,8 @@ namespace Wolfgang.D20.Tests.Unit
         [InlineData("2d10+1+2", 2, 10, 3)]
         [InlineData("2d10+0", 2, 10, 0)]
         [InlineData("2d10-0", 2, 10, 0)]
+        [InlineData("d10", 1, 10, 0)]
+        [InlineData("d10+1", 1, 10, 1)]        
         public void TryParse_when_notation_is_valid_returns_new_Dice(string notation, int dieCount, int sideCount, int modifier)
         {
             var result = Dice.TryParse(notation);
