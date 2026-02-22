@@ -353,10 +353,10 @@ jobs:
             # Extract target frameworks from the project file
             # Support both <TargetFramework> (single) and <TargetFrameworks> (multiple)
             # Use tr to collapse multi-line TargetFrameworks into a single line before grepping
-            frameworks=$(tr -d '\n\r' < "$test_proj" | grep -oP '<TargetFramework[s]?>\K[^<]+' | tr ';' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | grep -E '^net(5\.0|6\.0|7\.0|8\.0|9\.0|10\.0)$' || true)
+            frameworks=$(tr -d '\n\r' < "$test_proj" | grep -oP '<TargetFramework[s]?>\K[^<]+' | tr ';' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | grep -E '^(net(5\.0|6\.0|7\.0|8\.0|9\.0|10\.0)|netcoreapp[0-9]+\.[0-9]+)$' || true)
             
             if [ -z "$frameworks" ]; then
-              echo "⊘ Skipping: No compatible .NET 5.0-10.0 target frameworks found"
+              echo "⊘ Skipping: No compatible .NET target frameworks found"
               echo ""
               continue
             fi
