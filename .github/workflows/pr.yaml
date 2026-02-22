@@ -431,7 +431,7 @@ jobs:
               
               echo "Checking module: '$module' - Coverage: ${percent}%"
               
-              if [ "$percent" -lt "$threshold" ]; then
+              if (( percent < threshold )); then
                 echo "  ❌ FAIL: Below ${threshold}% threshold"
                 failed_projects="$failed_projects $module (${percent}%)"
               else
