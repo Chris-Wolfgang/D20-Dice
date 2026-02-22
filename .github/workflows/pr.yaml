@@ -861,7 +861,7 @@ jobs:
           echo "  - .NET 9.0 ✅"
           echo "  - .NET 10.0 ✅"
           echo ""
-          echo ".NET Core 5.0 are tested on Linux and Windows"
+          echo ".NET 5.0 is tested on Linux and Windows"
           echo ""
 
       - name: Summarize pipeline result
