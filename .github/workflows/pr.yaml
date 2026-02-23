@@ -149,6 +149,9 @@ jobs:
       - name: Check for .NET project files
         id: check-projects
         run: |
+          # git ls-files only lists files tracked in the PR branch's git index.
+          # main-branch-checkout is a separate git repository (created by actions/checkout with path:)
+          # and its files are NOT indexed here, so it is inherently excluded.
           if git ls-files '*.csproj' '*.vbproj' '*.fsproj' | grep -q .; then
             echo "has-projects=true" >> $GITHUB_OUTPUT
             echo "✅ Found .NET project files - .NET build and test jobs will run"
@@ -336,7 +339,8 @@ jobs:
 
       - name: Run tests with coverage (.NET Core 3.1 and .NET 5.0 - 10.0)
         run: |
-          # Find all test projects (C#, VB.NET, F#)
+          # Find all test projects (C#, VB.NET, F#).
+          # Scoped to ./tests so main-branch-checkout (at the root) is never traversed.
           test_projects=()
           while IFS= read -r -d '' proj; do
             test_projects+=("$proj")
@@ -717,6 +721,9 @@ jobs:
       - name: Restore and build (exclude .NET Framework-only projects)
         run: |
           echo "Enumerating tracked .NET project files (git ls-files)..."
+          # git ls-files only lists files tracked in the PR branch's git index.
+          # main-branch-checkout is a separate git repository (created by actions/checkout with path:)
+          # and its files are NOT indexed here, so it is inherently excluded.
           
           # Filter out projects that ONLY target .NET Framework 4.x
           # Multi-targeting projects (e.g., net8.0;net48) will be INCLUDED
@@ -802,7 +809,8 @@ jobs:
 
       - name:  Run tests (.NET 6.0 - 10.0 only - ARM64 compatible)
         run: |
-          # Find all test projects (C#, VB.NET, F#)
+          # Find all test projects (C#, VB.NET, F#).
+          # Scoped to ./tests so main-branch-checkout (at the root) is never traversed.
           test_projects=()
           while IFS= read -r -d '' proj; do
             test_projects+=("$proj")
