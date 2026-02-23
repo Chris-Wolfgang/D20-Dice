@@ -6,7 +6,7 @@ namespace Wolfgang.D20;
 /// <summary>
 /// Represents a number of dice, each with the specified number of sides and an optional modifier.
 /// </summary>
-public class Dice : IDice, IEquatable<Dice>
+public class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
 {
 
     /// <summary>
@@ -52,6 +52,7 @@ public class Dice : IDice, IEquatable<Dice>
     public int SideCount { get; }
 
 
+
     /// <summary>
     /// An optional modifier to add to the total of the dice rolled.
     /// </summary>
@@ -61,16 +62,18 @@ public class Dice : IDice, IEquatable<Dice>
     public int Modifier { get; }
 
 
+
     /// <summary>
     /// The minimum value that can be rolled with the specified dice and modifier.
     /// </summary>
-    public int MinValue => DieCount * 1 + Modifier;
+    public int MinValue => (DieCount * 1) + Modifier;
+
 
 
     /// <summary>
     /// The maximum value that can be rolled with the specified dice and modifier.
     /// </summary>
-    public int MaxValue => DieCount * SideCount + Modifier;
+    public int MaxValue => (DieCount * SideCount) + Modifier;
 
 
 
@@ -108,9 +111,10 @@ public class Dice : IDice, IEquatable<Dice>
         {
             0 => value,
             > 0 => $"{value}+{Modifier}",
-            < 0 => $"{value}{Modifier}"
+            < 0 => $"{value}{Modifier}",
         };
     }
+
 
 
     /// <summary>
@@ -164,7 +168,65 @@ public class Dice : IDice, IEquatable<Dice>
         {
             return false;
         }
+
         return Equals((Dice)obj);
+    }
+
+
+
+    /// <summary>
+    /// Determines whether two <see cref="Dice"/> instances are equal.
+    /// </summary>
+    /// <param name="x">The first <see cref="Dice"/> instance.</param>
+    /// <param name="y">The second <see cref="Dice"/> instance.</param>
+    /// <returns>true if the two instances are equal; otherwise, false.</returns>
+    public bool Equals(Dice? x, Dice? y)
+    {
+        if (ReferenceEquals(x, y))
+        {
+            return true;
+        }
+
+        if (x is null)
+        {
+            return false;
+        }
+
+        if (y is null)
+        {
+            return false;
+        }
+
+        if (x.GetType() != y.GetType())
+        {
+            return false;
+        }
+
+        return x.DieCount == y.DieCount && x.SideCount == y.SideCount && x.Modifier == y.Modifier;
+    }
+
+
+
+    /// <summary>
+    /// Generates a hash code for this instance based on its DieCount, SideCount, and Modifier.
+    /// </summary>
+    /// <param name="obj">The <see cref="Dice"/> instance for which to generate the hash code.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="obj"/> is null.</exception>
+    /// <returns>int</returns>
+    public int GetHashCode(Dice obj)
+    {
+        if (obj == null)
+        {
+            throw new ArgumentNullException(nameof(obj));
+        }
+
+        unchecked
+        {
+            var hashCode = obj.DieCount;
+            hashCode = (hashCode * 397) ^ obj.SideCount;
+            hashCode = (hashCode * 397) ^ obj.Modifier;
+            return hashCode;
+        }
     }
 
 
@@ -175,6 +237,9 @@ public class Dice : IDice, IEquatable<Dice>
     /// <returns>int</returns>
     public override int GetHashCode()
     {
+#if NET5_0_OR_GREATER
+        return HashCode.Combine(DieCount, SideCount, Modifier);
+#else
         unchecked
         {
             var hashCode = DieCount;
@@ -182,6 +247,7 @@ public class Dice : IDice, IEquatable<Dice>
             hashCode = (hashCode * 397) ^ Modifier;
             return hashCode;
         }
+#endif
     }
 
 
@@ -221,47 +287,102 @@ public class Dice : IDice, IEquatable<Dice>
             return Result<Dice?>.Failure("Die count value is out of range.");
         }
 
-        var dieCount = 1;
 
-        if (match.Groups["dieCount"].Value != "" && !int.TryParse(match.Groups["dieCount"].Value, out dieCount))
+        // Get the die count and validate it
+        var tryGetDieCountResult = TryGetDieCount(match.Groups["dieCount"].Value);
+        if (tryGetDieCountResult.Failed)
         {
-            return Result<Dice?>.Failure("Die count value is out of range.");
+            return Result<Dice?>.Failure(tryGetDieCountResult.ErrorMessage!);
+        }
+        var dieCount = tryGetDieCountResult.Value;
+
+
+        // Get the side count and validate it
+        var getSideResult = TryGetSideCount(match.Groups["sideCount"].Value);
+        if (getSideResult.Failed)
+        {
+            return Result<Dice?>.Failure(getSideResult.ErrorMessage!);
+        }
+        var sideCount = getSideResult.Value;
+
+
+        // Get the modifier and validate it
+        var getModifierResult = TryGetModifierTotal(match.Groups["modifier"].Captures);
+        if (getModifierResult.Failed)
+        {
+            return Result<Dice?>.Failure(getModifierResult.ErrorMessage!);
+        }
+        var modifier = getModifierResult.Value;
+
+        return Result<Dice?>.Success(new Dice(dieCount, sideCount, modifier));
+    }
+
+
+
+    private static Result<int> TryGetDieCount(string value)
+    {
+
+        // if not specified assume 1 i.e. "d6" is the same as "1d6"
+        if (string.IsNullOrEmpty(value))
+        {
+            return Result<int>.Success(1);
         }
 
-        if (!int.TryParse(match.Groups["sideCount"].Value, out var sideCount))
+        if (!int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var dieCount))
         {
-            return Result<Dice?>.Failure("Side count value is out of range.");
+            return Result<int>.Failure("Die count value is out of range.");
         }
 
-        var modifier = 0;
-        foreach (Capture capture in match.Groups["modifier"].Captures)
+        if (dieCount < 1)
         {
-            if (!int.TryParse(capture.Value, out var part))
+            return Result<int>.Failure("Die count must be greater than 0.");
+        }
+
+        return Result<int>.Success(dieCount);
+    }
+
+
+
+    private static Result<int> TryGetSideCount(string value)
+    {
+        if (!int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var sideCount))
+        {
+            return Result<int>.Failure("Side count value is out of range.");
+        }
+
+        if (sideCount < 2)
+        {
+            return Result<int>.Failure("Side count must be greater than 1.");
+        }
+
+        return Result<int>.Success(sideCount);
+    }
+
+
+
+    private static Result<int> TryGetModifierTotal(CaptureCollection modifiers)
+    {
+        var total = 0;
+
+        foreach (Capture modifier in modifiers)
+        {
+            if (!int.TryParse(modifier.Value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var modifierValue))
             {
-                return Result<Dice?>.Failure("Modifier value is out of range.");
+                return Result<int>.Failure("Modifier value is out of range.");
             }
 
             try
             {
                 checked
-                { modifier += part; }
+                {
+                    total += modifierValue;
+                }
             }
             catch (OverflowException)
             {
-                return Result<Dice?>.Failure("Modifier value is out of range.");
+                return Result<int>.Failure("Modifier value is out of range.");
             }
         }
-
-        if (dieCount < 1)
-        {
-            return Result<Dice?>.Failure("Die count must be greater than 0.");
-        }
-
-        if (sideCount < 2)
-        {
-            return Result<Dice?>.Failure("Side count must be greater than 1.");
-        }
-
-        return Result<Dice?>.Success(new Dice(dieCount, sideCount, modifier));
+        return Result<int>.Success(total);
     }
 }
