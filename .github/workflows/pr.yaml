@@ -562,10 +562,14 @@ jobs:
             10.0.x
 
       - name: Restore dependencies
-        run: dotnet restore
+        # Explicitly reference the PR branch solution file to ensure only PR branch
+        # source is restored, never accidentally pulling from main-branch-checkout.
+        run: dotnet restore Wolfgang.D20.Dice.sln
 
       - name: Build solution
-        run: dotnet build --no-restore --configuration Release
+        # Explicitly reference the PR branch solution file to ensure only PR branch
+        # source is built, never accidentally pulling from main-branch-checkout.
+        run: dotnet build Wolfgang.D20.Dice.sln --no-restore --configuration Release
 
       - name: Run all .NET tests (.NET 3.1 and 5.0-10.0 and Framework 4.6.2-4.8.1)
         shell: pwsh
@@ -958,13 +962,16 @@ jobs:
       - name: Run DevSkim security scan
         continue-on-error: true
         run: |
+          # Scan only PR branch source code.
+          # main-branch-checkout is excluded via ignore-globs - it holds trusted config
+          # files copied from main and must not be scanned as PR code.
           devskim analyze \
             --source-code . \
             --file-format text \
             --output-file devskim-results.txt \
             -E \
             --ignore-rule-ids DS176209 \
-            --ignore-globs "**/api/**,**/CoverageReport/**,**/TestResults/**"
+            --ignore-globs "**/api/**,**/CoverageReport/**,**/TestResults/**,**/main-branch-checkout/**"
 
       - name: Display security scan results
         if: always()
