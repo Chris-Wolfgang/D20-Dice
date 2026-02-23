@@ -249,10 +249,11 @@ jobs:
 
       - name: Restore and build (exclude .NET Framework-only projects)
         run: |
-          echo "Finding .NET project files in repository (via find command)..."
+          echo "Finding .NET project files in repository (via find command, excluding main-branch-checkout)..."
           
           # Filter out projects that ONLY target .NET Framework 4.x
           # Multi-targeting projects (e.g., net8.0;net48) will be INCLUDED
+          # main-branch-checkout is explicitly excluded to ensure only PR branch source is built
           projects=()
           project_found=false
           
@@ -267,7 +268,7 @@ jobs:
             else
               echo "⊘ Excluding: $proj (Framework-only, incompatible with Linux)"
             fi
-          done < <(find . -type f \( -name "*.csproj" -o -name "*.vbproj" -o -name "*.fsproj" \) -print0)
+          done < <(find . -not -path "./main-branch-checkout/*" -type f \( -name "*.csproj" -o -name "*.vbproj" -o -name "*.fsproj" \) -print0)
           
           if [ "$project_found" = false ]; then
             echo "❌ No .NET projects found."
@@ -509,8 +510,8 @@ jobs:
           
           # Ensure origin uses an authenticated URL so fetch works on private repositories
           git remote set-url origin "https://x-access-token:$env:GITHUB_TOKEN@github.com/$env:GITHUB_REPOSITORY.git"
-          # Create local ref from the already-checked-out main branch (no unauthenticated network fetch needed)
-          git fetch "$env:RUNNER_TEMP/main-branch-checkout" HEAD:main-branch
+          # Fetch the main branch from origin using the authenticated URL set above
+          git fetch origin main HEAD:main-branch
           
           # List of configuration files that should come from trusted main branch
           $configFiles = @(
@@ -658,7 +659,9 @@ jobs:
         run: |
           echo "Fetching configuration files from main branch to prevent malicious overrides..."
           
-          # Fetch the main branch from the local main-branch checkout (no network or token required)
+          # Ensure origin uses an authenticated URL so fetch works on private repositories
+          git remote set-url origin "$REPO_URL"
+          # Fetch the main branch from origin using the authenticated URL set above
           git fetch origin main HEAD:main-branch
           
           # List of configuration files that should come from trusted main branch
