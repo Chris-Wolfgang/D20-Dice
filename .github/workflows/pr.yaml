@@ -149,6 +149,9 @@ jobs:
       - name: Check for .NET project files
         id: check-projects
         run: |
+          # git ls-files only lists files tracked in the PR branch's git index.
+          # main-branch-checkout is a separate git repository (created by actions/checkout with path:)
+          # and its files are NOT indexed here, so it is inherently excluded.
           if git ls-files '*.csproj' '*.vbproj' '*.fsproj' | grep -q .; then
             echo "has-projects=true" >> $GITHUB_OUTPUT
             echo "✅ Found .NET project files - .NET build and test jobs will run"
@@ -336,7 +339,8 @@ jobs:
 
       - name: Run tests with coverage (.NET Core 3.1 and .NET 5.0 - 10.0)
         run: |
-          # Find all test projects (C#, VB.NET, F#)
+          # Find all test projects (C#, VB.NET, F#).
+          # Scoped to ./tests so main-branch-checkout (at the root) is never traversed.
           test_projects=()
           while IFS= read -r -d '' proj; do
             test_projects+=("$proj")
@@ -562,10 +566,14 @@ jobs:
             10.0.x
 
       - name: Restore dependencies
-        run: dotnet restore
+        # Explicitly reference the PR branch solution file to ensure only PR branch
+        # source is restored, never accidentally pulling from main-branch-checkout.
+        run: dotnet restore Wolfgang.D20.Dice.sln
 
       - name: Build solution
-        run: dotnet build --no-restore --configuration Release
+        # Explicitly reference the PR branch solution file to ensure only PR branch
+        # source is built, never accidentally pulling from main-branch-checkout.
+        run: dotnet build Wolfgang.D20.Dice.sln --no-restore --configuration Release
 
       - name: Run all .NET tests (.NET 3.1 and 5.0-10.0 and Framework 4.6.2-4.8.1)
         shell: pwsh
@@ -713,6 +721,9 @@ jobs:
       - name: Restore and build (exclude .NET Framework-only projects)
         run: |
           echo "Enumerating tracked .NET project files (git ls-files)..."
+          # git ls-files only lists files tracked in the PR branch's git index.
+          # main-branch-checkout is a separate git repository (created by actions/checkout with path:)
+          # and its files are NOT indexed here, so it is inherently excluded.
           
           # Filter out projects that ONLY target .NET Framework 4.x
           # Multi-targeting projects (e.g., net8.0;net48) will be INCLUDED
@@ -798,7 +809,8 @@ jobs:
 
       - name:  Run tests (.NET 6.0 - 10.0 only - ARM64 compatible)
         run: |
-          # Find all test projects (C#, VB.NET, F#)
+          # Find all test projects (C#, VB.NET, F#).
+          # Scoped to ./tests so main-branch-checkout (at the root) is never traversed.
           test_projects=()
           while IFS= read -r -d '' proj; do
             test_projects+=("$proj")
@@ -958,13 +970,16 @@ jobs:
       - name: Run DevSkim security scan
         continue-on-error: true
         run: |
+          # Scan only PR branch source code.
+          # main-branch-checkout is excluded via ignore-globs - it holds trusted config
+          # files copied from main and must not be scanned as PR code.
           devskim analyze \
             --source-code . \
             --file-format text \
             --output-file devskim-results.txt \
             -E \
             --ignore-rule-ids DS176209 \
-            --ignore-globs "**/api/**,**/CoverageReport/**,**/TestResults/**"
+            --ignore-globs "**/api/**,**/CoverageReport/**,**/TestResults/**,**/main-branch-checkout/**"
 
       - name: Display security scan results
         if: always()
