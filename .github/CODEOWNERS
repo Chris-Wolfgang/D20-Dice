@@ -15,3 +15,4 @@
 
 # Example: Assign an owner to the .github folder to protect the CODEOWNERS file
 /.github/ @Chris-Wolfgang
+

@@ -1,4 +1,4 @@
-﻿namespace Wolfgang.D20;
+namespace Wolfgang.D20;
 
 /// <summary>
 /// Represents a number of dice, each with the name specified number of sides and optional modifier.

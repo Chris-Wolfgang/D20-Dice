@@ -372,11 +372,6 @@ MSBuild_Logs/
 # AWS SAM Build and Temporary Artifacts folder
 .aws-sam
 
-# DocFX build output
-docfx_project/_site/
-docfx_project/api/*.yml
-docfx_project/obj/
-
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
 
@@ -421,3 +416,19 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Test results and coverage
+TestResults/
+CoverageReport/
+
+# Release workflow temporary directories
+package-smoke-test/
+nuget-packages/
+
+# DocFX generated files
+docfx_project/_site/
+docfx_project/obj/
+
+# Generated documentation (built by CI/CD)
+docs/*
+!docs/.gitkeep
