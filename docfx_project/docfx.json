@@ -46,6 +46,7 @@
     "globalMetadata": {
       "_appName": "Wolfgang.D20-Dice",
       "_appTitle": "Wolfgang.D20-Dice Documentation",
+      "_appLogoPath": "logo.svg",
       "_enableSearch": true,
       "_appFooter": "Made with DocFX",
       "_disableSidebar": false,
