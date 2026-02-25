@@ -37,7 +37,7 @@
       }
     ],
     // Note: "../docs" is used as the DocFX output directory for GitHub Actions deployment and is git-ignored for local builds.
-    "output": "../docs",
+    "output": "_site",
     "template": [
       "default",
       "modern",
@@ -46,6 +46,7 @@
     "globalMetadata": {
       "_appName": "Wolfgang.D20-Dice",
       "_appTitle": "Wolfgang.D20-Dice Documentation",
+      "_appLogoPath": "logo.svg",
       "_enableSearch": true,
       "_appFooter": "Made with DocFX",
       "_disableSidebar": false,
