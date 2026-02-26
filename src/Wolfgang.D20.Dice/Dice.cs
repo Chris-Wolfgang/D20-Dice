@@ -282,12 +282,6 @@ public class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
             return Result<Dice?>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
         }
 
-        if (match.Groups["dieCount"].Value.Length > 9)
-        {
-            return Result<Dice?>.Failure("Die count value is out of range.");
-        }
-
-
         // Get the die count and validate it
         var tryGetDieCountResult = TryGetDieCount(match.Groups["dieCount"].Value);
         if (tryGetDieCountResult.Failed)
