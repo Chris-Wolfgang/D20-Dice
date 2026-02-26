@@ -464,7 +464,8 @@ public class DiceTests
     [InlineData("d10", 1, 10, 0)]
     [InlineData("d10+3", 1, 10, 3)]
     [InlineData("d6-1", 1, 6, -1)]
-    public void TryParse_when_notation_is_valid_returns_new_Dice(string notation, int dieCount, int sideCount, int modifier)
+    public void TryParse_when_notation_is_valid_returns_new_Dice(string notation, int dieCount, int sideCount,
+        int modifier)
     {
         var result = Dice.TryParse(notation);
 
@@ -480,6 +481,7 @@ public class DiceTests
     [Theory]
     [InlineData("-1d6")] // negative die count
     [InlineData("1d-1")]
+    [InlineData("-2147483649d6")]
     public void TryParse_when_dice_notation_is_invalid_fails_with_error_message(string? notation)
     {
         var result = Dice.TryParse(notation);
@@ -529,4 +531,150 @@ public class DiceTests
 
 
 
+    [Theory]
+    [InlineData("2147483648d6")]
+    public void TryParse_when_die_count_exceeds_int_range_returns_failure(string notation)
+    {
+        var result = Dice.TryParse(notation);
+
+        Assert.True(result.Failed);
+        Assert.Equal("Die count value is out of range.", result.ErrorMessage);
+    }
+
+
+
+    [Theory]
+    [InlineData("1d9999999999")]
+    public void TryParse_when_side_count_exceeds_int_range_returns_failure(string notation)
+    {
+        var result = Dice.TryParse(notation);
+
+        Assert.True(result.Failed);
+        Assert.Equal("Side count value is out of range.", result.ErrorMessage);
+    }
+
+
+
+    [Theory]
+    [InlineData("1d6+12345678901234567890")]
+    [InlineData("1d6-12345678901234567890")]
+    public void TryParse_when_modifier_value_is_out_of_int_range_returns_failure(string notation)
+    {
+        var result = Dice.TryParse(notation);
+
+        Assert.True(result.Failed);
+        Assert.Equal("Modifier value is out of range.", result.ErrorMessage);
+    }
+
+
+
+    [Fact]
+    public void TryParse_when_modifier_total_overflows_returns_failure()
+    {
+        var result = Dice.TryParse("1d6+2147483647+1");
+
+        Assert.True(result.Failed);
+        Assert.Equal("Modifier value is out of range.", result.ErrorMessage);
+    }
+
+
+
+    [Fact]
+    public void EqualsDiceComparer_BothNull_ReturnsTrue()
+    {
+        var comparer = new Dice();
+
+        var result = comparer.Equals(null!, null!);
+
+        Assert.True(result);
+    }
+
+
+
+    [Fact]
+    public void EqualsDiceComparer_OneNull_ReturnsFalse()
+    {
+        var comparer = new Dice();
+        var dice = new Dice(1, 6, 0);
+
+        Assert.False(comparer.Equals(dice, null!));
+        Assert.False(comparer.Equals(null!, dice));
+    }
+
+
+
+    [Fact]
+    public void EqualsDiceComparer_SameValues_ReturnsTrue()
+    {
+        var comparer = new Dice();
+        var left = new Dice(2, 8, 1);
+        var right = new Dice(2, 8, 1);
+
+        Assert.True(comparer.Equals(left, right));
+    }
+
+
+
+    [Fact]
+    public void EqualsDiceComparer_DifferentValues_ReturnsFalse()
+    {
+        var comparer = new Dice();
+        var left = new Dice(2, 8, 1);
+        var right = new Dice(2, 8, 2);
+
+        Assert.False(comparer.Equals(left, right));
+    }
+
+
+
+    [Fact]
+    public void EqualsDiceComparer_DifferentTypes_ReturnsFalse()
+    {
+        var comparer = new Dice();
+        var left = new Dice(1, 6, 0);
+        var right = new DerivedDice();
+
+        Assert.False(comparer.Equals(left, right));
+    }
+
+    [Fact]
+    public void GetHashCodeDiceComparer_Null_ThrowsArgumentNullException()
+    {
+        var comparer = new Dice();
+
+        Assert.Throws<ArgumentNullException>(() => comparer.GetHashCode(null!));
+    }
+
+    [Fact]
+    public void GetHashCodeDiceComparer_SameValues_ReturnsSameHashCode()
+    {
+        var comparer = new Dice();
+        var left = new Dice(2, 6, 3);
+        var right = new Dice(2, 6, 3);
+
+        var leftHash = comparer.GetHashCode(left);
+        var rightHash = comparer.GetHashCode(right);
+
+        Assert.Equal(leftHash, rightHash);
+    }
+
+    [Fact]
+    public void GetHashCodeDiceComparer_DifferentValues_ReturnsDifferentHashCode()
+    {
+        var comparer = new Dice();
+        var left = new Dice(2, 6, 3);
+        var right = new Dice(1, 8, 4);
+
+        var leftHash = comparer.GetHashCode(left);
+        var rightHash = comparer.GetHashCode(right);
+
+        Assert.NotEqual(leftHash, rightHash);
+    }
+
+    private sealed class DerivedDice : Dice
+    {
+        public DerivedDice() : base(1, 6, 0)
+        {
+        }
+    }
 }
