@@ -101,10 +101,10 @@ jobs:
         # Produces versions.json consumed by the DocFX version-switcher dropdown.
         # Site layout:
         #   /<repo>/               ← latest docs (deployed to root)
-        #   /<repo>/latest/        ← latest docs (alias for convenience)
-        #   /<repo>/v1.2.3/        ← versioned docs (sibling to root)
+        #   /<repo>/versions/latest/  ← latest docs (alias under versions/)
+        #   /<repo>/versions/v1.2.3/  ← versioned docs (under versions/)
         # versions.json format expected by the dropdown:
-        #   [{ "version": "latest", "url": "/<repo>/" }, { "version": "v1.2.3", "url": "/<repo>/v1.2.3/" }]
+        #   [{ "version": "latest", "url": "/<repo>/versions/latest/" }, { "version": "v1.2.3", "url": "/<repo>/versions/v1.2.3/" }]
         # URLs must include the repo path segment because this is a GitHub Pages project site
         # (https://<owner>.github.io/<repo>/), not a root user/org site.
         env:
@@ -141,10 +141,10 @@ jobs:
           $repoName = ($env:GITHUB_REPOSITORY -split '/')[-1]
           $base = if ($repoName) { "/$repoName/" } else { "/" }
 
-          # "latest" always points to the site root; each version points to its own folder.
-          [array]$versions = @([PSCustomObject]@{ version = 'latest'; url = $base })
+          # "latest" points to the versions/latest/ folder; each version points to versions/<tag>/.
+          [array]$versions = @([PSCustomObject]@{ version = 'latest'; url = "${base}versions/latest/" })
           foreach ($t in $orderedTags) {
-            $versions += [PSCustomObject]@{ version = $t; url = "$base$t/" }
+            $versions += [PSCustomObject]@{ version = $t; url = "${base}versions/$t/" }
           }
 
           ConvertTo-Json -InputObject $versions -Depth 3 |
@@ -153,11 +153,11 @@ jobs:
 
       - name: Clean up stale root files from gh-pages
         # Before deploying the latest docs to the site root, remove any pre-existing
-        # root-level files and folders from the gh-pages branch (except version folders
-        # such as v1.0.0/, the latest/ alias, CNAME, and .nojekyll) so that stale DocFX
-        # assets from a previous build do not linger on the live site.
-        # Version folders (v*) and the latest/ folder are preserved so that older docs
-        # remain accessible while the root is refreshed with the new build.
+        # root-level files and folders from the gh-pages branch (except the versions/
+        # directory, CNAME, and .nojekyll) so that stale DocFX assets from a previous
+        # build do not linger on the live site.
+        # The versions/ folder is preserved so that all versioned docs remain accessible
+        # while the root is refreshed with the new build.
         if: inputs.deploy_to_pages != false && inputs.deploy_as_latest != false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -190,14 +190,12 @@ jobs:
           #   .git         – Git metadata (worktree pointer file)
           #   CNAME        – Custom domain config (if present)
           #   .nojekyll    – Tells GitHub Pages not to run Jekyll
-          #   v[0-9]*      – Versioned docs folders (e.g. v1.0.0/)
-          #   latest/      – Stable alias folder for the latest version
+          #   versions/    – All versioned docs (v1.0.0/, latest/, etc.)
           Get-ChildItem -Path $WORK_DIR -Force | Where-Object {
             $_.Name -ne '.git' -and
             $_.Name -ne 'CNAME' -and
             $_.Name -ne '.nojekyll' -and
-            $_.Name -notmatch '^v[0-9]' -and
-            $_.Name -ne 'latest'
+            $_.Name -ne 'versions'
           } | Remove-Item -Recurse -Force
 
           git -C "$WORK_DIR" add -A
@@ -240,21 +238,21 @@ jobs:
           Add-Content -Path $env:GITHUB_OUTPUT -Value "dir=$sanitized"
 
       - name: Deploy versioned docs to GitHub Pages
-        # Publishes this build into its own versioned subfolder on gh-pages, e.g. /v1.2.3/.
+        # Publishes this build into versions/<version>/ on gh-pages, e.g. versions/v1.2.3/.
         # keep_files: true preserves all other version folders already present in gh-pages.
         if: inputs.deploy_to_pages != false
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docfx_project/_site
-          destination_dir: ${{ steps.dest.outputs.dir }}
+          destination_dir: versions/${{ steps.dest.outputs.dir }}
           keep_files: true
           force_orphan: false
 
       - name: Deploy latest docs to GitHub Pages root
         # Publishes the latest docs to the site root ('/') so that visiting
         # https://<owner>.github.io/<repo>/ always shows the latest version.
-        # keep_files: true preserves all existing version folders as siblings.
+        # keep_files: true preserves the versions/ folder and all its sub-folders.
         # Skipped when deploy_as_latest is false (e.g. when rebuilding an older version).
         if: inputs.deploy_to_pages != false && inputs.deploy_as_latest != false
         uses: peaceiris/actions-gh-pages@v4
@@ -264,15 +262,15 @@ jobs:
           keep_files: true
           force_orphan: false
 
-      - name: Deploy latest docs to /latest/ folder
-        # Also publishes to /latest/ as a stable, bookmarkable URL alias for the
-        # latest version.  The versions.json 'latest' entry points to '/' (root).
+      - name: Deploy latest docs to versions/latest/ folder
+        # Also publishes to versions/latest/ as a stable, bookmarkable URL alias for the
+        # latest version.  The versions.json 'latest' entry points to versions/latest/.
         # Skipped when deploy_as_latest is false (e.g. when rebuilding an older version).
         if: inputs.deploy_to_pages != false && inputs.deploy_as_latest != false
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docfx_project/_site
-          destination_dir: latest
+          destination_dir: versions/latest
           keep_files: true
           force_orphan: false
