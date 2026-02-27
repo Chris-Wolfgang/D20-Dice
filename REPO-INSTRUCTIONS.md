@@ -237,3 +237,35 @@ If you're using DocFX for documentation:
 1. Review and customize the generated table of contents in `docfx_project/docs/toc.yml` as needed (the setup scripts already point this to your repository)
 2. Customize the rest of the documentation content in `docfx_project/`
 
+### Multi-Version DocFX Documentation
+
+This repository is configured for versioned documentation using DocFX. The setup consists of:
+
+#### Key Files
+| File | Purpose |
+|------|---------|
+| `docfx.json` | **Root-level manifest** listing all documentation versions via the `docsets` array. Single source of truth for versioned builds. |
+| `docfx_project/docfx.json` | Per-build DocFX configuration used by CI workflows to build docs. Uses `default` + `modern` templates with dark mode enabled (`colorMode: dark`). |
+| `logo.svg` | Repository logo at the root; also present in `docfx_project/`. |
+
+#### How Versioning Works
+- `docfx.json` at the repo root contains a `docsets` array that lists every released version and `latest`.
+- The `.github/workflows/build-all-versions.yaml` workflow reads this array automatically – no manual version list updates needed.
+- Each release (version tag `v*.*.*`) triggers `.github/workflows/docfx.yaml`, which builds docs and deploys them to the `gh-pages` branch under `versions/<tag>/`.
+- After every versioned deploy, a `versions.json` is generated and written to `gh-pages`, powering the version-switcher dropdown.
+- `versions/latest/` always mirrors the most recent stable release; the site root (`/`) also serves the latest docs.
+
+#### Adding a New Version
+When you publish a new release (e.g. `v1.0.0`):
+1. Add an entry to the `docsets` array in the root `docfx.json`:
+   ```json
+   { "version": "v1.0.0", "src": "docfx_project" }
+   ```
+2. Push a version tag – the `docfx.yaml` workflow automatically builds and publishes the docs.
+3. To backfill all historical versions at once, run the **Build All Versioned Docs** workflow manually from the Actions tab.
+
+#### Dark Theme
+The DocFX modern template is configured to default to dark mode. This is controlled by:
+- `"colorMode": "dark"` in `docfx_project/docfx.json` → `build.globalMetadata`
+- `"_enableDarkMode": true` enables the light/dark toggle so visitors can switch themes
+

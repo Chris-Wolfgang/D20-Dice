@@ -48,13 +48,13 @@ jobs:
           New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 
           # Versions to build – each must have a matching git tag.
-          # NOTE: This list is intentionally hard-coded for a one-time / historical
-          # backfill of documentation for specific tagged releases.
-          # New versions are built and published by the regular docfx.yaml
-          # workflow that runs on releases, so this list is not expected to
-          # be updated as new versions are created.
-          # 'latest' is built from the most recent stable v*.*.* tag below.
-          $versions = @('v0.1.0', 'v0.1.1', 'v0.1.2', 'v0.2.0', 'v0.3.0')
+          # The version list is read from the root docfx.json 'docsets' array so
+          # there is a single source of truth.  Only entries with a version string
+          # that looks like a v*.*.* tag are included; 'latest' is handled separately.
+          $rootConfig = Get-Content -Raw 'docfx.json' | ConvertFrom-Json
+          $versions = $rootConfig.docsets |
+            Where-Object { $_.version -match '^v\d+\.\d+\.\d+' } |
+            Select-Object -ExpandProperty version
 
           foreach ($version in $versions) {
             Write-Host "========================================" -ForegroundColor Cyan

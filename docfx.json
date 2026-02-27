@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+  "docsets": [
+    { "version": "latest", "src": "docfx_project" },
+    { "version": "v0.3.0", "src": "docfx_project" },
+    { "version": "v0.2.0", "src": "docfx_project" },
+    { "version": "v0.1.2", "src": "docfx_project" },
+    { "version": "v0.1.1", "src": "docfx_project" },
+    { "version": "v0.1.0", "src": "docfx_project" }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "src": "docfx_project",
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "logo.svg",
+          "docfx_project/images/**"
+        ]
+      }
+    ],
+    "output": "docfx_project/_site",
+    "template": [
+      "default"
+    ],
+    "globalMetadata": {
+      "_appName": "Wolfgang.D20-Dice",
+      "_appTitle": "Wolfgang.D20-Dice Documentation",
+      "_appLogoPath": "logo.svg",
+      "_enableSearch": true,
+      "_appFooter": "Made with DocFX",
+      "colorMode": "dark"
+    }
+  }
+}
