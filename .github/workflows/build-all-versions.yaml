@@ -93,10 +93,10 @@ jobs:
             foreach ($f in @('Directory.Build.props', '.globalconfig', 'BannedSymbols.txt')) {
               if ((Test-Path $f) -and -not (Test-Path "$workDir/$f")) {
                 Copy-Item $f "$workDir/$f" -Force -ErrorAction Stop
-              # Attempt dotnet restore + build; failures are non-fatal because
-              # DocFX can still extract metadata from source files.
-              $slnFile = Get-ChildItem -Filter '*.sln' -ErrorAction SilentlyContinue |
-                         Select-Object -First 1
+              }
+            }
+            # Attempt dotnet restore + build; failures are non-fatal because
+            # DocFX can still extract metadata from source files.
               if ($slnFile) {
                 Write-Host "Restoring $($slnFile.Name)..."
                 dotnet restore $slnFile.FullName 2>&1 | Write-Host
