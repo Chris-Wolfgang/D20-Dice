@@ -1,8 +1,9 @@
 name: Build All Versioned Docs
 
 # One-shot (or on-demand) workflow that builds DocFX documentation for every
-# specified version from its matching git tag and deploys the output to
-# gh-pages under versions/<version>/.
+# v*.*.* git tag and deploys the output to gh-pages under versions/<version>/.
+# The version list is discovered automatically from git tags at runtime – no
+# manual updates are required when new releases are published.
 #
 # Versions without a docfx_project at their tag (e.g. v0.1.x) use the
 # current docfx_project configuration so that the documentation structure
@@ -47,14 +48,26 @@ jobs:
           $outDir = Join-Path $env:RUNNER_TEMP 'all_version_docs'
           New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 
-          # Versions to build – each must have a matching git tag.
-          # The version list is read from the root docfx.json 'docsets' array so
-          # there is a single source of truth.  Only entries with a version string
-          # that looks like a v*.*.* tag are included; 'latest' is handled separately.
-          $rootConfig = Get-Content -Raw 'docfx.json' | ConvertFrom-Json
-          $versions = $rootConfig.docsets |
-            Where-Object { $_.version -match '^v\d+\.\d+\.\d+' } |
-            Select-Object -ExpandProperty version
+          # Versions to build – discovered automatically from all v*.*.* git tags so
+          # no manual list updates are needed when new releases are published.
+          # 'latest' is handled separately below.
+          $semverRe = '^v(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>[0-9A-Za-z.-]+))?$'
+          $versions = git tag -l 'v*' |
+            Where-Object { $_ -match $semverRe } |
+            ForEach-Object {
+              $_ -match $semverRe | Out-Null
+              $stable = if ([string]::IsNullOrEmpty($Matches['prerelease'])) { 1 } else { 0 }
+              [PSCustomObject]@{
+                Tag    = $_
+                Major  = [int]$Matches['major']
+                Minor  = [int]$Matches['minor']
+                Patch  = [int]$Matches['patch']
+                Stable = $stable
+              }
+            } |
+            Sort-Object -Property Major, Minor, Patch, Stable -Descending |
+            Select-Object -ExpandProperty Tag
+          Write-Host "Discovered $($versions.Count) version tag(s): $($versions -join ', ')"
 
           foreach ($version in $versions) {
             Write-Host "========================================" -ForegroundColor Cyan
