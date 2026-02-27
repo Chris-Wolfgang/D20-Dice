@@ -48,12 +48,13 @@ jobs:
           New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 
           # Versions to build – each must have a matching git tag.
-          # 'latest' is built from the current HEAD at the end of this step.
+          # NOTE: This list is intentionally hard-coded for a one-time / historical
+          # backfill of documentation for specific tagged releases.
+          # New versions are built and published by the regular docfx.yaml
+          # workflow that runs on releases, so this list is not expected to
+          # be updated as new versions are created.
+          # 'latest' is built from the most recent stable v*.*.* tag below.
           $versions = @('v0.1.0', 'v0.1.1', 'v0.1.2', 'v0.2.0', 'v0.3.0')
-
-          # Remember the original commit so we can restore docfx_project files
-          # that are absent from older tags.
-          $originalSHA = git rev-parse HEAD
 
           foreach ($version in $versions) {
             Write-Host "========================================" -ForegroundColor Cyan
@@ -63,8 +64,11 @@ jobs:
             $workDir = Join-Path $env:RUNNER_TEMP "workdir-$version"
 
             # Clean up any leftover worktree from a previous run
-            git worktree remove $workDir --force 2>&1 | Out-Null
-            if (Test-Path $workDir) { Remove-Item $workDir -Recurse -Force }
+            $removeOutput = git worktree remove $workDir --force 2>&1
+            if ($LASTEXITCODE -ne 0 -and (Test-Path $workDir)) {
+              Write-Warning "⚠️  Could not remove worktree for $version via git; attempting manual cleanup."
+              Remove-Item $workDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
 
             # Create a worktree checked out at the version tag
             git worktree add $workDir $version
@@ -82,16 +86,13 @@ jobs:
               Copy-Item 'docfx_project' "$workDir/docfx_project" -Recurse -Force
             }
 
-            # Also copy build-support files that were added in later versions
-            # to help older code compile cleanly.
+            # Copy build-support files that were added in later versions to help
+            # older code compile cleanly.  These files contain global settings
+            # (analyzer rules, banned symbols) that are version-agnostic; copying
+            # them into older worktrees is safe and avoids restore/build warnings.
             foreach ($f in @('Directory.Build.props', '.globalconfig', 'BannedSymbols.txt')) {
               if ((Test-Path $f) -and -not (Test-Path "$workDir/$f")) {
-                Copy-Item $f "$workDir/$f" -Force
-              }
-            }
-
-            Push-Location $workDir
-            try {
+                Copy-Item $f "$workDir/$f" -Force -ErrorAction Stop
               # Attempt dotnet restore + build; failures are non-fatal because
               # DocFX can still extract metadata from source files.
               $slnFile = Get-ChildItem -Filter '*.sln' -ErrorAction SilentlyContinue |
@@ -112,36 +113,120 @@ jobs:
               if (Test-Path 'docfx_project/_site') {
                 $dest = Join-Path $outDir $version
                 New-Item -ItemType Directory -Force -Path $dest | Out-Null
-                Copy-Item 'docfx_project/_site/*' $dest -Recurse -Force
+                Copy-Item 'docfx_project/_site/*' $dest -Recurse -Force -ErrorAction Stop
                 Write-Host "✅ Docs built for $version" -ForegroundColor Green
               } else {
                 Write-Warning "⚠️  No _site output produced for $version."
               }
             } finally {
               Pop-Location
-              git worktree remove $workDir --force 2>&1 | Out-Null
+              $removeOutput = git worktree remove $workDir --force 2>&1
+              if ($LASTEXITCODE -ne 0) {
+                Write-Warning "⚠️  git worktree remove failed for $version (exit $LASTEXITCODE): $removeOutput"
+              }
             }
           }
 
-          # Build 'latest' from the current HEAD (the branch this workflow runs on)
+          # Build 'latest' from the most recent stable v*.*.* tag so that the
+          # 'latest' docs always match the last published release rather than an
+          # arbitrary HEAD commit.
           Write-Host "========================================" -ForegroundColor Cyan
           Write-Host "Building docs for latest" -ForegroundColor Cyan
           Write-Host "========================================" -ForegroundColor Cyan
 
-          dotnet restore
-          dotnet build --configuration Release --no-restore
+          $semverRe = '^v(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)$'
+          $latestTag = git tag -l 'v*' |
+            Where-Object { $_ -match $semverRe } |
+            ForEach-Object {
+              $_ -match $semverRe | Out-Null
+              [PSCustomObject]@{
+                Tag   = $_
+                Major = [int]$Matches['major']
+                Minor = [int]$Matches['minor']
+                Patch = [int]$Matches['patch']
+              }
+            } |
+            Sort-Object -Property Major, Minor, Patch -Descending |
+            Select-Object -First 1 -ExpandProperty Tag
 
-          docfx metadata docfx_project/docfx.json
-          docfx build docfx_project/docfx.json
-
-          if (Test-Path 'docfx_project/_site') {
-            $dest = Join-Path $outDir 'latest'
-            New-Item -ItemType Directory -Force -Path $dest | Out-Null
-            Copy-Item 'docfx_project/_site/*' $dest -Recurse -Force
-            Write-Host "✅ Docs built for latest" -ForegroundColor Green
-          } else {
-            Write-Error "❌ No _site output for latest build."
+          if (-not $latestTag) {
+            Write-Error "❌ No stable v*.*.* tag found – cannot build 'latest'."
             exit 1
+          }
+
+          Write-Host "Latest stable tag: $latestTag" -ForegroundColor Cyan
+
+          $latestWorkDir = Join-Path $env:RUNNER_TEMP 'workdir-latest'
+          $removeOutput = git worktree remove $latestWorkDir --force 2>&1
+          if ($LASTEXITCODE -ne 0 -and (Test-Path $latestWorkDir)) {
+            Remove-Item $latestWorkDir -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
+          git worktree add $latestWorkDir $latestTag
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "❌ Failed to create worktree for $latestTag (latest)."
+            exit 1
+          }
+
+          # Overlay current docfx_project and build-support files (same as versioned builds)
+          if (Test-Path 'docfx_project') {
+            if (Test-Path "$latestWorkDir/docfx_project") {
+              Remove-Item "$latestWorkDir/docfx_project" -Recurse -Force
+            }
+            Copy-Item 'docfx_project' "$latestWorkDir/docfx_project" -Recurse -Force
+          }
+          foreach ($f in @('Directory.Build.props', '.globalconfig', 'BannedSymbols.txt')) {
+            if ((Test-Path $f) -and -not (Test-Path "$latestWorkDir/$f")) {
+              Copy-Item $f "$latestWorkDir/$f" -Force -ErrorAction Stop
+            }
+          }
+
+          Push-Location $latestWorkDir
+          try {
+            $slnFile = Get-ChildItem -Filter '*.sln' -ErrorAction SilentlyContinue |
+                       Select-Object -First 1
+            if ($slnFile) {
+              Write-Host "Restoring $($slnFile.Name)..."
+              dotnet restore $slnFile.FullName
+              if ($LASTEXITCODE -ne 0) {
+                Write-Warning "⚠️  dotnet restore failed for latest – continuing to docfx."
+              }
+              Write-Host "Building $($slnFile.Name)..."
+              dotnet build $slnFile.FullName --configuration Release --no-restore
+              if ($LASTEXITCODE -ne 0) {
+                Write-Warning "⚠️  dotnet build failed for latest – continuing to docfx."
+              }
+            }
+
+            Write-Host "Running docfx metadata..."
+            docfx metadata docfx_project/docfx.json
+            if ($LASTEXITCODE -ne 0) {
+              Write-Error "❌ docfx metadata failed for latest (exit $LASTEXITCODE)."
+              exit $LASTEXITCODE
+            }
+
+            Write-Host "Running docfx build..."
+            docfx build docfx_project/docfx.json
+            if ($LASTEXITCODE -ne 0) {
+              Write-Error "❌ docfx build failed for latest (exit $LASTEXITCODE)."
+              exit $LASTEXITCODE
+            }
+
+            if (Test-Path 'docfx_project/_site') {
+              $dest = Join-Path $outDir 'latest'
+              New-Item -ItemType Directory -Force -Path $dest | Out-Null
+              Copy-Item 'docfx_project/_site/*' $dest -Recurse -Force -ErrorAction Stop
+              Write-Host "✅ Docs built for latest ($latestTag)" -ForegroundColor Green
+            } else {
+              Write-Error "❌ No _site output for latest build."
+              exit 1
+            }
+          } finally {
+            Pop-Location
+            $removeOutput = git worktree remove $latestWorkDir --force 2>&1
+            if ($LASTEXITCODE -ne 0) {
+              Write-Warning "⚠️  git worktree remove failed for latest (exit $LASTEXITCODE): $removeOutput"
+            }
           }
 
       - name: Generate versions.json for every version

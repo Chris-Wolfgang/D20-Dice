@@ -17,7 +17,7 @@ on:
         type: boolean
         default: true
       deploy_as_latest:
-        description: 'Also deploy to the site root (/) and /latest/ as the current latest version'
+        description: 'Also deploy to the site root (/) and versions/latest/ as the current latest version'
         required: false
         type: boolean
         default: true
@@ -34,7 +34,7 @@ on:
         type: boolean
         default: true
       deploy_as_latest:
-        description: 'Also deploy to the site root (/) and /latest/ (uncheck when rebuilding older versions)'
+        description: 'Also deploy to the site root (/) and versions/latest/ (uncheck when rebuilding older versions)'
         type: boolean
         default: true
 
