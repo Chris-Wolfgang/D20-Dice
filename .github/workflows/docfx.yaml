@@ -290,7 +290,7 @@ jobs:
             $template = Get-Content '.github/version-picker-template.html' -Raw
           } else {
             Write-Host "Warning: .github/version-picker-template.html not found; using built-in default template."
-            $template = @'
+            $template = @"
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -306,7 +306,7 @@ jobs:
   </ul>
 </body>
 </html>
-'@
+"@
           }
 
           $html = $template -replace '\{\{TITLE\}\}', $title `
