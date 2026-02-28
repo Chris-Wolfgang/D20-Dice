@@ -294,14 +294,19 @@ jobs:
 
           Write-Host "Generated versions.json with $($versions.Count) entries: $($versions | ForEach-Object { $_.version })"
 
-      - name: Deploy all versioned docs to gh-pages under versions/
+      - name: Copy root index.html
+        run: |
+          cp index.html ${{ runner.temp }}/all_version_docs/index.html
+        shell: bash
+
+      - name: Deploy all versioned docs to gh-pages at root
         # Publishes the entire all_version_docs/ output directory to gh-pages
-        # as the versions/ sub-directory.  keep_files: true preserves any
-        # other content already present on the branch (CNAME, root assets, etc.).
+        # at the site root.  keep_files: true preserves any other content
+        # already present on the branch (CNAME, root assets, etc.).
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{ runner.temp }}/all_version_docs
-          destination_dir: versions
+          destination_dir: .
           keep_files: true
           force_orphan: false
