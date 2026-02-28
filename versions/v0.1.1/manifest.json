@@ -1,5 +1,5 @@
 {
-  "source_base_path": "D:/a/D20-Dice/D20-Dice/docfx_project",
+  "source_base_path": "D:/a/_temp/workdir-v0.1.1/docfx_project",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -134,6 +134,16 @@
       "output": {
         ".html": {
           "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "logo.svg",
+      "output": {
+        "resource": {
+          "relative_path": "logo.svg"
         }
       },
       "version": ""

@@ -22,6 +22,15 @@ references:
   fullName.vb: Wolfgang.D20.Dice.New(Integer, Integer, Integer)
   nameWithType: Dice.Dice(int, int, int)
   nameWithType.vb: Dice.New(Integer, Integer, Integer)
+- uid: Wolfgang.D20.Dice.#ctor(System.String)
+  name: Dice(string)
+  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice__ctor_System_String_
+  commentId: M:Wolfgang.D20.Dice.#ctor(System.String)
+  name.vb: New(String)
+  fullName: Wolfgang.D20.Dice.Dice(string)
+  fullName.vb: Wolfgang.D20.Dice.New(String)
+  nameWithType: Dice.Dice(string)
+  nameWithType.vb: Dice.New(String)
 - uid: Wolfgang.D20.Dice.#ctor*
   name: Dice
   href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice__ctor_
@@ -63,15 +72,6 @@ references:
   fullName.vb: Wolfgang.D20.Dice.Equals(Wolfgang.D20.Dice)
   nameWithType: Dice.Equals(Dice?)
   nameWithType.vb: Dice.Equals(Dice)
-- uid: Wolfgang.D20.Dice.Equals(Wolfgang.D20.Dice,Wolfgang.D20.Dice)
-  name: Equals(Dice?, Dice?)
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Equals_Wolfgang_D20_Dice_Wolfgang_D20_Dice_
-  commentId: M:Wolfgang.D20.Dice.Equals(Wolfgang.D20.Dice,Wolfgang.D20.Dice)
-  name.vb: Equals(Dice, Dice)
-  fullName: Wolfgang.D20.Dice.Equals(Wolfgang.D20.Dice?, Wolfgang.D20.Dice?)
-  fullName.vb: Wolfgang.D20.Dice.Equals(Wolfgang.D20.Dice, Wolfgang.D20.Dice)
-  nameWithType: Dice.Equals(Dice?, Dice?)
-  nameWithType.vb: Dice.Equals(Dice, Dice)
 - uid: Wolfgang.D20.Dice.Equals*
   name: Equals
   href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Equals_
@@ -85,12 +85,6 @@ references:
   commentId: M:Wolfgang.D20.Dice.GetHashCode
   fullName: Wolfgang.D20.Dice.GetHashCode()
   nameWithType: Dice.GetHashCode()
-- uid: Wolfgang.D20.Dice.GetHashCode(Wolfgang.D20.Dice)
-  name: GetHashCode(Dice)
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_GetHashCode_Wolfgang_D20_Dice_
-  commentId: M:Wolfgang.D20.Dice.GetHashCode(Wolfgang.D20.Dice)
-  fullName: Wolfgang.D20.Dice.GetHashCode(Wolfgang.D20.Dice)
-  nameWithType: Dice.GetHashCode(Dice)
 - uid: Wolfgang.D20.Dice.GetHashCode*
   name: GetHashCode
   href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_GetHashCode_
@@ -176,22 +170,6 @@ references:
   isSpec: "True"
   fullName: Wolfgang.D20.Dice.ToString
   nameWithType: Dice.ToString
-- uid: Wolfgang.D20.Dice.TryParse(System.String)
-  name: TryParse(string?)
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_TryParse_System_String_
-  commentId: M:Wolfgang.D20.Dice.TryParse(System.String)
-  name.vb: TryParse(String)
-  fullName: Wolfgang.D20.Dice.TryParse(string?)
-  fullName.vb: Wolfgang.D20.Dice.TryParse(String)
-  nameWithType: Dice.TryParse(string?)
-  nameWithType.vb: Dice.TryParse(String)
-- uid: Wolfgang.D20.Dice.TryParse*
-  name: TryParse
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_TryParse_
-  commentId: Overload:Wolfgang.D20.Dice.TryParse
-  isSpec: "True"
-  fullName: Wolfgang.D20.Dice.TryParse
-  nameWithType: Dice.TryParse
 - uid: Wolfgang.D20.IDice
   name: IDice
   href: api/Wolfgang.D20.IDice.html
