@@ -108,8 +108,12 @@ jobs:
                 Copy-Item $f "$workDir/$f" -Force -ErrorAction Stop
               }
             }
-            # Attempt dotnet restore + build; failures are non-fatal because
-            # DocFX can still extract metadata from source files.
+            Push-Location $workDir
+            try {
+              # Attempt dotnet restore + build; failures are non-fatal because
+              # DocFX can still extract metadata from source files.
+              $slnFile = Get-ChildItem -Filter '*.sln' -ErrorAction SilentlyContinue |
+                         Select-Object -First 1
               if ($slnFile) {
                 Write-Host "Restoring $($slnFile.Name)..."
                 dotnet restore $slnFile.FullName 2>&1 | Write-Host
@@ -123,23 +127,21 @@ jobs:
               Write-Host "Running docfx build..."
               docfx build docfx_project/docfx.json 2>&1 | Write-Host
 
-              Push-Location $workDir
-              try {
-                if (Test-Path 'docfx_project/_site') {
-                  $dest = Join-Path $outDir $version
-                  New-Item -ItemType Directory -Force -Path $dest | Out-Null
-                  Copy-Item 'docfx_project/_site/*' $dest -Recurse -Force -ErrorAction Stop
-                  Write-Host "✅ Docs built for $version" -ForegroundColor Green
-                } else {
-                  Write-Warning "⚠️  No _site output produced for $version."
-                }
-              } finally {
-                Pop-Location
-                $removeOutput = git worktree remove $workDir --force 2>&1
-                if ($LASTEXITCODE -ne 0) {
-                  Write-Warning "⚠️  git worktree remove failed for $version (exit $LASTEXITCODE): $removeOutput"
-                }
+              if (Test-Path 'docfx_project/_site') {
+                $dest = Join-Path $outDir $version
+                New-Item -ItemType Directory -Force -Path $dest | Out-Null
+                Copy-Item 'docfx_project/_site/*' $dest -Recurse -Force -ErrorAction Stop
+                Write-Host "✅ Docs built for $version" -ForegroundColor Green
+              } else {
+                Write-Warning "⚠️  No _site output produced for $version."
               }
+            } finally {
+              Pop-Location
+              $removeOutput = git worktree remove $workDir --force 2>&1
+              if ($LASTEXITCODE -ne 0) {
+                Write-Warning "⚠️  git worktree remove failed for $version (exit $LASTEXITCODE): $removeOutput"
+              }
+            }
           }
 
           # Build 'latest' from the most recent stable v*.*.* tag so that the
