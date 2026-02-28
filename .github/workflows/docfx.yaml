@@ -90,8 +90,8 @@ jobs:
           if (-Not (Test-Path "docfx_project/_site")) {
           Write-Host "Error: docfx_project/_site directory not found!"
           exit 1
-          }  
-          Write-Host "Build successful. Contents of _site:" 
+          }
+          Write-Host "Build successful. Contents of _site:"
           Get-ChildItem "docfx_project/_site"
           Write-Host "API documentation:"
           Get-ChildItem "docfx_project/_site/api"
@@ -290,23 +290,23 @@ jobs:
             $template = Get-Content '.github/version-picker-template.html' -Raw
           } else {
             Write-Host "Warning: .github/version-picker-template.html not found; using built-in default template."
-            $template = @"
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{TITLE}}</title>
-</head>
-<body>
-  <h1>{{TITLE}}</h1>
-  <p>Select a documentation version:</p>
-  <ul>
-{{VERSION_LIST}}
-  </ul>
-</body>
-</html>
-"@
+            $template = @(
+              '<!DOCTYPE html>',
+              '<html lang="en">',
+              '<head>',
+              '  <meta charset="UTF-8">',
+              '  <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+              '  <title>{{TITLE}}</title>',
+              '</head>',
+              '<body>',
+              '  <h1>{{TITLE}}</h1>',
+              '  <p>Select a documentation version:</p>',
+              '  <ul>',
+              '{{VERSION_LIST}}',
+              '  </ul>',
+              '</body>',
+              '</html>'
+            ) -join "`n"
           }
 
           $html = $template -replace '\{\{TITLE\}\}', $title `
