@@ -130,7 +130,7 @@ jobs:
               docfx build docfx_project/docfx.json 2>&1 | Write-Host
 
               if (Test-Path 'docfx_project/_site') {
-                $dest = Join-Path $outDir $version
+                $dest = Join-Path $outDir 'versions' $version
                 New-Item -ItemType Directory -Force -Path $dest | Out-Null
                 Copy-Item 'docfx_project/_site/*' $dest -Recurse -Force -ErrorAction Stop
                 Write-Host "✅ Docs built for $version" -ForegroundColor Green
@@ -232,7 +232,7 @@ jobs:
             }
 
             if (Test-Path 'docfx_project/_site') {
-              $dest = Join-Path $outDir 'latest'
+              $dest = Join-Path $outDir 'versions' 'latest'
               New-Item -ItemType Directory -Force -Path $dest | Out-Null
               Copy-Item 'docfx_project/_site/*' $dest -Recurse -Force -ErrorAction Stop
               Write-Host "✅ Docs built for latest ($latestTag)" -ForegroundColor Green
@@ -287,21 +287,80 @@ jobs:
 
           $versionsJson = ConvertTo-Json -InputObject $versions -Depth 3
 
-          Get-ChildItem -Path $outDir -Directory | ForEach-Object {
+          Get-ChildItem -Path (Join-Path $outDir 'versions') -Directory | ForEach-Object {
             $versionsJson | Set-Content -Path (Join-Path $_.FullName 'versions.json') -Encoding utf8NoBOM
             Write-Host "Wrote versions.json to $($_.Name)/"
           }
 
           Write-Host "Generated versions.json with $($versions.Count) entries: $($versions | ForEach-Object { $_.version })"
 
-      - name: Deploy all versioned docs to gh-pages under versions/
+      - name: Generate root index.html
+        # Builds index.html from the shared template (.github/version-picker-template.html)
+        # so the page layout is maintained in one place and both this workflow and
+        # docfx.yaml produce identical markup.
+        shell: pwsh
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          $outDir = Join-Path $env:RUNNER_TEMP 'all_version_docs'
+
+          $repoName = ($env:GITHUB_REPOSITORY -split '/')[-1]
+          $title    = if ($repoName) { "$repoName Documentation" } else { "Documentation" }
+
+          $versionsJsonPath = Join-Path $outDir 'versions' 'latest' 'versions.json'
+          $versions = Get-Content $versionsJsonPath -Raw | ConvertFrom-Json
+
+          $listItems = foreach ($v in $versions) {
+            $liClass = if ($v.version -eq 'latest') { ' class="latest"' } else { '' }
+            $label   = if ($v.version -eq 'latest') { 'latest (stable)' } else { $v.version }
+            "      <li${liClass}><a href=`"$($v.url)`">$label</a></li>"
+          }
+          $listHtml = $listItems -join "`n"
+
+          $templatePath = '.github/version-picker-template.html'
+          if (Test-Path $templatePath) {
+            $template = Get-Content $templatePath -Raw
+          } else {
+            Write-Host "Template file '$templatePath' not found. Using built-in fallback template."
+            $template = @'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{TITLE}}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 2rem; }
+    h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    ul { list-style: none; padding-left: 0; }
+    li { margin: 0.25rem 0; }
+    li.latest > a { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>{{TITLE}}</h1>
+  <p>Select a documentation version:</p>
+  <ul>
+{{VERSION_LIST}}
+  </ul>
+</body>
+</html>
+'@
+          }
+          $html = $template -replace '\{\{TITLE\}\}', $title `
+                            -replace '\{\{VERSION_LIST\}\}', $listHtml
+
+          $html | Set-Content -Path (Join-Path $outDir 'index.html') -Encoding utf8NoBOM
+          Write-Host "Generated index.html with $($versions.Count) version link(s)."
+
+      - name: Deploy all versioned docs to gh-pages at root
         # Publishes the entire all_version_docs/ output directory to gh-pages
-        # as the versions/ sub-directory.  keep_files: true preserves any
-        # other content already present on the branch (CNAME, root assets, etc.).
+        # at the site root.  keep_files: true preserves any other content
+        # already present on the branch (CNAME, root assets, etc.).
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{ runner.temp }}/all_version_docs
-          destination_dir: versions
+          destination_dir: .
           keep_files: true
           force_orphan: false
