@@ -52,21 +52,23 @@ jobs:
           # no manual list updates are needed when new releases are published.
           # 'latest' is handled separately below.
           $semverRe = '^v(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>[0-9A-Za-z.-]+))?$'
-          $versions = git tag -l 'v*' |
-            Where-Object { $_ -match $semverRe } |
-            ForEach-Object {
-              $_ -match $semverRe | Out-Null
-              $stable = if ([string]::IsNullOrEmpty($Matches['prerelease'])) { 1 } else { 0 }
-              [PSCustomObject]@{
-                Tag    = $_
-                Major  = [int]$Matches['major']
-                Minor  = [int]$Matches['minor']
-                Patch  = [int]$Matches['patch']
-                Stable = $stable
-              }
-            } |
-            Sort-Object -Property Major, Minor, Patch, Stable -Descending |
-            Select-Object -ExpandProperty Tag
+          $versions = @(
+            git tag -l 'v*' |
+              Where-Object { $_ -match $semverRe } |
+              ForEach-Object {
+                $_ -match $semverRe | Out-Null
+                $stable = if ([string]::IsNullOrEmpty($Matches['prerelease'])) { 1 } else { 0 }
+                [PSCustomObject]@{
+                  Tag    = $_
+                  Major  = [int]$Matches['major']
+                  Minor  = [int]$Matches['minor']
+                  Patch  = [int]$Matches['patch']
+                  Stable = $stable
+                }
+              } |
+              Sort-Object -Property Major, Minor, Patch, Stable -Descending |
+              Select-Object -ExpandProperty Tag
+          )
           Write-Host "Discovered $($versions.Count) version tag(s): $($versions -join ', ')"
 
           foreach ($version in $versions) {
