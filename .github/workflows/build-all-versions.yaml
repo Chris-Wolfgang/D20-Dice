@@ -130,7 +130,7 @@ jobs:
               docfx build docfx_project/docfx.json 2>&1 | Write-Host
 
               if (Test-Path 'docfx_project/_site') {
-                $dest = Join-Path $outDir $version
+                $dest = Join-Path $outDir 'versions' $version
                 New-Item -ItemType Directory -Force -Path $dest | Out-Null
                 Copy-Item 'docfx_project/_site/*' $dest -Recurse -Force -ErrorAction Stop
                 Write-Host "✅ Docs built for $version" -ForegroundColor Green
@@ -232,7 +232,7 @@ jobs:
             }
 
             if (Test-Path 'docfx_project/_site') {
-              $dest = Join-Path $outDir 'latest'
+              $dest = Join-Path $outDir 'versions' 'latest'
               New-Item -ItemType Directory -Force -Path $dest | Out-Null
               Copy-Item 'docfx_project/_site/*' $dest -Recurse -Force -ErrorAction Stop
               Write-Host "✅ Docs built for latest ($latestTag)" -ForegroundColor Green
@@ -287,7 +287,7 @@ jobs:
 
           $versionsJson = ConvertTo-Json -InputObject $versions -Depth 3
 
-          Get-ChildItem -Path $outDir -Directory | ForEach-Object {
+          Get-ChildItem -Path (Join-Path $outDir 'versions') -Directory | ForEach-Object {
             $versionsJson | Set-Content -Path (Join-Path $_.FullName 'versions.json') -Encoding utf8NoBOM
             Write-Host "Wrote versions.json to $($_.Name)/"
           }
