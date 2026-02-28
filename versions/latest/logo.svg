@@ -1,4 +1,18 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="64" height="64" rx="14" fill="none"/>
-  <text x="50%" y="58%" text-anchor="middle" fill="#4F2179" font-size="40" font-family="Arial Black, Arial, sans-serif" font-weight="bold" dominant-baseline="middle">W</text>
+<svg width="100" height="100" viewBox="0 0 100 100"
+     xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* Using Google Fonts CDN for DM Serif Display */
+    @font-face {
+      font-family: 'DM Serif Display';
+      src: url('https://fonts.gstatic.com/s/dmserifdisplay/v13/-nF6OG414u0gLgBvIEjRpMqB6mM.woff2') format('woff2');
+    }
+    .fancy {
+      font-family: 'DM Serif Display', serif;
+      fill: #cccccc;
+      font-size: 72px;
+      letter-spacing: 2px;
+    }
+  </style>
+  <rect width="100" height="100" rx="12" fill="#222"/>
+  <text x="14" y="75" class="fancy">W</text>
 </svg>
