@@ -1,4 +1,4 @@
-<svg width="100" height="100" viewBox="0 0 100 100"
+<svg width="48" height="48" viewBox="0 0 48 48"
      xmlns="http://www.w3.org/2000/svg">
   <style>
     @font-face {
@@ -8,14 +8,14 @@
     .fancy {
       font-family: 'DM Serif Display', serif;
       fill: #7c23bb;
-      font-size: 72px;
-      letter-spacing: 2px;
+      font-size: 34px;
+      letter-spacing: 1px;
       stroke: #7c23bb;
-      stroke-width: 2px;
+      stroke-width: 1.2px;
       paint-order: stroke fill;
     }
   </style>
-  <!-- Overlap two W's for extra boldness effect -->
-  <text x="14" y="75" class="fancy" opacity="0.7">W</text>
-  <text x="15" y="75" class="fancy">W</text>
+  <!-- Overlap two W's for boldness effect -->
+  <text x="6" y="37" class="fancy" opacity="0.7">W</text>
+  <text x="7" y="37" class="fancy">W</text>
 </svg>
