@@ -1,13 +1,5 @@
 {
   "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
-  "docsets": [
-    { "version": "latest", "src": "docfx_project" },
-    { "version": "v0.3.0", "src": "docfx_project" },
-    { "version": "v0.2.0", "src": "docfx_project" },
-    { "version": "v0.1.2", "src": "docfx_project" },
-    { "version": "v0.1.1", "src": "docfx_project" },
-    { "version": "v0.1.0", "src": "docfx_project" }
-  ],
   "build": {
     "content": [
       {
