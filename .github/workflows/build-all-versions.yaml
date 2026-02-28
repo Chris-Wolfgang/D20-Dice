@@ -295,9 +295,11 @@ jobs:
           Write-Host "Generated versions.json with $($versions.Count) entries: $($versions | ForEach-Object { $_.version })"
 
       - name: Copy root index.html
+        shell: pwsh
         run: |
-          cp index.html ${{ runner.temp }}/all_version_docs/index.html
-        shell: bash
+          $destDir = Join-Path $env:RUNNER_TEMP 'all_version_docs'
+          $destPath = Join-Path $destDir 'index.html'
+          Copy-Item -LiteralPath 'index.html' -Destination $destPath -Force
 
       - name: Deploy all versioned docs to gh-pages at root
         # Publishes the entire all_version_docs/ output directory to gh-pages
