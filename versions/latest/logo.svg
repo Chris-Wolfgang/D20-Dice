@@ -7,10 +7,15 @@
     }
     .fancy {
       font-family: 'DM Serif Display', serif;
-      fill: #7c23bb; /* Purple from sample */
+      fill: #7c23bb;
       font-size: 72px;
       letter-spacing: 2px;
+      stroke: #7c23bb;
+      stroke-width: 2px;
+      paint-order: stroke fill;
     }
   </style>
-  <text x="14" y="75" class="fancy">W</text>
+  <!-- Overlap two W's for extra boldness effect -->
+  <text x="14" y="75" class="fancy" opacity="0.7">W</text>
+  <text x="15" y="75" class="fancy">W</text>
 </svg>
