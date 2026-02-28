@@ -322,7 +322,7 @@ jobs:
             $template = Get-Content $templatePath -Raw
           } else {
             Write-Host "Template file '$templatePath' not found. Using built-in fallback template."
-            $template = @'
+            $template = @"
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -345,7 +345,7 @@ jobs:
   </ul>
 </body>
 </html>
-'@
+"@
           }
           $html = $template -replace '\{\{TITLE\}\}', $title `
                             -replace '\{\{VERSION_LIST\}\}', $listHtml
