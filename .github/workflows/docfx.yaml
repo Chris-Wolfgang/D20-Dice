@@ -151,6 +151,34 @@ jobs:
             Set-Content -Path 'docfx_project/_site/versions.json' -Encoding utf8NoBOM
           Write-Host "Generated versions.json with $($versions.Count) version(s): $($versions | ForEach-Object { $_.version })"
 
+      - name: Generate root index.html
+        # Replaces DocFX's default index.html with the shared version-picker page so
+        # that the site root always shows a list of all deployed versions, not raw DocFX
+        # content.  The template is in .github/version-picker-template.html — edit it
+        # there to change the look/feel for both this workflow and build-all-versions.yaml.
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        shell: pwsh
+        run: |
+          $repoName = ($env:GITHUB_REPOSITORY -split '/')[-1]
+          $title    = if ($repoName) { "$repoName Documentation" } else { "Documentation" }
+
+          $versions = Get-Content 'docfx_project/_site/versions.json' -Raw | ConvertFrom-Json
+
+          $listItems = foreach ($v in $versions) {
+            $liClass = if ($v.version -eq 'latest') { ' class="latest"' } else { '' }
+            $label   = if ($v.version -eq 'latest') { 'latest (stable)' } else { $v.version }
+            "      <li${liClass}><a href=`"$($v.url)`">$label</a></li>"
+          }
+          $listHtml = $listItems -join "`n"
+
+          $template = Get-Content '.github/version-picker-template.html' -Raw
+          $html = $template -replace '\{\{TITLE\}\}', $title `
+                            -replace '\{\{VERSION_LIST\}\}', $listHtml
+
+          $html | Set-Content -Path 'docfx_project/_site/index.html' -Encoding utf8NoBOM
+          Write-Host "Generated index.html with $($versions.Count) version link(s)."
+
       - name: Clean up stale root files from gh-pages
         # Before deploying the latest docs to the site root, remove any pre-existing
         # root-level files and folders from the gh-pages branch (except the versions/
