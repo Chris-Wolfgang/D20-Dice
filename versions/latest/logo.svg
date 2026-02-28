@@ -1,18 +1,16 @@
 <svg width="100" height="100" viewBox="0 0 100 100"
      xmlns="http://www.w3.org/2000/svg">
   <style>
-    /* Using Google Fonts CDN for DM Serif Display */
     @font-face {
       font-family: 'DM Serif Display';
       src: url('https://fonts.gstatic.com/s/dmserifdisplay/v13/-nF6OG414u0gLgBvIEjRpMqB6mM.woff2') format('woff2');
     }
     .fancy {
       font-family: 'DM Serif Display', serif;
-      fill: #cccccc;
+      fill: #7c23bb; /* Purple from sample */
       font-size: 72px;
       letter-spacing: 2px;
     }
   </style>
-  <rect width="100" height="100" rx="12" fill="#222"/>
   <text x="14" y="75" class="fancy">W</text>
 </svg>
