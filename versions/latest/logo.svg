@@ -5,17 +5,26 @@
       font-family: 'DM Serif Display';
       src: url('https://fonts.gstatic.com/s/dmserifdisplay/v13/-nF6OG414u0gLgBvIEjRpMqB6mM.woff2') format('woff2');
     }
-    .fancy {
+    .stroke {
       font-family: 'DM Serif Display', serif;
-      fill: #7c23bb;
       font-size: 34px;
       letter-spacing: 1px;
+      stroke: #fff;
+      stroke-width: 2px;
+      fill: none;
+    }
+    .fill {
+      font-family: 'DM Serif Display', serif;
+      font-size: 34px;
+      letter-spacing: 1px;
+      fill: #7c23bb;
       stroke: #7c23bb;
       stroke-width: 1.2px;
       paint-order: stroke fill;
     }
   </style>
-  <!-- Overlap two W's for boldness effect -->
-  <text x="6" y="37" class="fancy" opacity="0.7">W</text>
-  <text x="7" y="37" class="fancy">W</text>
+  <!-- White border version below, slightly offset for bold effect -->
+  <text x="7" y="37" class="stroke">W</text>
+  <!-- Purple fill version above -->
+  <text x="7" y="37" class="fill">W</text>
 </svg>
