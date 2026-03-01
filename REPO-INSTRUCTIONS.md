@@ -199,7 +199,7 @@ After creating your repository from the template, update the following files wit
 
 ### Setup GitHub Pages for Documentation (Optional)
 
-If you want to publish your DocFX documentation to GitHub Pages automatically when you create version tags:
+If you want to publish your DocFX documentation to GitHub Pages automatically when you publish a GitHub Release:
 
 1. Run the GitHub Pages setup script:
    ```powershell
@@ -213,21 +213,21 @@ If you want to publish your DocFX documentation to GitHub Pages automatically wh
    - **Replace placeholders** in DocFX files (Wolfgang.D20-Dice, https://Chris-Wolfgang.github.io/D20-Dice/, etc.)
    - Create a `gh-pages` branch if it doesn't exist
    - Configure GitHub Pages to serve from the `gh-pages` branch
-   - Verify that the DocFX workflow is configured to trigger on version tags
+   - Verify that the DocFX workflow is reachable via `workflow_call` from `release.yaml`
 
    **Note:** If you've already run `scripts/setup.ps1`, the DocFX placeholders are already configured, and this script will skip the configuration step.
 
-2. After setup, documentation will be automatically published when you push a version tag:
-   ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
-   ```
+2. After setup, documentation will be automatically published when you publish a GitHub Release:
+   1. Go to your repository's **Releases** page
+   2. Click **"Draft a new release"**
+   3. Choose or create a version tag (e.g., `v1.0.0`)
+   4. Click **"Publish release"**
 
 3. The documentation will be available at: `https://[username].github.io/[repo-name]/`
 
-**Note:** The DocFX workflow (`.github/workflows/docfx.yaml`) is configured to trigger on:
-- Push to the `main` branch (for testing/preview)
-- Version tags in the format `v*.*.*` (e.g., v1.0.0, v2.1.3)
+**Note:** The DocFX workflow (`.github/workflows/docfx.yaml`) is configured to trigger via:
+- **`workflow_call`**: Called automatically by `release.yaml` after a GitHub Release is published (passes the release tag as the version)
+- **`workflow_dispatch`**: Manual trigger for ad-hoc builds or dry-runs (available from the Actions tab)
 
 **Alternative Approach:** If you prefer to configure DocFX placeholders separately from GitHub Pages setup, you can run `scripts/setup.ps1` first (which handles all template placeholders including DocFX), then run `scripts/Setup-GitHubPages.ps1` just to set up the gh-pages branch and GitHub Pages settings.
 
@@ -253,7 +253,7 @@ This repository is configured for versioned documentation using DocFX. The setup
 - The `.github/workflows/build-all-versions.yaml` workflow enumerates all matching tags and builds documentation for each — no file updates are required when a new release is published.
 - Each release triggers `.github/workflows/release.yaml` (on a published GitHub Release), which calls `.github/workflows/docfx.yaml` via `workflow_call` to build docs and deploy them to the `gh-pages` branch under `versions/<tag>/`. You can also run `docfx.yaml` directly via `workflow_dispatch` from the Actions tab for ad-hoc builds.
 - After every versioned deploy, a `versions.json` is generated and written to `gh-pages`, powering the version-switcher dropdown.
-- `versions/latest/` always mirrors the most recent stable release; the site root (`/`) also serves the latest docs.
+- `versions/latest/` always mirrors the most recent stable release; the site root (`/`) hosts the version-picker landing page that links to the latest and all other available documentation versions.
 
 #### Adding a New Version
 When you publish a new release (e.g. `v1.0.0`):
