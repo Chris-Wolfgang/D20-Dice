@@ -6,7 +6,7 @@ namespace Wolfgang.D20;
 /// <summary>
 /// Represents a number of dice, each with the specified number of sides and an optional modifier.
 /// </summary>
-public class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
+public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
 {
 
     /// <summary>
@@ -255,7 +255,8 @@ public class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
     private static readonly Regex DiceNotationRegex = new
     (
         @"^(?<dieCount>\d*)[dD](?<sideCount>\d+)(?<modifier>[+-]\d+)*$",
-        RegexOptions.Compiled
+        RegexOptions.Compiled,
+        TimeSpan.FromSeconds(1)
     );
 
 
