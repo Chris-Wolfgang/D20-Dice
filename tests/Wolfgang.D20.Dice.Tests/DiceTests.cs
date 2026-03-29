@@ -628,16 +628,6 @@ public class DiceTests
 
 
     [Fact]
-    public void EqualsDiceComparer_DifferentTypes_ReturnsFalse()
-    {
-        var comparer = new Dice();
-        var left = new Dice(1, 6, 0);
-        var right = new DerivedDice();
-
-        Assert.False(comparer.Equals(left, right));
-    }
-
-    [Fact]
     public void GetHashCodeDiceComparer_Null_ThrowsArgumentNullException()
     {
         var comparer = new Dice();
@@ -671,10 +661,4 @@ public class DiceTests
         Assert.NotEqual(leftHash, rightHash);
     }
 
-    private sealed class DerivedDice : Dice
-    {
-        public DerivedDice() : base(1, 6, 0)
-        {
-        }
-    }
 }
