@@ -9,13 +9,13 @@ internal static class Program
     {
 
         Console.Write("Enter the number of sides: ");
-        var sideCount = int.Parse(Console.ReadLine()!);
+        var sideCount = int.Parse(Console.ReadLine()!, System.Globalization.CultureInfo.InvariantCulture);
 
         Console.Write("Enter the number of dice: ");
-        var dieCount = int.Parse(Console.ReadLine()!);
+        var dieCount = int.Parse(Console.ReadLine()!, System.Globalization.CultureInfo.InvariantCulture);
 
         Console.Write("Enter a modifier (default 0): ");
-        var modifier = int.Parse(Console.ReadLine()!);
+        var modifier = int.Parse(Console.ReadLine()!, System.Globalization.CultureInfo.InvariantCulture);
 
 
         var dice = new Dice(dieCount, sideCount, modifier);
@@ -24,7 +24,7 @@ internal static class Program
         {
             0 => string.Empty,
             > 0 => $"+{modifier}",
-            < 0 => modifier.ToString()
+            < 0 => modifier.ToString(System.Globalization.CultureInfo.InvariantCulture)
         };
 
         Console.WriteLine($"Rolling {dieCount}d{sideCount}{modifierString}:");
