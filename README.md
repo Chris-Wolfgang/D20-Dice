@@ -60,10 +60,39 @@ if (parseResult.IsSuccess)
 
 ## ✨ Features
 
-{{FEATURES_TABLE}}
+| Feature | Description |
+|---------|-------------|
+| Dice Notation | Standard `XdY+Z` format (e.g., `2d6+3`) |
+| Parsing | `Dice.TryParse("1d20+5")` with full validation via `Result<T>` |
+| Roll | `Roll()` generates a random result within the valid range |
+| Min/Max | `MinValue` and `MaxValue` computed from dice configuration |
+| Modifiers | Positive, negative, or zero modifiers supported |
+| Equality | Full `IEquatable<Dice>` and `IEqualityComparer<Dice>` support |
+| ToString | Formats back to dice notation (`2d6+3`, `1d20`, `3d8-2`) |
+| Multi-TFM | Targets .NET Framework 4.6.2+, .NET Standard 2.0, and .NET 5.0–10.0 |
 
 **Examples:**
-{{FEATURE_EXAMPLES}}
+
+```csharp
+// Standard dice
+var d20 = new Dice(1, 20);           // 1d20
+var d6 = new Dice(2, 6, 3);          // 2d6+3
+var penalty = new Dice(1, 8, -2);    // 1d8-2
+
+// Parse from string notation
+var result = Dice.TryParse("4d6+1");
+if (result.IsSuccess)
+{
+    var dice = result.Value;
+    Console.WriteLine($"{dice} range: {dice.MinValue}–{dice.MaxValue}");
+    Console.WriteLine($"Rolled: {dice.Roll()}");
+}
+
+// Equality comparison
+var a = new Dice(2, 6, 3);
+var b = new Dice(2, 6, 3);
+Console.WriteLine(a.Equals(b));  // True
+```
 
 ---
 
