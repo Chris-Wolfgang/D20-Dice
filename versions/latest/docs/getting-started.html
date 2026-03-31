@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.4.0/docfx_project/docs/getting-started.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,10 +75,9 @@
 
 <p>This guide will help you quickly get up and running with Wolfgang.D20-Dice.</p>
 <h2 id="prerequisites">Prerequisites</h2>
-<!-- List any prerequisites needed. For example:
-- .NET 8.0 or later
-- Visual Studio 2022 or Visual Studio Code
--->
+<ul>
+<li>.NET 8.0 SDK or later (for development; the library targets .NET Framework 4.6.2+, .NET Standard 2.0, and .NET 8.0+)</li>
+</ul>
 <h2 id="installation">Installation</h2>
 <h3 id="via-nuget-package-manager">Via NuGet Package Manager</h3>
 <pre><code class="lang-bash">dotnet add package Wolfgang.D20-Dice
@@ -87,22 +86,36 @@
 <pre><code class="lang-powershell">Install-Package Wolfgang.D20-Dice
 </code></pre>
 <h2 id="quick-start">Quick Start</h2>
-<!-- Add a quick start example. For example: -->
-<pre><code class="lang-csharp">// Add your quick start code example here
-// This should show the simplest way to use your library
+<pre><code class="lang-csharp">using Wolfgang.D20;
 
-using Wolfgang.D20Dice;
+// Roll a single d20
+var d20 = new Dice(dieCount: 1, sideCount: 20);
+int result = d20.Roll();
+Console.WriteLine($&quot;Rolled {d20}: {result}&quot;);  // e.g. &quot;Rolled 1d20: 14&quot;
 
-// Example usage
+// Roll 2d6 with a +3 modifier
+var attackRoll = new Dice(dieCount: 2, sideCount: 6, modifier: 3);
+Console.WriteLine($&quot;Attack ({attackRoll}): {attackRoll.Roll()}&quot;);
+Console.WriteLine($&quot;Range: {attackRoll.MinValue}–{attackRoll.MaxValue}&quot;);
+
+// Parse dice notation from a string
+var parseResult = Dice.TryParse(&quot;1d20+5&quot;);
+if (parseResult.IsSuccess)
+{
+    Console.WriteLine($&quot;Parsed: {parseResult.Value} → {parseResult.Value.Roll()}&quot;);
+}
 </code></pre>
 <h2 id="next-steps">Next Steps</h2>
 <ul>
-<li>Explore the <a href="../api/index.html">API Reference</a> for detailed documentation</li>
+<li>Explore the <a href="https://chris-wolfgang.github.io/D20-Dice/versions/latest/api/Wolfgang.D20.html">API Reference</a> for detailed documentation</li>
 <li>Read the <a href="introduction.html">Introduction</a> to learn more about Wolfgang.D20-Dice</li>
 <li>Check out example projects in the <a href="https://github.com/Chris-Wolfgang/D20-Dice">GitHub repository</a></li>
 </ul>
 <h2 id="common-issues">Common Issues</h2>
-<!-- Add common issues and their solutions here -->
+<h3 id="parsing-fails-for-valid-looking-notation">Parsing fails for valid-looking notation</h3>
+<p><code>Dice.TryParse</code> expects the format <code>XdY</code>, <code>XdY+Z</code>, or <code>XdY-Z</code> where X is optional (defaults to 1). The die count must be at least 1 and the side count at least 2. Check <code>result.ErrorMessage</code> for details on why parsing failed.</p>
+<h3 id="modifier-can-be-negative">Modifier can be negative</h3>
+<p>A negative modifier is valid — <code>new Dice(1, 20, -2)</code> creates <code>1d20-2</code>. The <code>MinValue</code> property accounts for the modifier, so it may be less than 1.</p>
 <h2 id="additional-resources">Additional Resources</h2>
 <ul>
 <li><a href="https://github.com/Chris-Wolfgang/D20-Dice">GitHub Repository</a></li>
@@ -113,6 +126,7 @@ using Wolfgang.D20Dice;
 </article>
 
         <div class="contribution d-print-none">
+          <a href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.4.0/docfx_project/docs/getting-started.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>

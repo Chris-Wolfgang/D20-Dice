@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.4.0/docfx_project/docs/introduction.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,19 +75,21 @@
 
 <p>Welcome to Wolfgang.D20-Dice!</p>
 <h2 id="overview">Overview</h2>
-<p>A random number generator that simulates d20 dice with modifier</p>
-<!-- Add your project overview here -->
+<p>Wolfgang.D20-Dice is a .NET library for simulating tabletop dice rolls using standard dice notation (e.g., <code>2d6+3</code>). It provides a strongly-typed <code>Dice</code> class with roll generation, notation parsing, and value-equality semantics.</p>
 <h2 id="key-features">Key Features</h2>
-<!-- List the main features of your project. For example:
-- Feature 1: Description
-- Feature 2: Description
-- Feature 3: Description
--->
+<ul>
+<li><strong>Dice Notation</strong> — standard <code>XdY+Z</code> format with any die count, side count, and modifier</li>
+<li><strong>Parsing</strong> — <code>Dice.TryParse(&quot;1d20+5&quot;)</code> with full validation, returning a <code>Result&lt;T&gt;</code> from <a href="https://github.com/Chris-Wolfgang/Try-Pattern">Wolfgang.TryPattern</a></li>
+<li><strong>Roll Generation</strong> — <code>Roll()</code> produces a random result within the valid range</li>
+<li><strong>Min/Max Calculation</strong> — <code>MinValue</code> and <code>MaxValue</code> computed from the dice configuration</li>
+<li><strong>Equality</strong> — full <code>IEquatable&lt;Dice&gt;</code> and <code>IEqualityComparer&lt;Dice&gt;</code> implementation</li>
+<li><strong>ToString</strong> — formats back to dice notation (<code>2d6+3</code>, <code>1d20</code>, <code>3d8-2</code>)</li>
+</ul>
 <h2 id="getting-help">Getting Help</h2>
 <p>If you need help with Wolfgang.D20-Dice, please:</p>
 <ul>
 <li>Check the <a href="getting-started.html">Getting Started</a> guide</li>
-<li>Review the <a href="../api/index.html">API Reference</a></li>
+<li>Review the <a href="https://chris-wolfgang.github.io/D20-Dice/versions/latest/api/Wolfgang.D20.html">API Reference</a></li>
 <li>Visit the <a href="https://github.com/Chris-Wolfgang/D20-Dice">GitHub repository</a></li>
 <li>Open an issue on <a href="https://github.com/Chris-Wolfgang/D20-Dice/issues">GitHub Issues</a></li>
 </ul>
@@ -95,6 +97,7 @@
 </article>
 
         <div class="contribution d-print-none">
+          <a href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.4.0/docfx_project/docs/introduction.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>
