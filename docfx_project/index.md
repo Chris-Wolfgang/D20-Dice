@@ -9,7 +9,7 @@ Welcome to the Wolfgang.D20-Dice documentation. This site contains comprehensive
 ## Quick Links
 
 - [Getting Started](docs/getting-started.md) - Learn the basics
-- [API Reference](xref:Wolfgang.Extensions.DateTime) - Complete API documentation
+- [API Reference](https://chris-wolfgang.github.io/D20-Dice/versions/latest/api/Wolfgang.D20.html) - Complete API documentation
 - [GitHub Repository](https://github.com/Chris-Wolfgang/D20-Dice) - View source code
 
 ## About Wolfgang.D20-Dice
@@ -27,7 +27,7 @@ dotnet add package Wolfgang.D20-Dice
 ### 📖 [Documentation](docs/getting-started.md)
 Step-by-step guides and tutorials to help you use Wolfgang.D20-Dice effectively.
 
-### 📚 [API Reference](xref:Wolfgang.D20-Dice)
+### 📚 [API Reference](https://chris-wolfgang.github.io/D20-Dice/versions/latest/api/Wolfgang.D20.html)
 Complete API documentation automatically generated from source code XML comments.
 
 ## Additional Resources
