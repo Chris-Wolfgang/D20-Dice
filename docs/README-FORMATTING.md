@@ -42,9 +42,9 @@ Code style rules are defined in `.editorconfig` at the repository root.
 
 ## CI/CD
 
-All pull requests are automatically checked for proper formatting. PRs with formatting issues will fail the build.
+Formatting is enforced locally before committing. Run the formatting script to ensure your code matches the expected style.
 
-### If CI Fails
+### Before Pushing
 
 1. Run `pwsh ./scripts/format.ps1` locally
 2. Review the changes

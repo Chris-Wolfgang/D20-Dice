@@ -78,7 +78,7 @@ if ($Check)
     {
         Write-Host ""
         Write-Host "❌ Formatting issues detected!" -ForegroundColor Red
-        Write-Host "Run '.\format.ps1' (without -Check) to fix them automatically." -ForegroundColor Yellow
+        Write-Host "Run 'pwsh ./scripts/format.ps1' (without -Check) to fix them automatically." -ForegroundColor Yellow
         exit 1
     }
 }

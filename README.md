@@ -159,7 +159,7 @@ dotnet build --configuration Release
 dotnet test --configuration Release
 
 # Run code formatting (PowerShell Core)
-pwsh ./format.ps1
+pwsh ./scripts/format.ps1
 ```
 
 ### Code Formatting
