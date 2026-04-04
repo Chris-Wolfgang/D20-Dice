@@ -11,11 +11,11 @@
     If specified, only checks formatting without making changes (like CI does).
 
 .EXAMPLE
-    .\format.ps1
+    pwsh ./scripts/format.ps1
     Formats all code in the repository.
 
 .EXAMPLE
-    .\format.ps1 -Check
+    pwsh ./scripts/format.ps1 -Check
     Checks formatting without making changes.
 #>
 
@@ -78,7 +78,7 @@ if ($Check)
     {
         Write-Host ""
         Write-Host "❌ Formatting issues detected!" -ForegroundColor Red
-        Write-Host "Run '.\format.ps1' (without -Check) to fix them automatically." -ForegroundColor Yellow
+        Write-Host "Run 'pwsh ./scripts/format.ps1' (without -Check) to fix them automatically." -ForegroundColor Yellow
         exit 1
     }
 }
