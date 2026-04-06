@@ -44,7 +44,7 @@ public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
 
 
     /// <summary>
-    /// The number of sides on each die. Must be greater than 2.
+    /// The number of sides on each die. Must be at least 2.
     /// </summary>
     /// <remarks>
     /// A value of 2 represents a coin toss, 3 represents a three-sided die, etc.
@@ -66,14 +66,32 @@ public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
     /// <summary>
     /// The minimum value that can be rolled with the specified dice and modifier.
     /// </summary>
-    public int MinValue => (DieCount * 1) + Modifier;
+    public int MinValue
+    {
+        get
+        {
+            checked
+            {
+                return (DieCount * 1) + Modifier;
+            }
+        }
+    }
 
 
 
     /// <summary>
     /// The maximum value that can be rolled with the specified dice and modifier.
     /// </summary>
-    public int MaxValue => (DieCount * SideCount) + Modifier;
+    public int MaxValue
+    {
+        get
+        {
+            checked
+            {
+                return (DieCount * SideCount) + Modifier;
+            }
+        }
+    }
 
 
 
@@ -83,11 +101,15 @@ public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
     /// <returns>int</returns>
     public int Roll()
     {
+#if NET6_0_OR_GREATER
+        var random = Random.Shared;
+#else
         var random = new Random();
+#endif
         var total = 0;
         for (var i = 0; i < DieCount; i++)
         {
-            total += random.Next(1, SideCount);
+            total += random.Next(1, SideCount + 1);
         }
         return total + Modifier;
     }
