@@ -8,6 +8,11 @@ namespace Wolfgang.D20;
 /// </summary>
 public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
 {
+#if !NET6_0_OR_GREATER
+    private static readonly Random SharedRandom = new();
+#endif
+
+
 
     /// <summary>
     /// Constructs a new instance of <see cref="Dice"/> with the specified number of dice, sides, and modifier.
@@ -104,14 +109,17 @@ public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
 #if NET6_0_OR_GREATER
         var random = Random.Shared;
 #else
-        var random = new Random();
+        var random = SharedRandom;
 #endif
-        var total = 0;
-        for (var i = 0; i < DieCount; i++)
+        checked
         {
-            total += random.Next(1, SideCount + 1);
+            var total = 0;
+            for (var i = 0; i < DieCount; i++)
+            {
+                total += random.Next(1, SideCount + 1);
+            }
+            return total + Modifier;
         }
-        return total + Modifier;
     }
 
 

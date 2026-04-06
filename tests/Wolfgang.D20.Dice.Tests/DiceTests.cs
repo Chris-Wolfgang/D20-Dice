@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Xunit;
 // ReSharper disable RedundantArgumentDefaultValue
 
@@ -171,6 +172,50 @@ public class DiceTests
         var result = dice.Roll();
         // Assert
         Assert.InRange(result, dice.MinValue, dice.MaxValue);
+    }
+
+
+
+    [Fact]
+    public void Roll_when_d6_produces_values_including_max()
+    {
+        // Arrange — roll enough times to statistically guarantee a 6
+        var dice = new Dice(dieCount: 1, sideCount: 6);
+        var results = new HashSet<int>();
+
+        // Act
+        for (var i = 0; i < 1000; i++)
+        {
+            results.Add(dice.Roll());
+        }
+
+        // Assert — all values 1-6 should appear
+        Assert.Contains(1, results);
+        Assert.Contains(6, results);
+    }
+
+
+
+    [Fact]
+    public void MinValue_when_overflow_throws_OverflowException()
+    {
+        // Arrange
+        var dice = new Dice(dieCount: int.MaxValue, sideCount: 2, modifier: 1);
+
+        // Act & Assert
+        Assert.Throws<OverflowException>(() => dice.MinValue);
+    }
+
+
+
+    [Fact]
+    public void MaxValue_when_overflow_throws_OverflowException()
+    {
+        // Arrange
+        var dice = new Dice(dieCount: int.MaxValue, sideCount: 2, modifier: 0);
+
+        // Act & Assert
+        Assert.Throws<OverflowException>(() => dice.MaxValue);
     }
 
 
