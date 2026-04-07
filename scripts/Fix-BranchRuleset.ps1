@@ -83,7 +83,7 @@ if ($Repository -eq "Chris-Wolfgang/D20-Dice" -or -not $Repository) {
         Write-Host "Using repository: $Repository" -ForegroundColor Green
     } catch {
         if ($Repository -eq "Chris-Wolfgang/D20-Dice") {
-            Write-Error "Could not detect repository. Please run the setup script first to replace placeholders, or specify -Repository parameter."
+            Write-Error "Could not detect repository. Please specify the -Repository parameter, or run this script from within the target git repository."
         } else {
             Write-Error "Could not detect repository. Please run from within a git repository or specify -Repository parameter."
         }
