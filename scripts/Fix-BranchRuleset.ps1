@@ -12,9 +12,23 @@
 .PARAMETER Repository
     The repository in owner/repo format. If not provided, uses the current repository.
 
+.PARAMETER Force
+    Skip the confirmation prompt and proceed automatically. Alias: -y
+
+.PARAMETER SkipSetup
+    Skip automatic invocation of Setup-BranchRuleset.ps1 after fixing.
+
 .EXAMPLE
     .\Fix-BranchRuleset.ps1
-    Inspects and fixes rulesets for the current repository
+    Inspects and fixes rulesets for the current repository with interactive confirmation
+
+.EXAMPLE
+    .\Fix-BranchRuleset.ps1 -Force
+    Inspects and fixes rulesets without prompting for confirmation
+
+.EXAMPLE
+    .\Fix-BranchRuleset.ps1 -Force -SkipSetup
+    Fixes rulesets non-interactively without recreating a fresh ruleset
 
 .EXAMPLE
     .\Fix-BranchRuleset.ps1 -Repository "Chris-Wolfgang/my-repo"
@@ -28,7 +42,14 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string]$Repository = "{{GITHUB_USERNAME}}/{{REPO_NAME}}"
+    [string]$Repository = "Chris-Wolfgang/D20-Dice",
+
+    [Parameter()]
+    [Alias("y")]
+    [switch]$Force,
+
+    [Parameter()]
+    [switch]$SkipSetup
 )
 
 # Check if gh CLI is installed
@@ -54,15 +75,15 @@ try {
 }
 
 # Determine repository
-if ($Repository -eq "{{GITHUB_USERNAME}}/{{REPO_NAME}}" -or -not $Repository) {
+if ($Repository -eq "Chris-Wolfgang/D20-Dice" -or -not $Repository) {
     Write-Host "Detecting current repository..." -ForegroundColor Cyan
     try {
         $repoInfo = gh repo view --json nameWithOwner | ConvertFrom-Json
         $Repository = $repoInfo.nameWithOwner
         Write-Host "Using repository: $Repository" -ForegroundColor Green
     } catch {
-        if ($Repository -eq "{{GITHUB_USERNAME}}/{{REPO_NAME}}") {
-            Write-Error "Could not detect repository. Please run the setup script first to replace placeholders, or specify -Repository parameter."
+        if ($Repository -eq "Chris-Wolfgang/D20-Dice") {
+            Write-Error "Could not detect repository. Please specify the -Repository parameter, or run this script from within the target git repository."
         } else {
             Write-Error "Could not detect repository. Please run from within a git repository or specify -Repository parameter."
         }
@@ -158,10 +179,14 @@ foreach ($item in $plan) {
 Write-Host ""
 
 # Prompt for confirmation
-$response = Read-Host "Proceed with these changes? (y/N)"
-if ($response -ne 'y' -and $response -ne 'Y') {
-    Write-Host "Cancelled. No changes were made." -ForegroundColor Yellow
-    exit 0
+if ($Force) {
+    Write-Host "Auto-confirmed via -Force flag." -ForegroundColor Green
+} else {
+    $response = Read-Host "Proceed with these changes? (y/N)"
+    if ($response -ne 'y' -and $response -ne 'Y') {
+        Write-Host "Cancelled. No changes were made." -ForegroundColor Yellow
+        exit 0
+    }
 }
 
 Write-Host ""
@@ -228,6 +253,19 @@ if ($errors -gt 0) {
 } else {
     Write-Host "All changes applied successfully." -ForegroundColor Green
     Write-Host ""
-    Write-Host "Next step: Run .\Setup-BranchRuleset.ps1 to create a fresh ruleset." -ForegroundColor Cyan
-    Write-Host "View rulesets at: https://github.com/$Repository/settings/rules" -ForegroundColor Cyan
+
+    # Invoke Setup-BranchRuleset.ps1 to create a fresh ruleset
+    $setupScript = Join-Path $PSScriptRoot "Setup-BranchRuleset.ps1"
+    if ($SkipSetup) {
+        Write-Host "Skipping Setup-BranchRuleset.ps1 (-SkipSetup specified)." -ForegroundColor Yellow
+        Write-Host "Run it manually to create a fresh ruleset:" -ForegroundColor Cyan
+        Write-Host "  pwsh -File `"$setupScript`" -Repository $Repository" -ForegroundColor Cyan
+    } elseif (Test-Path $setupScript) {
+        Write-Host "Running Setup-BranchRuleset.ps1 to create a fresh ruleset..." -ForegroundColor Cyan
+        Write-Host ""
+        & $setupScript -Repository $Repository
+    } else {
+        Write-Host "Setup-BranchRuleset.ps1 not found. Run it manually to create a fresh ruleset." -ForegroundColor Yellow
+        Write-Host "View rulesets at: https://github.com/$Repository/settings/rules" -ForegroundColor Cyan
+    }
 }
