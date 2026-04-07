@@ -13,7 +13,7 @@ public interface IDice
 
 
     /// <summary>
-    /// The number of sides on each die. Must be greater than 2.
+    /// The number of sides on each die. Must be at least 2.
     /// </summary>
     /// <remarks>
     /// A value of 2 represents a coin toss, 3 represents a three-sided die, etc.

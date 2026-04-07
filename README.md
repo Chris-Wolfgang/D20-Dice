@@ -50,7 +50,7 @@ Console.WriteLine($"Range: {attackRoll.MinValue}–{attackRoll.MaxValue}");  // 
 
 // Parse dice notation from a string
 var parseResult = Dice.TryParse("1d20+5");
-if (parseResult.IsSuccess)
+if (parseResult.Succeeded)
 {
     Console.WriteLine($"Parsed: {parseResult.Value} → {parseResult.Value.Roll()}");
 }
@@ -81,7 +81,7 @@ var penalty = new Dice(1, 8, -2);    // 1d8-2
 
 // Parse from string notation
 var result = Dice.TryParse("4d6+1");
-if (result.IsSuccess)
+if (result.Succeeded)
 {
     var dice = result.Value;
     Console.WriteLine($"{dice} range: {dice.MinValue}–{dice.MaxValue}");

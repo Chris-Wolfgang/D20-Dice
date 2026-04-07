@@ -37,7 +37,7 @@ Console.WriteLine($"Range: {attackRoll.MinValue}–{attackRoll.MaxValue}");
 
 // Parse dice notation from a string
 var parseResult = Dice.TryParse("1d20+5");
-if (parseResult.IsSuccess)
+if (parseResult.Succeeded)
 {
     Console.WriteLine($"Parsed: {parseResult.Value} → {parseResult.Value.Roll()}");
 }
