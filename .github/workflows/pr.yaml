@@ -13,8 +13,6 @@
 #   without blocking Stages 1-3 from running. Add it to the branch ruleset to block merges.
 # - persist-credentials: false prevents the checkout token from being written to git config for subsequent git commands
 #   (it does NOT, by itself, prevent steps from accessing github.token / GITHUB_TOKEN if you explicitly expose it)
-# - After checkout, configuration files (.editorconfig, BannedSymbols.txt, etc.) are fetched from
-#   the main branch to prevent malicious PRs from disabling analyzers or bypassing code quality checks
 # - Default GITHUB_TOKEN permissions are restricted to read-only repository contents to limit impact if exposed
 
 name: PR Checks v3 (Gated)
@@ -110,7 +108,15 @@ jobs:
         run: |
           echo "Checking for changes to protected configuration files in this PR..."
 
-          git fetch origin main:main-branch
+          if ! git fetch origin main:main-branch; then
+            echo "❌ Failed to fetch base ref 'main'. Unable to compare protected files."
+            exit 1
+          fi
+
+          if ! git cat-file -e main-branch 2>/dev/null; then
+            echo "❌ Base ref 'main-branch' not available after fetch."
+            exit 1
+          fi
 
           changed_files=()
 
@@ -129,7 +135,7 @@ jobs:
 
           while IFS= read -r file; do
             changed_files+=("$file")
-          done < <(git diff --name-only --diff-filter=AMRC main-branch HEAD 2>/dev/null | grep -E '\.(globalconfig|ruleset)$' || true)
+          done < <(git diff --name-only --diff-filter=AMRCD main-branch HEAD 2>/dev/null | grep -E '\.(globalconfig|ruleset)$' || true)
 
           if [ ${#changed_files[@]} -gt 0 ]; then
             echo ""
