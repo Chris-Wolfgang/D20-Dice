@@ -9,8 +9,8 @@
 # - All checkout steps use PR refs (refs/pull/*/head) to check out PR code from the base repo
 # - After checkout, configuration files (.editorconfig, BannedSymbols.txt, etc.) are fetched from
 #   the main branch to prevent malicious PRs from disabling analyzers or bypassing code quality checks
-# - If a PR changes any of these protected configuration files, CI explicitly fails with instructions
-#   for a maintainer to manually review and verify the changes before merging
+# - A separate "Protected File Check" job detects changes to these files and fails independently,
+#   without blocking Stages 1-3 from running. Add it to the branch ruleset to block merges.
 # - persist-credentials: false prevents the checkout token from being written to git config for subsequent git commands
 #   (it does NOT, by itself, prevent steps from accessing github.token / GITHUB_TOKEN if you explicitly expose it)
 # - After checkout, configuration files (.editorconfig, BannedSymbols.txt, etc.) are fetched from
@@ -68,91 +68,69 @@ jobs:
     if: github.repository != 'Chris-Wolfgang/repo-template'
     outputs:
       has-projects: ${{ steps.check-projects.outputs.has-projects }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: refs/pull/${{ github.event.pull_request.number }}/head
           persist-credentials: false
-      
-      - name: Fetch trusted configuration files from main branch
+
+      - name: Check for .NET project files
+        id: check-projects
         run: |
-          echo "Fetching configuration files from main branch to prevent malicious overrides..."
-          
-          # Fetch the main branch
-          git fetch origin main:main-branch
-          
-          # List of configuration files that should come from trusted main branch
-          config_files=(
-            ".editorconfig"
-            "Directory.Build.props"
-            "Directory.Build.targets"
-            "BannedSymbols.txt"
-            "*.globalconfig"
-            "*.ruleset"
-          )
-          
-          # Copy each configuration file from main branch if it exists
-          for config_file in "${config_files[@]}"; do
-            # Handle glob patterns
-            if [[ "$config_file" == *"*"* ]]; then
-              # Find files matching the pattern in main branch
-              git ls-tree -r --name-only main-branch | grep -E "${config_file//\*/.*}" | while read -r file; do
-                if [ -n "$file" ]; then
-                  echo "  ✓ Copying $file from main branch"
-                  mkdir -p "$(dirname "$file")"
-                  git show "main-branch:$file" > "$file" || echo "  ⚠️  Failed to copy $file"
-                fi
-              done
-            else
-              # Check if file exists in main branch
-              if git cat-file -e "main-branch:$config_file" 2>/dev/null; then
-                echo "  ✓ Copying $config_file from main branch"
-                git show "main-branch:$config_file" > "$config_file"
-              else
-                echo "  ℹ️  $config_file not found in main branch, skipping"
-              fi
-            fi
-          done
-          
-          echo ""
-          echo "✅ Configuration files secured - using versions from main branch"
-      
+          if git ls-files '*.csproj' '*.vbproj' '*.fsproj' | grep -q .; then
+            echo "has-projects=true" >> $GITHUB_OUTPUT
+            echo "✅ Found .NET project files - .NET build and test jobs will run"
+          else
+            echo "has-projects=false" >> $GITHUB_OUTPUT
+            echo "ℹ️  No .NET project files found - skipping .NET build and test jobs"
+          fi
+
+  # ============================================================================
+  # GUARD: Detect protected configuration file changes
+  # Runs independently so it never blocks Stages 1-3 from executing.
+  # Add this job's name to the branch ruleset required checks to block merges
+  # when protected files are changed without maintainer review.
+  # ============================================================================
+  check-protected-files:
+    name: "Protected File Check"
+    runs-on: ubuntu-latest
+    if: github.repository != 'Chris-Wolfgang/repo-template'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/head
+          persist-credentials: false
+          fetch-depth: 0
+
       - name: Detect protected configuration file changes
         run: |
           echo "Checking for changes to protected configuration files in this PR..."
-          
-          # Verify main-branch ref is available (it was fetched in the previous step)
-          if ! git cat-file -e main-branch 2>/dev/null; then
-            echo "❌ main-branch ref not found - cannot detect configuration file changes"
-            exit 1
-          fi
-          
+
+          git fetch origin main:main-branch
+
           changed_files=()
-          
-          # Check exact file matches against main branch git objects
-          # 2>/dev/null suppresses output when a file doesn't exist in one ref (new/deleted file),
-          # which git diff handles correctly via its exit code
+
           exact_files=(
             ".editorconfig"
             "Directory.Build.props"
             "Directory.Build.targets"
             "BannedSymbols.txt"
           )
-          
+
           for config_file in "${exact_files[@]}"; do
             if ! git diff --quiet main-branch HEAD -- "$config_file" 2>/dev/null; then
               changed_files+=("$config_file")
             fi
           done
-          
-          # Check .globalconfig and .ruleset files using the same git diff approach
-          # --diff-filter=AMRC: Added, Modified, Renamed, Copied (excludes Deleted)
+
           while IFS= read -r file; do
             changed_files+=("$file")
           done < <(git diff --name-only --diff-filter=AMRC main-branch HEAD 2>/dev/null | grep -E '\.(globalconfig|ruleset)$' || true)
-          
+
           if [ ${#changed_files[@]} -gt 0 ]; then
             echo ""
             echo "⚠️  PROTECTED CONFIGURATION FILES CHANGED IN THIS PR:"
@@ -171,17 +149,6 @@ jobs:
             exit 1
           else
             echo "✅ No protected configuration files changed - CI fully validates this PR"
-          fi
-      
-      - name: Check for .NET project files
-        id: check-projects
-        run: |
-          if git ls-files '*.csproj' '*.vbproj' '*.fsproj' | grep -q .; then
-            echo "has-projects=true" >> $GITHUB_OUTPUT
-            echo "✅ Found .NET project files - .NET build and test jobs will run"
-          else
-            echo "has-projects=false" >> $GITHUB_OUTPUT
-            echo "ℹ️  No .NET project files found - skipping .NET build and test jobs"
           fi
 
   # ============================================================================
