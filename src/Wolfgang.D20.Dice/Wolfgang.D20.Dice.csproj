@@ -46,7 +46,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Wolfgang.TryPattern" Version="0.3.0" />
+	  <PackageReference Include="Wolfgang.TryPattern" Version="0.3.1" />
 	</ItemGroup>
 
 </Project>
