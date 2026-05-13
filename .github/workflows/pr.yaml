@@ -94,7 +94,15 @@ jobs:
   check-protected-files:
     name: "Protected File Check"
     runs-on: ubuntu-latest
-    if: github.repository != 'Chris-Wolfgang/repo-template'
+    # Skip for Dependabot — its package-version bumps to protected files
+    # (e.g. Directory.Build.props analyzer references) are legitimate and
+    # the threat model of this guard is human PR authors disabling
+    # analyzers in their own PRs, not GitHub-controlled package bots.
+    # Required status checks treat skipped jobs as passing, so this lets
+    # Dependabot PRs auto-merge without a maintainer override.
+    if: |
+      github.repository != 'Chris-Wolfgang/repo-template' &&
+      github.event.pull_request.user.login != 'dependabot[bot]'
 
     steps:
       - name: Checkout code
