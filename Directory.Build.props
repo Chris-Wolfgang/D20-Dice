@@ -1,5 +1,8 @@
 <Project>
   <PropertyGroup>
+    <!-- Nullable reference types on for every SDK-style project in the repo -->
+    <Nullable>enable</Nullable>
+
     <!-- Enable .NET analyzers -->
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
