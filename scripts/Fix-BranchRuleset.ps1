@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 <#
 .SYNOPSIS
     Fixes branch rulesets by disabling existing ones and recreating with the correct configuration.
@@ -15,9 +16,6 @@
 .PARAMETER Force
     Skip the confirmation prompt and proceed automatically. Alias: -y
 
-.PARAMETER SkipSetup
-    Skip automatic invocation of Setup-BranchRuleset.ps1 after fixing.
-
 .EXAMPLE
     .\Fix-BranchRuleset.ps1
     Inspects and fixes rulesets for the current repository with interactive confirmation
@@ -25,10 +23,6 @@
 .EXAMPLE
     .\Fix-BranchRuleset.ps1 -Force
     Inspects and fixes rulesets without prompting for confirmation
-
-.EXAMPLE
-    .\Fix-BranchRuleset.ps1 -Force -SkipSetup
-    Fixes rulesets non-interactively without recreating a fresh ruleset
 
 .EXAMPLE
     .\Fix-BranchRuleset.ps1 -Repository "Chris-Wolfgang/my-repo"
@@ -42,14 +36,11 @@
 [CmdletBinding()]
 param(
     [Parameter()]
-    [string]$Repository = "Chris-Wolfgang/D20-Dice",
+    [string]$Repository = "{{GITHUB_USERNAME}}/{{REPO_NAME}}",
 
     [Parameter()]
     [Alias("y")]
-    [switch]$Force,
-
-    [Parameter()]
-    [switch]$SkipSetup
+    [switch]$Force
 )
 
 # Check if gh CLI is installed
@@ -75,15 +66,15 @@ try {
 }
 
 # Determine repository
-if ($Repository -eq "Chris-Wolfgang/D20-Dice" -or -not $Repository) {
+if ($Repository -eq "{{GITHUB_USERNAME}}/{{REPO_NAME}}" -or -not $Repository) {
     Write-Host "Detecting current repository..." -ForegroundColor Cyan
     try {
         $repoInfo = gh repo view --json nameWithOwner | ConvertFrom-Json
         $Repository = $repoInfo.nameWithOwner
         Write-Host "Using repository: $Repository" -ForegroundColor Green
     } catch {
-        if ($Repository -eq "Chris-Wolfgang/D20-Dice") {
-            Write-Error "Could not detect repository. Please specify the -Repository parameter, or run this script from within the target git repository."
+        if ($Repository -eq "{{GITHUB_USERNAME}}/{{REPO_NAME}}") {
+            Write-Error "Could not detect repository. Please run the setup script first to replace placeholders, or specify -Repository parameter."
         } else {
             Write-Error "Could not detect repository. Please run from within a git repository or specify -Repository parameter."
         }
@@ -256,11 +247,7 @@ if ($errors -gt 0) {
 
     # Invoke Setup-BranchRuleset.ps1 to create a fresh ruleset
     $setupScript = Join-Path $PSScriptRoot "Setup-BranchRuleset.ps1"
-    if ($SkipSetup) {
-        Write-Host "Skipping Setup-BranchRuleset.ps1 (-SkipSetup specified)." -ForegroundColor Yellow
-        Write-Host "Run it manually to create a fresh ruleset:" -ForegroundColor Cyan
-        Write-Host "  pwsh -File `"$setupScript`" -Repository $Repository" -ForegroundColor Cyan
-    } elseif (Test-Path $setupScript) {
+    if (Test-Path $setupScript) {
         Write-Host "Running Setup-BranchRuleset.ps1 to create a fresh ruleset..." -ForegroundColor Cyan
         Write-Host ""
         & $setupScript -Repository $Repository

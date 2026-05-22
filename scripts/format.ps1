@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env pwsh
+#!/usr/bin/env pwsh
 <#
 .SYNOPSIS
     Formats all C# code in the repository using dotnet format.
@@ -11,11 +11,11 @@
     If specified, only checks formatting without making changes (like CI does).
 
 .EXAMPLE
-    pwsh ./scripts/format.ps1
+    .\format.ps1
     Formats all code in the repository.
 
 .EXAMPLE
-    pwsh ./scripts/format.ps1 -Check
+    .\format.ps1 -Check
     Checks formatting without making changes.
 #>
 
@@ -38,9 +38,11 @@ if ($LASTEXITCODE -ne 0)
     Write-Host "❌ dotnet format is not available!" -ForegroundColor Red
     Write-Host ""
     Write-Host "The 'dotnet format' command is built into the .NET SDK starting with .NET 6." -ForegroundColor Yellow
-    Write-Host "This project requires .NET 8.0 SDK or later." -ForegroundColor Yellow
+    Write-Host "You need an SDK new enough to load this repo's target frameworks — see" -ForegroundColor Yellow
+    Write-Host ".github/workflows/pr.yaml (and global.json if present) for the SDK" -ForegroundColor Yellow
+    Write-Host "versions CI uses. The latest stable .NET SDK is generally a safe choice." -ForegroundColor Yellow
     Write-Host ""
-    Write-Host "Please install the .NET 8.0 SDK or later from:" -ForegroundColor Yellow
+    Write-Host "Install the .NET SDK from:" -ForegroundColor Yellow
     Write-Host "https://dotnet.microsoft.com/download" -ForegroundColor Cyan
     Write-Host ""
     exit 1
@@ -50,16 +52,16 @@ Write-Host "✅ dotnet format is available" -ForegroundColor Green
 Write-Host ""
 
 # Find solution file
-$solutions = Get-ChildItem -Path . -File | Where-Object { $_.Extension -eq '.sln' -or $_.Extension -eq '.slnx' } | Select-Object -First 1
+$solution = Get-ChildItem -Path . -File | Where-Object { $_.Extension -eq '.sln' -or $_.Extension -eq '.slnx' } | Select-Object -First 1
 
-if (-not $solutions)
+if (-not $solution)
 {
     Write-Host "❌ No solution file found!" -ForegroundColor Red
     exit 1
 }
 
-$solutionFile = $solutions.FullName
-Write-Host "📁 Found solution: $($solutions.Name)" -ForegroundColor Green
+$solutionFile = $solution.FullName
+Write-Host "📁 Found solution: $($solution.Name)" -ForegroundColor Green
 Write-Host ""
 
 if ($Check)
@@ -78,7 +80,7 @@ if ($Check)
     {
         Write-Host ""
         Write-Host "❌ Formatting issues detected!" -ForegroundColor Red
-        Write-Host "Run 'pwsh ./scripts/format.ps1' (without -Check) to fix them automatically." -ForegroundColor Yellow
+        Write-Host "Run '.\format.ps1' (without -Check) to fix them automatically." -ForegroundColor Yellow
         exit 1
     }
 }
