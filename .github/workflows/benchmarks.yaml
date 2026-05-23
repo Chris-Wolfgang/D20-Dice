@@ -1,0 +1,86 @@
+name: Benchmarks
+
+# Runs BenchmarkDotNet after a merge to main, then publishes the results to
+# the gh-pages branch under /dev/bench/ where benchmark-action/github-action-benchmark
+# renders an interactive line chart.
+#
+# This workflow is decoupled from PR validation and release: it does NOT gate
+# merging or publishing — it just adds one data point per qualifying push.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'benchmarks/**'
+      - '.github/workflows/benchmarks.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  benchmark:
+    name: Run BenchmarkDotNet & publish chart
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.0.x
+
+      - name: Restore
+        run: dotnet restore benchmarks/Wolfgang.D20.Dice.Benchmarks/Wolfgang.D20.Dice.Benchmarks.csproj
+
+      - name: Build (Release)
+        run: dotnet build -c Release --no-restore benchmarks/Wolfgang.D20.Dice.Benchmarks/Wolfgang.D20.Dice.Benchmarks.csproj
+
+      - name: Run benchmarks
+        working-directory: benchmarks/Wolfgang.D20.Dice.Benchmarks
+        run: dotnet run -c Release --no-build -- --filter "*" --job short --memory --exporters json
+
+      - name: Merge per-class BDN reports
+        id: locate
+        working-directory: benchmarks/Wolfgang.D20.Dice.Benchmarks
+        run: |
+          shopt -s nullglob
+          reports=(BenchmarkDotNet.Artifacts/results/*-report-full-compressed.json)
+          if [ ${#reports[@]} -eq 0 ]; then
+            echo "::error::No BenchmarkDotNet JSON report found"
+            exit 1
+          fi
+          echo "Merging ${#reports[@]} report(s):"
+          printf '  %s\n' "${reports[@]}"
+          jq -s '{
+            Title: "BenchmarkDotNet combined report",
+            HostEnvironmentInfo: .[0].HostEnvironmentInfo,
+            Benchmarks: [.[].Benchmarks[]]
+          }' "${reports[@]}" > benchmarks-result.json
+          echo "report=benchmarks/Wolfgang.D20.Dice.Benchmarks/benchmarks-result.json" >> "$GITHUB_OUTPUT"
+
+      - name: Publish chart to gh-pages
+        uses: benchmark-action/github-action-benchmark@52576c92bccf6ac60c8223ec7eb2565637cae9ba  # v1.22.1
+        with:
+          name: BenchmarkDotNet
+          tool: 'benchmarkdotnet'
+          output-file-path: ${{ steps.locate.outputs.report }}
+          gh-pages-branch: gh-pages
+          benchmark-data-dir-path: dev/bench
+          auto-push: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          alert-threshold: '200%'
+          fail-on-alert: false
