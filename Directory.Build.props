@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <!-- Nullable reference types on for every C# project (F#/VB projects excluded) -->
-    <Nullable Condition="'$(MSBuildProjectExtension)' == '.csproj'">enable</Nullable>
+    <Nullable Condition="'$(MSBuildProjectExtension)' == '.csproj' and '$(UsingMicrosoftNETSdk)' == 'true'">enable</Nullable>
 
     <!-- Enable .NET analyzers -->
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
