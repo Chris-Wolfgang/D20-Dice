@@ -6,7 +6,6 @@
     <LangVersion>latest</LangVersion>
 	  <Version>0.5.0</Version>
 	  <Title>$(AssemblyName)</Title>
-	  <Authors>Chris Wolfgang</Authors>
 	  <Description>Contains class for generating random numbers by simulating rolling of dice with various number of sides</Description>
 	  <RootNamespace>Wolfgang.D20</RootNamespace>
 	  <Copyright>Copyright 2025 Chris Wolfgang </Copyright>
