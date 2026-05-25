@@ -1,4 +1,4 @@
-# Wolfgang.D20-Dice
+# Wolfgang.D20.Dice
 
 A random number generator that simulates d20 dice with modifier
 
@@ -11,7 +11,7 @@ A random number generator that simulates d20 dice with modifier
 ## 📦 Installation
 
 ```bash
-dotnet add package Wolfgang.D20-Dice
+dotnet add package Wolfgang.D20.Dice
 ```
 
 **NuGet Package:** Available on Nuget.org
