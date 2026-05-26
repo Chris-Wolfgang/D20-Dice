@@ -12,6 +12,7 @@
 	  <RootNamespace>Wolfgang.D20</RootNamespace>
 	  <Copyright>Copyright 2025 Chris Wolfgang </Copyright>
 	  <PackageProjectUrl>https://github.com/Chris-Wolfgang/D20-Dice</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/Chris-Wolfgang/D20-Dice.git</RepositoryUrl>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
