@@ -13,7 +13,6 @@
 	  <Copyright>Copyright 2025 Chris Wolfgang </Copyright>
 	  <PackageProjectUrl>https://github.com/Chris-Wolfgang/D20-Dice</PackageProjectUrl>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
-	  <AssemblyVersion>1.0.0</AssemblyVersion>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
