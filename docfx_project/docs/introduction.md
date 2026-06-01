@@ -1,10 +1,10 @@
 # Introduction
 
-Welcome to Wolfgang.D20-Dice!
+Welcome to Wolfgang.D20.Dice!
 
 ## Overview
 
-Wolfgang.D20-Dice is a .NET library for simulating tabletop dice rolls using standard dice notation (e.g., `2d6+3`). It provides a strongly-typed `Dice` class with roll generation, notation parsing, and value-equality semantics.
+Wolfgang.D20.Dice is a .NET library for simulating tabletop dice rolls using standard dice notation (e.g., `2d6+3`). It provides a strongly-typed `Dice` class with roll generation, notation parsing, and value-equality semantics.
 
 ## Key Features
 
@@ -17,7 +17,7 @@ Wolfgang.D20-Dice is a .NET library for simulating tabletop dice rolls using sta
 
 ## Getting Help
 
-If you need help with Wolfgang.D20-Dice, please:
+If you need help with Wolfgang.D20.Dice, please:
 
 - Check the [Getting Started](getting-started.md) guide
 - Review the [API Reference](https://chris-wolfgang.github.io/D20-Dice/versions/latest/api/Wolfgang.D20.html)

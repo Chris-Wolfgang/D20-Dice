@@ -1,7 +1,7 @@
-# Copilot Instructions for Wolfgang.D20-Dice
+# Copilot Instructions for Wolfgang.D20.Dice
 
 ## Project Overview
-- **Package:** Wolfgang.D20-Dice
+- **Package:** Wolfgang.D20.Dice
 - **Namespace:** Wolfgang.D20
 - **Purpose:** Simulates tabletop dice rolls using standard dice notation (XdY+Z)
 - **Dependency:** Wolfgang.TryPattern for `Result<T>` return types
