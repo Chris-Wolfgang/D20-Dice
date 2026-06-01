@@ -49,9 +49,8 @@ runtime behavior change vs v0.5.0.
 - **C1** — fleet-wide template-drift sync: workflow files (`pr.yaml`,
   `release.yaml`, `docfx.yaml`, `codeql.yaml`,
   `build-all-versions.yaml`, `stryker.yaml`), `.editorconfig`,
-  `BannedSymbols.txt`, `Directory.Build.props`,
-  `tests/Directory.Build.props`, and `.gitattributes` consolidated to
-  the canonical baseline.
+  `BannedSymbols.txt`, `Directory.Build.props`, `tests/.editorconfig`,
+  and `.gitattributes` consolidated to the canonical baseline.
 - **Nullable** — `<Nullable>enable</Nullable>` consolidated into
   `Directory.Build.props` (was per-csproj); per-project opt-out via
   override still supported.
