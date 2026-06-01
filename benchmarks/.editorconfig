@@ -9,13 +9,16 @@
 #
 # This file is the canonical home for benchmark-inappropriate
 # analyzer suppressions. As BDN-typical warnings surface during
-# benchmark expansion, add per-rule severity overrides here rather
-# than blanket-disabling TWEA on the folder.
-#
-# Examples (commented out — none required yet for this repo):
-#   dotnet_diagnostic.CA1822.severity = none      # methods don't access this
-#   dotnet_diagnostic.MA0048.severity = none      # File name does not match
-#   dotnet_diagnostic.S1144.severity  = none      # Unused private members (reflection)
-#   dotnet_diagnostic.S2933.severity  = none      # Fields used by reflection should be private
+# benchmark expansion, add per-rule severity overrides BELOW the
+# `[*.cs]` section header rather than blanket-disabling TWEA on
+# the folder. Properties placed before any section header are
+# ignored by most EditorConfig parsers — keep entries inside
+# `[*.cs]`.
 
 [*.cs]
+
+# Examples (commented out — none required yet for this repo):
+# dotnet_diagnostic.CA1822.severity = none      # methods don't access this
+# dotnet_diagnostic.MA0048.severity = none      # File name does not match
+# dotnet_diagnostic.S1144.severity  = none      # Unused private members (reflection)
+# dotnet_diagnostic.S2933.severity  = none      # Fields used by reflection should be private
