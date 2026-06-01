@@ -91,15 +91,16 @@ public class DiceTests
 
 
 
-    [Fact]
-    public void Modify_can_be_positive_or_negative()
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(-1)]
+    [InlineData(int.MinValue)]
+    [InlineData(int.MaxValue)]
+    public void Modifier_can_be_positive_zero_or_negative_including_int_boundaries(int modifier)
     {
-        _ = new Dice(modifier: 0);
-        _ = new Dice(modifier: 1);
-        _ = new Dice(modifier: -1);
-        _ = new Dice(modifier: int.MinValue);
-        _ = new Dice(modifier: int.MaxValue);
-        Assert.True(true);
+        var dice = new Dice(modifier: modifier);
+        Assert.Equal(modifier, dice.Modifier);
     }
 
 
