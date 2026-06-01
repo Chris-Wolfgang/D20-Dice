@@ -1,7 +1,7 @@
 namespace Wolfgang.D20;
 
 /// <summary>
-/// Represents a number of dice, each with the name specified number of sides and optional modifier.
+/// Represents a number of dice, each with the specified number of sides and an optional modifier.
 /// </summary>
 public interface IDice
 {
@@ -45,21 +45,24 @@ public interface IDice
     /// <summary>
     /// Rolls the dice and returns the total value rolled, including any modifier.
     /// </summary>
-    /// <returns>int</returns>
+    /// <returns>
+    /// The sum of <see cref="DieCount"/> independent uniform rolls in [1, <see cref="SideCount"/>] plus <see cref="Modifier"/>.
+    /// Always between <see cref="MinValue"/> and <see cref="MaxValue"/> inclusive.
+    /// </returns>
     int Roll();
 
 
 
     /// <summary>
     /// Returns a string representation of the dice in the format "XdY+Z" where:
-    /// x is the number of dice,
-    /// y is the number of sides on each die,
-    /// z is the modifier (if any).
+    /// X is the number of dice,
+    /// Y is the number of sides on each die,
+    /// Z is the modifier (if any).
     /// </summary>
-    /// <returns>string</returns>
-    /// <remarks>
-    /// If the modifier is 0, it is omitted from the string.
-    /// </remarks>
+    /// <returns>
+    /// The dice in standard <c>XdY+Z</c> notation; the modifier is omitted when zero, and a negative modifier
+    /// renders as <c>XdY-Z</c>.
+    /// </returns>
     string ToString();
 
 }
