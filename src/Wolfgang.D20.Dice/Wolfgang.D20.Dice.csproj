@@ -12,7 +12,7 @@
 	       InformationalVersion (the latter auto-derived from <Version>) carry
 	       the actual release version. -->
 	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
-	  <FileVersion>$([System.Text.RegularExpressions.Regex]::Replace("$(Version)", "[-+].*$", "")).0</FileVersion>
+	  <FileVersion>$([System.Text.RegularExpressions.Regex]::Replace('$(Version)', '[-+].*$', '')).0</FileVersion>
 	  <Title>$(AssemblyName)</Title>
 	  <Description>Contains class for generating random numbers by simulating rolling of dice with various number of sides</Description>
 	  <RootNamespace>Wolfgang.D20</RootNamespace>
