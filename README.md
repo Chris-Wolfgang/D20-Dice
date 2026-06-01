@@ -127,18 +127,20 @@ This project is held to the canonical analyzer set used across all `Chris-Wolfga
 5. **Microsoft.CodeAnalysis.BannedApiAnalyzers** — enforces the `BannedSymbols.txt` policy
 6. **Meziantou.Analyzer** — broad code-quality rules
 7. **SonarAnalyzer.CSharp** — industry-standard analysis
-8. **Microsoft.CodeAnalysis.PublicApiAnalyzers** — tracks the declared public API via `PublicAPI.Shipped.txt` so breaking changes surface in code review
+8. **Microsoft.CodeAnalysis.PublicApiAnalyzers** — scaffolded. Activates when `PublicAPI.Shipped.txt` / `PublicAPI.Unshipped.txt` files are present alongside a src csproj; the baseline for this repo will be added in a follow-up using the IDE "Add to public API" code fix.
 
 ### Banned-API policy
 
-`BannedSymbols.txt` is the canonical fleet baseline. The same policy is applied to every Wolfgang.* library — including this one, even though `Dice` itself is a synchronous value type. Banned categories include blocking sync-over-async (`Task.Result`, `Task.Wait()`), `Thread.Sleep`, synchronous file I/O, and several legacy / deprecated APIs.
+`BannedSymbols.txt` is the canonical fleet baseline. The same policy is applied to every Wolfgang.* library — including this one, even though `Dice` itself exposes a synchronous API surface. Banned categories include blocking sync-over-async (`Task.Result`, `Task.Wait()`), `Thread.Sleep`, synchronous file I/O, and several legacy / deprecated APIs.
 
 ---
 
 ## 🛠️ Building from Source
 
 ### Prerequisites
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download) (needed to build the highest-targeted TFM); the older `net462`–`net8.0` TFMs are bundled by recent SDKs
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download) to build the highest-targeted TFM
+- Building the `net462` target also requires the .NET Framework 4.6.2 reference assemblies / targeting pack (typically installed via Visual Studio's ".NET desktop development" workload on Windows; the SDK alone does not include them, and `net462` builds are Windows-only)
+- The `netstandard2.0` and `net8.0` targets build with the .NET 10 SDK alone on any OS
 - Optional: [PowerShell Core](https://github.com/PowerShell/PowerShell) for `scripts/format.ps1`
 
 ### Build Steps
