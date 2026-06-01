@@ -4,7 +4,11 @@ This guide will help you quickly get up and running with Wolfgang.D20.Dice.
 
 ## Prerequisites
 
-- .NET 10.0 SDK to build the highest TFM (older `net462` / `netstandard2.0` / `net8.0` are bundled by recent SDKs). The library ships against `net462`, `netstandard2.0`, `net8.0`, and `net10.0`.
+- The .NET 10.0 SDK is required to build the highest TFM.
+- Building the `net462` target additionally requires the .NET Framework 4.6.2 reference assemblies / targeting pack (typically installed via Visual Studio's ".NET desktop development" workload on Windows; the SDK alone does not include them, and `net462` builds are Windows-only).
+- The `netstandard2.0` and `net8.0` targets build with the .NET 10 SDK alone on any OS.
+
+The library ships against `net462`, `netstandard2.0`, `net8.0`, and `net10.0`.
 
 ## Installation
 
