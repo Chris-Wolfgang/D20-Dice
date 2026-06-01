@@ -1,7 +1,11 @@
 # Wolfgang.D20.Dice
 
-A random number generator that simulates d20 dice with modifier
+A random number generator that simulates dice rolls using standard `XdY+Z` notation (e.g., `2d6+3`, `1d20-1`).
 
+[![NuGet](https://img.shields.io/nuget/v/Wolfgang.D20.Dice.svg?logo=nuget&label=NuGet)](https://www.nuget.org/packages/Wolfgang.D20.Dice)
+[![NuGet downloads](https://img.shields.io/nuget/dt/Wolfgang.D20.Dice.svg?logo=nuget&label=downloads)](https://www.nuget.org/packages/Wolfgang.D20.Dice)
+[![PR build](https://img.shields.io/github/actions/workflow/status/Chris-Wolfgang/D20-Dice/pr.yaml?event=pull_request_target&label=PR%20build&logo=github)](https://github.com/Chris-Wolfgang/D20-Dice/actions/workflows/pr.yaml)
+[![Release](https://img.shields.io/github/actions/workflow/status/Chris-Wolfgang/D20-Dice/release.yaml?label=release&logo=github)](https://github.com/Chris-Wolfgang/D20-Dice/actions/workflows/release.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-Multi--Targeted-purple.svg)](https://dotnet.microsoft.com/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/Chris-Wolfgang/D20-Dice)
@@ -14,7 +18,7 @@ A random number generator that simulates d20 dice with modifier
 dotnet add package Wolfgang.D20.Dice
 ```
 
-**NuGet Package:** Available on Nuget.org
+**NuGet Package:** [Wolfgang.D20.Dice](https://www.nuget.org/packages/Wolfgang.D20.Dice)
 
 ---
 
@@ -98,49 +102,44 @@ Console.WriteLine(a.Equals(b));  // True
 
 ## 🎯 Target Frameworks
 
-| Framework | Versions |
-|-----------|----------|
-| .Net Framework | .net 4.6.2, .net 4.7.0, .net 4.7.1, .net 4.7.2, .net 4.8, .net 4.8.1 | 
-| .Net Core | |
-| .Net | .net 5.0, .net 6.0, .net 7.0, .net 8.0, .net 9.0, .net 10.0 |
+The shipped library targets four TFMs:
+
+| Family | Targets |
+|---|---|
+| .NET Framework | `net462` |
+| .NET Standard | `netstandard2.0` |
+| Modern .NET | `net8.0`, `net10.0` |
+
+`netstandard2.0` lets the package be consumed on `net47/471/472/48/481` and `net5.0`–`net9.0` consumers without the library shipping per-TFM assemblies for each. The test project multi-targets the full `net462`–`net10.0` matrix to verify behaviour end-to-end.
 
 ---
 
 ## 🔍 Code Quality & Static Analysis
 
-This project enforces **strict code quality standards** through **7 specialized analyzers** and custom async-first rules:
+This project is held to the canonical analyzer set used across all `Chris-Wolfgang` .NET libraries. Analyzers run on every build and are treated as errors in `Release`.
 
 ### Analyzers in Use
 
-1. **Microsoft.CodeAnalysis.NetAnalyzers** - Built-in .NET analyzers for correctness and performance
-2. **Roslynator.Analyzers** - Advanced refactoring and code quality rules
-3. **AsyncFixer** - Async/await best practices and anti-pattern detection
-4. **Microsoft.VisualStudio.Threading.Analyzers** - Thread safety and async patterns
-5. **Microsoft.CodeAnalysis.BannedApiAnalyzers** - Prevents usage of banned synchronous APIs
-6. **Meziantou.Analyzer** - Comprehensive code quality rules
-7. **SonarAnalyzer.CSharp** - Industry-standard code analysis
+1. **Microsoft.CodeAnalysis.NetAnalyzers** — built-in .NET analyzers (correctness and performance)
+2. **Roslynator.Analyzers** — refactoring and code quality
+3. **AsyncFixer** — async/await best practices
+4. **Microsoft.VisualStudio.Threading.Analyzers** — thread safety
+5. **Microsoft.CodeAnalysis.BannedApiAnalyzers** — enforces the `BannedSymbols.txt` policy
+6. **Meziantou.Analyzer** — broad code-quality rules
+7. **SonarAnalyzer.CSharp** — industry-standard analysis
+8. **Microsoft.CodeAnalysis.PublicApiAnalyzers** — tracks the declared public API via `PublicAPI.Shipped.txt` so breaking changes surface in code review
 
-### Async-First Enforcement
+### Banned-API policy
 
-This library uses **`BannedSymbols.txt`** to prohibit synchronous APIs and enforce async-first patterns:
-
-**Blocked APIs Include:**
-- ❌ `Task.Wait()`, `Task.Result` - Use `await` instead
-- ❌ `Thread.Sleep()` - Use `await Task.Delay()` instead
-- ❌ Synchronous file I/O (`File.ReadAllText`) - Use async versions
-- ❌ Synchronous stream operations - Use `ReadAsync()`, `WriteAsync()`
-- ❌ `Parallel.For/ForEach` - Use `Task.WhenAll()` or `Parallel.ForEachAsync()`
-- ❌ Obsolete APIs (`WebClient`, `BinaryFormatter`)
-
-**Why?** To ensure all code is **truly async** and **non-blocking** for optimal performance in async contexts.
+`BannedSymbols.txt` is the canonical fleet baseline. The same policy is applied to every Wolfgang.* library — including this one, even though `Dice` itself is a synchronous value type. Banned categories include blocking sync-over-async (`Task.Result`, `Task.Wait()`), `Thread.Sleep`, synchronous file I/O, and several legacy / deprecated APIs.
 
 ---
 
 ## 🛠️ Building from Source
 
 ### Prerequisites
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download) or later
-- Optional: [PowerShell Core](https://github.com/PowerShell/PowerShell) for formatting scripts
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download) (needed to build the highest-targeted TFM); the older `net462`–`net8.0` TFMs are bundled by recent SDKs
+- Optional: [PowerShell Core](https://github.com/PowerShell/PowerShell) for `scripts/format.ps1`
 
 ### Build Steps
 
