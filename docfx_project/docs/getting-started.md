@@ -1,23 +1,23 @@
 # Getting Started
 
-This guide will help you quickly get up and running with Wolfgang.D20-Dice.
+This guide will help you quickly get up and running with Wolfgang.D20.Dice.
 
 ## Prerequisites
 
-- .NET 8.0 SDK or later (for development; the library targets .NET Framework 4.6.2+, .NET Standard 2.0, and .NET 8.0+)
+- .NET 10.0 SDK to build the highest TFM (older `net462` / `netstandard2.0` / `net8.0` are bundled by recent SDKs). The library ships against `net462`, `netstandard2.0`, `net8.0`, and `net10.0`.
 
 ## Installation
 
 ### Via NuGet Package Manager
 
 ```bash
-dotnet add package Wolfgang.D20-Dice
+dotnet add package Wolfgang.D20.Dice
 ```
 
 ### Via Package Manager Console
 
 ```powershell
-Install-Package Wolfgang.D20-Dice
+Install-Package Wolfgang.D20.Dice
 ```
 
 ## Quick Start
@@ -46,7 +46,7 @@ if (parseResult.Succeeded)
 ## Next Steps
 
 - Explore the [API Reference](https://chris-wolfgang.github.io/D20-Dice/versions/latest/api/Wolfgang.D20.html) for detailed documentation
-- Read the [Introduction](introduction.md) to learn more about Wolfgang.D20-Dice
+- Read the [Introduction](introduction.md) to learn more about Wolfgang.D20.Dice
 - Check out example projects in the [GitHub repository](https://github.com/Chris-Wolfgang/D20-Dice)
 
 ## Common Issues
