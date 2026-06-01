@@ -12,6 +12,9 @@ name: Build All Versioned Docs
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read  # Default to read-only; the build-and-deploy job overrides with write
+
 jobs:
   build-and-deploy:
     name: Build & Deploy All Versioned Docs
@@ -25,6 +28,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Full history so all tags are reachable
+          persist-credentials: false
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -38,7 +42,8 @@ jobs:
             10.0.x
 
       - name: Install DocFX
-        run: dotnet tool update docfx --global
+        run: |
+          dotnet tool update docfx --global || dotnet tool install docfx --global
         shell: pwsh
 
       - name: Build docs for each version
@@ -114,20 +119,20 @@ jobs:
             try {
               # Attempt dotnet restore + build; failures are non-fatal because
               # DocFX can still extract metadata from source files.
-              $slnFile = Get-ChildItem -Filter '*.sln' -ErrorAction SilentlyContinue |
+              $slnFile = Get-ChildItem -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -in '.sln','.slnx' } |
                          Select-Object -First 1
               if ($slnFile) {
                 Write-Host "Restoring $($slnFile.Name)..."
-                dotnet restore $slnFile.FullName 2>&1 | Write-Host
+                dotnet restore $slnFile.FullName 2>&1 | Out-Host
                 Write-Host "Building $($slnFile.Name)..."
-                dotnet build $slnFile.FullName --configuration Release --no-restore 2>&1 | Write-Host
+                dotnet build $slnFile.FullName --configuration Release --no-restore 2>&1 | Out-Host
               }
 
               Write-Host "Running docfx metadata..."
-              docfx metadata docfx_project/docfx.json 2>&1 | Write-Host
+              docfx metadata docfx_project/docfx.json 2>&1 | Out-Host
 
               Write-Host "Running docfx build..."
-              docfx build docfx_project/docfx.json 2>&1 | Write-Host
+              docfx build docfx_project/docfx.json 2>&1 | Out-Host
 
               if (Test-Path 'docfx_project/_site') {
                 $dest = Join-Path $outDir 'versions' $version
@@ -202,7 +207,7 @@ jobs:
 
           Push-Location $latestWorkDir
           try {
-            $slnFile = Get-ChildItem -Filter '*.sln' -ErrorAction SilentlyContinue |
+            $slnFile = Get-ChildItem -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -in '.sln','.slnx' } |
                        Select-Object -First 1
             if ($slnFile) {
               Write-Host "Restoring $($slnFile.Name)..."
@@ -280,9 +285,22 @@ jobs:
             Sort-Object -Property Major, Minor, Patch, Stable -Descending |
             Select-Object -ExpandProperty Tag
 
+          # Only emit version-picker entries for tags whose docs were actually
+          # built and copied under $outDir/versions/<tag>/. Skipped tags (worktree
+          # add failed, DocFX produced no _site, etc.) would otherwise appear in
+          # versions.json as links to 404s on gh-pages.
+          $versionsDir = Join-Path $outDir 'versions'
+          $builtTags = if (Test-Path $versionsDir) {
+            Get-ChildItem -Path $versionsDir -Directory | Select-Object -ExpandProperty Name
+          } else { @() }
+
           [array]$versions = @([PSCustomObject]@{ version = 'latest'; url = "${base}versions/latest/" })
           foreach ($t in $orderedTags) {
-            $versions += [PSCustomObject]@{ version = $t; url = "${base}versions/$t/" }
+            if ($builtTags -contains $t) {
+              $versions += [PSCustomObject]@{ version = $t; url = "${base}versions/$t/" }
+            } else {
+              Write-Host "::notice::Skipping versions.json entry for $t — no built docs under versions/$t/"
+            }
           }
 
           $versionsJson = ConvertTo-Json -InputObject $versions -Depth 3
@@ -318,12 +336,11 @@ jobs:
           $listHtml = $listItems -join "`n"
 
           $templatePath = '.github/version-picker-template.html'
-          if (Test-Path $templatePath) {
-            $template = Get-Content $templatePath -Raw
-          } else {
-            Write-Host "Template file '$templatePath' not found. Using built-in fallback template."
+          if (-not (Test-Path $templatePath)) {
+            Write-Error "Template file '$templatePath' not found. This file is required."
             exit 1
           }
+          $template = Get-Content $templatePath -Raw
           $html = $template -replace '\{\{TITLE\}\}', $title `
                             -replace '\{\{VERSION_LIST\}\}', $listHtml
 
@@ -334,7 +351,7 @@ jobs:
         # Publishes the entire all_version_docs/ output directory to gh-pages
         # at the site root.  keep_files: true preserves any other content
         # already present on the branch (CNAME, root assets, etc.).
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e  # v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{ runner.temp }}/all_version_docs

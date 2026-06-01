@@ -23,10 +23,65 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Validate release tag matches csproj version
+        shell: pwsh
+        env:
+          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          # Strip leading 'v' or 'v.' from the tag (v0.3.0 -> 0.3.0, v.0.1.0 -> 0.1.0)
+          $tagName = $env:RELEASE_TAG_NAME
+          $tagVersion = $tagName -replace '^v\.?', ''
+          Write-Host "Release tag:      $tagName" -ForegroundColor Cyan
+          Write-Host "Expected version: $tagVersion" -ForegroundColor Cyan
+          Write-Host ""
+
+          $srcCsprojs = @(Get-ChildItem -Path './src' -Recurse -Filter '*.csproj' -ErrorAction SilentlyContinue)
+          if ($srcCsprojs.Count -eq 0) {
+            Write-Warning "No src csprojs found - skipping version validation"
+            exit 0
+          }
+
+          # Collect <Version> and <PackageVersion> values from every src csproj
+          $found = @()
+          foreach ($proj in $srcCsprojs) {
+            try {
+              [xml]$xml = Get-Content $proj.FullName -Raw
+              $nodes = $xml.SelectNodes('//Version | //PackageVersion')
+              foreach ($node in $nodes) {
+                $v = $node.InnerText.Trim()
+                if ($v) {
+                  $found += [pscustomobject]@{ Project = $proj.Name; Version = $v }
+                }
+              }
+            } catch {
+              Write-Warning "Failed to parse $($proj.Name): $($_.Exception.Message)"
+            }
+          }
+
+          Write-Host "Versions found in src csprojs:" -ForegroundColor Cyan
+          foreach ($f in $found) {
+            Write-Host "  $($f.Project): $($f.Version)" -ForegroundColor DarkGray
+          }
+          Write-Host ""
+
+          if ($found.Count -eq 0) {
+            Write-Error "No <Version> or <PackageVersion> found in any src csproj"
+            exit 1
+          }
+
+          if ($found.Version -contains $tagVersion) {
+            Write-Host "Release tag matches at least one src csproj version" -ForegroundColor Green
+          } else {
+            $allVersions = ($found.Version | Sort-Object -Unique) -join ', '
+            Write-Error "Release tag '$tagName' (version '$tagVersion') does not match any src csproj version. Found: $allVersions. Bump the csproj <Version> or correct the release tag before re-running."
+            exit 1
+          }
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
+            3.1.x
             5.0.x
             6.0.x
             7.0.x
@@ -300,6 +355,7 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
+            3.1.x
             5.0.x
             6.0.x
             7.0.x
@@ -506,10 +562,107 @@ jobs:
           retention-days: 90
           if-no-files-found: warn
 
+  # Verify the documentation builds cleanly BEFORE publishing the release —
+  # initiative D8. Builds DocFX without deploying so a docs failure blocks
+  # publish-nuget rather than landing after the package is already live.
+  verify-docs-build:
+    name: Verify Documentation Builds
+    runs-on: windows-latest
+    # Gate on the prior validation jobs so we don't burn ~5-10 min of Windows
+    # runner time on a release that's already failing earlier in the pipeline.
+    needs: [validate-release, pack-and-validate]
+    if: github.repository != 'Chris-Wolfgang/repo-template'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Detect docfx project
+        id: check
+        shell: pwsh
+        run: |
+          if (Test-Path "docfx_project/docfx.json") {
+            "found=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          } else {
+            Write-Host "::notice::No docfx_project/docfx.json - skipping docs verification."
+            "found=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          }
+
+      - name: Setup .NET
+        if: steps.check.outputs.found == 'true'
+        uses: actions/setup-dotnet@v5
+        with:
+          # Install the same SDK set as validate-release so dotnet build can
+          # compile every TFM the solution targets (some test projects span
+          # netcoreapp3.1 → net10.0). Without these, the docs verify step
+          # fails on repos with broad multi-targeting.
+          dotnet-version: |
+            3.1.x
+            5.0.x
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Restore .NET workloads
+        # Same gated probe as pr.yaml — only run dotnet workload restore when
+        # at least one csproj declares a workload-bearing TFM. Required for
+        # repos with MAUI/Android/iOS targets (e.g. Hawsey); fast no-op
+        # otherwise. Without this, dotnet build below fails on workload-bearing
+        # projects because the SDK can't resolve the workload assemblies.
+        if: steps.check.outputs.found == 'true'
+        shell: bash
+        run: |
+          if find . -name '*.csproj' -type f -exec grep -lE 'net[0-9]+\.[0-9]+-(android|ios|maccatalyst|maui|tvos|tizen|browser)' {} \; | grep -q .; then
+            echo "Workload-bearing TFMs detected — running dotnet workload restore"
+            dotnet workload restore
+          else
+            echo "No workload-bearing TFMs in any csproj — skipping dotnet workload restore"
+          fi
+
+      - name: Restore dependencies
+        if: steps.check.outputs.found == 'true'
+        run: dotnet restore
+
+      - name: Build solution (Release)
+        if: steps.check.outputs.found == 'true'
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Install DocFX
+        if: steps.check.outputs.found == 'true'
+        shell: pwsh
+        run: dotnet tool update docfx --global || dotnet tool install docfx --global
+
+      - name: Build DocFX metadata
+        if: steps.check.outputs.found == 'true'
+        run: docfx metadata
+        working-directory: docfx_project
+
+      - name: Build documentation (no deploy)
+        if: steps.check.outputs.found == 'true'
+        run: docfx build
+        working-directory: docfx_project
+
+      - name: Verify documentation output
+        if: steps.check.outputs.found == 'true'
+        shell: pwsh
+        run: |
+          if (-Not (Test-Path "docfx_project/_site")) {
+            Write-Error "docfx_project/_site not found after build"
+            exit 1
+          }
+          if (-Not (Test-Path "docfx_project/_site/api")) {
+            Write-Error "docfx_project/_site/api not found - API metadata generation may have failed"
+            exit 1
+          }
+          Write-Host "Documentation built successfully - release may proceed"
+
   # Publish to NuGet (only if validation passed)
   publish-nuget:
     name: Publish to NuGet.org
-    needs: pack-and-validate
+    needs: [pack-and-validate, verify-docs-build]
     if: needs.pack-and-validate.outputs.has-packages == 'true'
     runs-on: windows-latest
     steps:
@@ -517,6 +670,7 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
+            3.1.x
             5.0.x
             6.0.x
             7.0.x
@@ -612,11 +766,12 @@ jobs:
         run: zip -r release-coverage.zip ./release-coverage
 
       - name: Attach artifacts to release
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b  # v2.5.0
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda  # v3.0.0
         with:
           tag_name: ${{ github.event.release.tag_name }}
           files: |
             ./nuget-packages/*.nupkg
+            ./nuget-packages/*.snupkg
             ./nuget-packages/*.bom.json
             release-coverage.zip
 
