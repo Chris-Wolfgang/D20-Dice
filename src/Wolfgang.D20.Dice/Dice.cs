@@ -77,7 +77,7 @@ public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
         {
             checked
             {
-                return (DieCount * 1) + Modifier;
+                return DieCount + Modifier;
             }
         }
     }
@@ -103,7 +103,10 @@ public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
     /// <summary>
     /// Rolls the dice and returns the total value rolled, including any modifier.
     /// </summary>
-    /// <returns>int</returns>
+    /// <returns>
+    /// The sum of <see cref="DieCount"/> independent uniform rolls in [1, <see cref="SideCount"/>] plus <see cref="Modifier"/>.
+    /// Always between <see cref="MinValue"/> and <see cref="MaxValue"/> inclusive.
+    /// </returns>
     public int Roll()
     {
 #if NET6_0_OR_GREATER
@@ -130,10 +133,10 @@ public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
     /// y is the number of sides on each die,
     /// z is the modifier (if any).
     /// </summary>
-    /// <returns>string</returns>
-    /// <remarks>
-    /// If the modifier is 0, it is omitted from the string.
-    /// </remarks>
+    /// <returns>
+    /// The dice in standard <c>XdY+Z</c> notation; the modifier is omitted when zero, and a negative modifier
+    /// renders as <c>XdY-Z</c> (the sign is part of the modifier token).
+    /// </returns>
     public override string ToString()
     {
         var value = $"{DieCount}d{SideCount}";
@@ -216,55 +219,39 @@ public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
         {
             return true;
         }
-
-        if (x is null)
+        if (x is null || y is null)
         {
             return false;
         }
-
-        if (y is null)
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.DieCount == y.DieCount && x.SideCount == y.SideCount && x.Modifier == y.Modifier;
+        // GetType check unnecessary — Dice is sealed, so x and y are always exactly Dice.
+        return x.Equals(y);
     }
 
 
 
     /// <summary>
-    /// Generates a hash code for this instance based on its DieCount, SideCount, and Modifier.
+    /// Generates a hash code for the supplied <see cref="Dice"/> instance based on its <see cref="DieCount"/>,
+    /// <see cref="SideCount"/>, and <see cref="Modifier"/>. <see cref="IEqualityComparer{T}"/> implementation.
     /// </summary>
-    /// <param name="obj">The <see cref="Dice"/> instance for which to generate the hash code.</param>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="obj"/> is null.</exception>
-    /// <returns>int</returns>
+    /// <param name="obj">The <see cref="Dice"/> instance to hash.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="obj"/> is null.</exception>
+    /// <returns>A combined hash code of the three identity properties.</returns>
     public int GetHashCode(Dice obj)
     {
         if (obj == null)
         {
             throw new ArgumentNullException(nameof(obj));
         }
-
-        unchecked
-        {
-            var hashCode = obj.DieCount;
-            hashCode = (hashCode * 397) ^ obj.SideCount;
-            hashCode = (hashCode * 397) ^ obj.Modifier;
-            return hashCode;
-        }
+        return obj.GetHashCode();
     }
 
 
 
     /// <summary>
-    /// Generates a hash code for this instance based on its DieCount, SideCount, and Modifier.
+    /// Generates a hash code for this instance based on its <see cref="DieCount"/>, <see cref="SideCount"/>,
+    /// and <see cref="Modifier"/>.
     /// </summary>
-    /// <returns>int</returns>
+    /// <returns>A combined hash code of the three identity properties.</returns>
     public override int GetHashCode()
     {
 #if NET5_0_OR_GREATER
