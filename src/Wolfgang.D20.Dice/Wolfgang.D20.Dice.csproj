@@ -9,8 +9,8 @@
 	  <Description>Contains class for generating random numbers by simulating rolling of dice with various number of sides</Description>
 	  <RootNamespace>Wolfgang.D20</RootNamespace>
 	  <PackageProjectUrl>https://github.com/Chris-Wolfgang/D20-Dice</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/Chris-Wolfgang/D20-Dice.git</RepositoryUrl>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
-	  <AssemblyVersion>1.0.0</AssemblyVersion>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	  <GenerateDocumentationFile>True</GenerateDocumentationFile>

@@ -7,7 +7,6 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
-      - "dotnet"
     groups:
       dotnet-dependencies:
         patterns:
@@ -19,7 +18,6 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
-      - "dotnet"
     groups:
       dotnet-dependencies-src:
         patterns:
@@ -31,7 +29,6 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
-      - "dotnet"
     groups:
       dotnet-dependencies-tests:
         patterns:
@@ -43,7 +40,6 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
-      - "dotnet"
     groups:
       dotnet-dependencies-benchmarks:
         patterns:
@@ -55,8 +51,20 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
-      - "dotnet"
     groups:
       dotnet-dependencies-examples:
+        patterns:
+          - "*"
+
+  # Keep third-party GitHub Actions pinned in workflows up to date.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+    groups:
+      github-actions:
         patterns:
           - "*"
