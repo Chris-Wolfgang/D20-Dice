@@ -1,0 +1,23 @@
+Summary
+  Generated on: 6/2/2026 - 2:06:53 AM
+  Coverage date: 6/2/2026 - 2:06:50 AM
+  Parser: Cobertura
+  Assemblies: 1
+  Classes: 1
+  Files: 1
+  Line coverage: 100%
+  Covered lines: 95
+  Uncovered lines: 0
+  Coverable lines: 95
+  Total lines: 400
+  Branch coverage: 100% (56 of 56)
+  Covered branches: 56
+  Total branches: 56
+  Method coverage: 100% (18 of 18)
+  Full method coverage: 100% (18 of 18)
+  Covered methods: 18
+  Fully covered methods: 18
+  Total methods: 18
+
+Wolfgang.D20.Dice      100%
+  Wolfgang.D20.Dice    100%
