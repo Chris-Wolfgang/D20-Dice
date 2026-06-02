@@ -129,9 +129,9 @@ public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
 
     /// <summary>
     /// Returns a string representation of the dice in the format "XdY+Z" where:
-    /// x is the number of dice,
-    /// y is the number of sides on each die,
-    /// z is the modifier (if any).
+    /// X is the number of dice,
+    /// Y is the number of sides on each die,
+    /// Z is the modifier (if any).
     /// </summary>
     /// <returns>
     /// The dice in standard <c>XdY+Z</c> notation; the modifier is omitted when zero, and a negative modifier
