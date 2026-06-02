@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Introduction | Wolfgang.D20.Dice Documentation </title>
+      <title>Namespace Wolfgang.D20 | Wolfgang.D20.Dice Documentation </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Introduction | Wolfgang.D20.Dice Documentation ">
+      <meta name="title" content="Namespace Wolfgang.D20 | Wolfgang.D20.Dice Documentation ">
       
       
       <link rel="icon" href="../favicon.ico">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/D20-Dice/blob/main/docfx_project/docs/introduction.md/#L1">
+      
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -39,7 +39,7 @@
 
   </head>
 
-  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
     <header class="bg-body border-bottom">
       <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
         <div class="container-xxl flex-nowrap">
@@ -70,37 +70,36 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="">
-<h1 id="introduction">Introduction</h1>
+        <article data-uid="Wolfgang.D20">
 
-<p>Welcome to Wolfgang.D20.Dice!</p>
-<h2 id="overview">Overview</h2>
-<p>Wolfgang.D20.Dice is a .NET library for simulating tabletop dice rolls using standard dice notation (e.g., <code>2d6+3</code>). It provides a strongly-typed <code>Dice</code> class with roll generation, notation parsing, and value-equality semantics.</p>
-<h2 id="key-features">Key Features</h2>
-<ul>
-<li><strong>Dice Notation</strong> — standard <code>XdY+Z</code> format with any die count, side count, and modifier</li>
-<li><strong>Parsing</strong> — <code>Dice.TryParse(&quot;1d20+5&quot;)</code> with full validation, returning a <code>Result&lt;T&gt;</code> from <a href="https://github.com/Chris-Wolfgang/Try-Pattern">Wolfgang.TryPattern</a></li>
-<li><strong>Roll Generation</strong> — <code>Roll()</code> produces a random result within the valid range</li>
-<li><strong>Min/Max Calculation</strong> — <code>MinValue</code> and <code>MaxValue</code> computed from the dice configuration</li>
-<li><strong>Equality</strong> — full <code>IEquatable&lt;Dice&gt;</code> and <code>IEqualityComparer&lt;Dice&gt;</code> implementation</li>
-<li><strong>ToString</strong> — formats back to dice notation (<code>2d6+3</code>, <code>1d20</code>, <code>3d8-2</code>)</li>
-</ul>
-<h2 id="getting-help">Getting Help</h2>
-<p>If you need help with Wolfgang.D20.Dice, please:</p>
-<ul>
-<li>Check the <a href="getting-started.html">Getting Started</a> guide</li>
-<li>Review the <a href="https://chris-wolfgang.github.io/D20-Dice/versions/latest/api/Wolfgang.D20.html">API Reference</a></li>
-<li>Visit the <a href="https://github.com/Chris-Wolfgang/D20-Dice">GitHub repository</a></li>
-<li>Open an issue on <a href="https://github.com/Chris-Wolfgang/D20-Dice/issues">GitHub Issues</a></li>
-</ul>
+  <h1 id="Wolfgang_D20" data-uid="Wolfgang.D20" class="text-break">Namespace Wolfgang.D20</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.D20.Dice.html">Dice</a></dt>
+      <dd><p>Represents a number of dice, each with the specified number of sides and an optional modifier.</p>
+</dd>
+    </dl>
+    <h3 id="interfaces">
+Interfaces
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.D20.IDice.html">IDice</a></dt>
+      <dd><p>Represents a number of dice, each with the specified number of sides and an optional modifier.</p>
+</dd>
+    </dl>
+
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/D20-Dice/blob/main/docfx_project/docs/introduction.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
-        <div class="next-article d-print-none border-top" id="nextArticle"></div>
 
       </div>
 

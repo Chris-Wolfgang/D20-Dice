@@ -1,5 +1,5 @@
 {
-  "source_base_path": "D:/a/_temp/workdir-v0.1.0/docfx_project",
+  "source_base_path": "D:/a/D20-Dice/D20-Dice/docfx_project",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -21,11 +21,66 @@
       "version": ""
     },
     {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.D20.Dice.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.D20.Dice.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.D20.Dice",
+      "Summary": "<p sourcefile=\"api/Wolfgang.D20.Dice.yml\" sourcestartlinenumber=\"1\">Represents a number of dice, each with the specified number of sides and an optional modifier.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.D20.IDice.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.D20.IDice.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.D20.IDice",
+      "Summary": "<p sourcefile=\"api/Wolfgang.D20.IDice.yml\" sourcestartlinenumber=\"1\">Represents a number of dice, each with the specified number of sides and an optional modifier.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.D20.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.D20.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.D20",
+      "Summary": null
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "api/index.md",
       "output": {
         ".html": {
           "relative_path": "api/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
         }
       },
       "version": ""
@@ -94,6 +149,16 @@
       "version": ""
     },
     {
+      "type": "Resource",
+      "source_relative_path": "public/version-picker.js",
+      "output": {
+        "resource": {
+          "relative_path": "public/version-picker.js"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
@@ -102,6 +167,16 @@
         },
         ".json": {
           "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "versions.json",
+      "output": {
+        "resource": {
+          "relative_path": "versions.json"
         }
       },
       "version": ""
