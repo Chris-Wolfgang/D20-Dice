@@ -46,7 +46,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Wolfgang.D20.IDice",
-      "Summary": "<p sourcefile=\"api/Wolfgang.D20.IDice.yml\" sourcestartlinenumber=\"1\">Represents a number of dice, each with the name specified number of sides and optional modifier.</p>\n"
+      "Summary": "<p sourcefile=\"api/Wolfgang.D20.IDice.yml\" sourcestartlinenumber=\"1\">Represents a number of dice, each with the specified number of sides and an optional modifier.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -149,6 +149,16 @@
       "version": ""
     },
     {
+      "type": "Resource",
+      "source_relative_path": "public/version-picker.js",
+      "output": {
+        "resource": {
+          "relative_path": "public/version-picker.js"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
@@ -157,6 +167,16 @@
         },
         ".json": {
           "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "versions.json",
+      "output": {
+        "resource": {
+          "relative_path": "versions.json"
         }
       },
       "version": ""
