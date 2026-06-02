@@ -238,7 +238,7 @@ public sealed class Dice : IDice, IEquatable<Dice>, IEqualityComparer<Dice>
     /// <returns>A combined hash code of the three identity properties.</returns>
     public int GetHashCode(Dice obj)
     {
-        if (obj == null)
+        if (obj is null)
         {
             throw new ArgumentNullException(nameof(obj));
         }
