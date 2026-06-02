@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780364922480,
+  "lastUpdate": 1780366718144,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -72,6 +72,42 @@ window.BENCHMARK_DATA = {
             "value": 6.814373339215915,
             "unit": "ns",
             "range": "± 0.0498974994690444"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bfaeba636a941dc13e754b73089e615235e54470",
+          "message": "Merge pull request #153 from Chris-Wolfgang/fix/obj-is-null-consistency\n\nfix: 'obj == null' → 'obj is null' for consistency (orphan rescue)",
+          "timestamp": "2026-06-01T22:17:36-04:00",
+          "tree_id": "985b282eb67f18c0708c1ebb6285770c5638bd76",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/bfaeba636a941dc13e754b73089e615235e54470"
+        },
+        "date": 1780366716258,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.208928768833478,
+            "unit": "ns",
+            "range": "± 0.049922945805450175"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 7.271819959084193,
+            "unit": "ns",
+            "range": "± 0.008257389901619179"
           }
         ]
       }
