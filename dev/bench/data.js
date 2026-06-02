@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780364387907,
+  "lastUpdate": 1780364922480,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -36,6 +36,42 @@ window.BENCHMARK_DATA = {
             "value": 7.005028009414673,
             "unit": "ns",
             "range": "± 0.0029492725530685976"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5ba9158c444da778971dc0a2a7cf4a8fb032df49",
+          "message": "Merge pull request #144 from Chris-Wolfgang/vNext\n\nRelease v0.5.1: canonical maintenance round + AssemblyVersion fix",
+          "timestamp": "2026-06-01T21:47:34-04:00",
+          "tree_id": "ef4e653c7945b518ebde9da9570df79e405aa021",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/5ba9158c444da778971dc0a2a7cf4a8fb032df49"
+        },
+        "date": 1780364921030,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 6.8286619037389755,
+            "unit": "ns",
+            "range": "± 0.1988365623448172"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 6.814373339215915,
+            "unit": "ns",
+            "range": "± 0.0498974994690444"
           }
         ]
       }
