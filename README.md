@@ -58,6 +58,11 @@ if (parseResult.Succeeded)
 {
     Console.WriteLine($"Parsed: {parseResult.Value} → {parseResult.Value.Roll()}");
 }
+
+// Heterogeneous dice — Dice is a collection of Die you can build up
+var pool = Dice.TryParse("2d6+1d4+3").Value;   // mixed dice plus a flat modifier
+pool.Add(new Die(8));                          // add a d8 to the pool
+Console.WriteLine($"{pool}: {pool.Roll()}");   // e.g. "1d8+2d6+1d4+3: 19"
 ```
 
 ---
@@ -66,13 +71,14 @@ if (parseResult.Succeeded)
 
 | Feature | Description |
 |---------|-------------|
-| Dice Notation | Standard `XdY+Z` format (e.g., `2d6+3`) |
-| Parsing | `Dice.TryParse("1d20+5")` with full validation via `Result<T>` |
+| Dice Notation | Standard `XdY+Z` format, including heterogeneous pools (e.g., `2d6+1d4+3`) |
+| Heterogeneous dice | `Dice` is an `ICollection<Die>` — `Add`/`Remove` individual `Die` of any side count |
+| Parsing | `Dice.TryParse("2d6+1d4+3")` with full validation via `Result<T>` |
 | Roll | `Roll()` generates a random result within the valid range |
-| Min/Max | `MinValue` and `MaxValue` computed from dice configuration |
-| Modifiers | Positive, negative, or zero modifiers supported |
-| Equality | Full `IEquatable<Dice>` and `IEqualityComparer<Dice>` support |
-| ToString | Formats back to dice notation (`2d6+3`, `1d20`, `3d8-2`) |
+| Min/Max | `MinValue` and `MaxValue` computed from the dice in the pool and the modifier |
+| Modifiers | Positive, negative, or zero flat modifiers supported |
+| Equality | Full `IEquatable<Dice>` / `IEquatable<Die>` support (dice pools compare order-independently) |
+| ToString | Formats back to dice notation (`2d6+1d4+3`, `1d20`, `3d8-2`) |
 | Multi-TFM | Targets .NET Framework 4.6.2+, .NET Standard 2.0, and .NET 5.0–10.0 |
 
 **Examples:**
