@@ -9,11 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **#48** — `Die` type representing a single die (`SideCount`, `MinValue`,
+  `MaxValue`, `Roll`, `Die.TryParse`, value equality) and its `IDie`
+  interface.
+- **#48** — `Dice` is now an `ICollection<Die>`: individual dice can be
+  added and removed (`Add`, `Remove`, `Clear`, `Contains`, `CopyTo`,
+  enumeration), enabling heterogeneous pools such as `2d6+1d4+3`.
+- **#48** — `Dice(IEnumerable<Die>, int modifier = 0)` constructor for
+  building a pool from existing dice.
+
 ### Changed
+
+- **#48** — `Dice.TryParse` now parses heterogeneous notation
+  (e.g. `2d6+1d4+3`) and ignores whitespace. `Dice.ToString` groups dice
+  by side count in descending order.
+- **#48** — `Dice` equality now compares the multiset of dice plus the
+  modifier (order-independent); `Dice.Modifier` is now settable.
 
 ### Deprecated
 
 ### Removed
+
+- **#48 (breaking)** — `Dice.SideCount` has been removed; side count now
+  lives on `Die`. A pool can contain dice with differing side counts, so a
+  single `SideCount` on `Dice` is no longer meaningful.
+- **#48 (breaking)** — `Dice` no longer implements `IEqualityComparer<Dice>`.
+- **#48 (breaking)** — `IDice.SideCount` has been removed from the interface.
 
 ### Fixed
 

@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 // ReSharper disable RedundantArgumentDefaultValue
 
@@ -9,22 +12,11 @@ public class DiceTests
     [Fact]
     public void Can_create_instance()
     {
-
         // Arrange & Act
         var dice = new Dice();
+
         // Assert
         Assert.NotNull(dice);
-    }
-
-
-
-    [Fact]
-    public void DieCount_less_than_1_throws_ArgumentOutOfRangeException()
-    {
-
-        // Arrange & Act & Assert
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: 0));
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: -1));
     }
 
 
@@ -37,6 +29,16 @@ public class DiceTests
 
         // Assert
         Assert.Equal(1, dice.DieCount);
+    }
+
+
+
+    [Fact]
+    public void DieCount_less_than_1_throws_ArgumentOutOfRangeException()
+    {
+        // Arrange & Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: -1));
     }
 
 
@@ -54,6 +56,7 @@ public class DiceTests
     }
 
 
+
     [Fact]
     public void SideCount_less_than_2_throws_ArgumentOutOfRangeException()
     {
@@ -66,27 +69,14 @@ public class DiceTests
 
 
     [Fact]
-    public void When_not_specified_SideCount_defaults_to_6()
+    public void Convenience_constructor_builds_homogeneous_dice()
     {
         // Arrange & Act
-        var dice = new Dice();
+        var dice = new Dice(dieCount: 3, sideCount: 8);
 
         // Assert
-        Assert.Equal(6, dice.SideCount);
-    }
-
-
-
-    [Theory]
-    [InlineData(2)]
-    [InlineData(10)]
-    public void Can_specify_the_number_of_sides(int sideCount)
-    {
-        // Arrange & Act
-        var dice = new Dice(sideCount: sideCount);
-
-        // Assert
-        Assert.Equal(sideCount, dice.SideCount);
+        Assert.Equal(3, dice.DieCount);
+        Assert.All(dice, die => Assert.Equal(8, die.SideCount));
     }
 
 
@@ -117,82 +107,229 @@ public class DiceTests
 
 
 
-    [Theory]
-    [InlineData(2)]
-    [InlineData(10)]
-    public void Can_specify_modifier_value(int modifier)
+    [Fact]
+    public void Modifier_can_be_set()
     {
-        // Arrange & Act
-        var dice = new Dice(modifier: modifier);
+        // Arrange
+        var dice = new Dice(1, 6, 0);
+
+        // Act
+        dice.Modifier = 5;
 
         // Assert
-        Assert.Equal(modifier, dice.Modifier);
+        Assert.Equal(5, dice.Modifier);
     }
 
 
 
+    // ---- Collection construction ----
+
+    [Fact]
+    public void Constructed_from_sequence_of_dice()
+    {
+        // Arrange
+        var source = new[] { new Die(6), new Die(4) };
+
+        // Act
+        var dice = new Dice(source, 3);
+
+        // Assert
+        Assert.Equal(2, dice.DieCount);
+        Assert.Equal(3, dice.Modifier);
+    }
+
+
+
+    [Fact]
+    public void Constructed_from_null_sequence_throws_ArgumentNullException()
+    {
+        Assert.Throws<ArgumentNullException>(() => new Dice((IEnumerable<Die>)null!));
+    }
+
+
+
+    [Fact]
+    public void Constructed_from_sequence_containing_null_throws_ArgumentException()
+    {
+        var source = new Die?[] { new Die(6), null };
+        Assert.Throws<ArgumentException>(() => new Dice(source!));
+    }
+
+
+
+    // ---- ICollection<Die> behaviour ----
+
+    [Fact]
+    public void Add_appends_a_die()
+    {
+        var dice = new Dice(1, 6);
+        dice.Add(new Die(4));
+
+        Assert.Equal(2, dice.DieCount);
+        Assert.Equal(2, dice.Count);
+    }
+
+
+
+    [Fact]
+    public void Add_null_throws_ArgumentNullException()
+    {
+        var dice = new Dice(1, 6);
+        Assert.Throws<ArgumentNullException>(() => dice.Add(null!));
+    }
+
+
+
+    [Fact]
+    public void Remove_removes_a_matching_die_and_returns_true()
+    {
+        var dice = new Dice(new[] { new Die(6), new Die(4) });
+
+        var removed = dice.Remove(new Die(4));
+
+        Assert.True(removed);
+        Assert.Equal(1, dice.DieCount);
+    }
+
+
+
+    [Fact]
+    public void Remove_when_no_match_returns_false()
+    {
+        var dice = new Dice(1, 6);
+        Assert.False(dice.Remove(new Die(20)));
+    }
+
+
+
+    [Fact]
+    public void Remove_null_returns_false()
+    {
+        var dice = new Dice(1, 6);
+        Assert.False(dice.Remove(null!));
+    }
+
+
+
+    [Fact]
+    public void Clear_removes_all_dice_but_keeps_modifier()
+    {
+        var dice = new Dice(3, 6, 2);
+
+        dice.Clear();
+
+        Assert.Equal(0, dice.DieCount);
+        Assert.Equal(2, dice.Modifier);
+    }
+
+
+
+    [Fact]
+    public void Contains_returns_true_for_matching_die()
+    {
+        var dice = new Dice(new[] { new Die(6), new Die(4) });
+
+        Assert.True(dice.Contains(new Die(4)));
+        Assert.False(dice.Contains(new Die(20)));
+    }
+
+
+
+    [Fact]
+    public void Contains_null_returns_false()
+    {
+        var dice = new Dice(1, 6);
+        Assert.False(dice.Contains(null!));
+    }
+
+
+
+    [Fact]
+    public void CopyTo_copies_dice_to_array()
+    {
+        var dice = new Dice(2, 6);
+        var array = new Die[2];
+
+        dice.CopyTo(array, 0);
+
+        Assert.All(array, die => Assert.Equal(6, die.SideCount));
+    }
+
+
+
+    [Fact]
+    public void IsReadOnly_is_false()
+    {
+        var dice = new Dice();
+        Assert.False(dice.IsReadOnly);
+    }
+
+
+
+    [Fact]
+    public void Can_enumerate_dice()
+    {
+        var dice = new Dice(new[] { new Die(6), new Die(4) });
+
+        var sides = dice.Select(die => die.SideCount).ToList();
+
+        Assert.Equal(new[] { 6, 4 }, sides);
+    }
+
+
+
+    [Fact]
+    public void Can_enumerate_dice_via_non_generic_enumerator()
+    {
+        var dice = new Dice(2, 6);
+
+        var count = 0;
+        foreach (var _ in (IEnumerable)dice)
+        {
+            count++;
+        }
+
+        Assert.Equal(2, count);
+    }
+
+
+
+    // ---- Min / Max ----
 
     [Theory]
-    [InlineData(1, 6, 0, 1)] // 1d6 + 0 = 1
-    [InlineData(2, 8, 3, 5)] // 2d8 + 3 = 5
-    [InlineData(2, 10, -1, 1)] // 2d10 - 1 = 1
-    [InlineData(3, 4, -5, -2)] // 3d4 -5 = -2
-
+    [InlineData(1, 6, 0, 1)]     // 1d6 = 1
+    [InlineData(2, 8, 3, 5)]     // 2d8+3 = 5
+    [InlineData(2, 10, -1, 1)]   // 2d10-1 = 1
+    [InlineData(3, 4, -5, -2)]   // 3d4-5 = -2
     public void Dice_properly_shows_MinValue(int dieCount, int sideCount, int modifier, int expectedValue)
     {
-        // Arrange & Act
         var sut = new Dice(dieCount, sideCount, modifier);
-        // Assert
         Assert.Equal(expectedValue, sut.MinValue);
     }
 
 
 
     [Theory]
-    [InlineData(1, 6, 0, 6)] // 1d6 + 0 = 6
-    [InlineData(2, 8, 3, 19)] // 2d8 + 3 = 19
-    [InlineData(2, 10, -1, 19)] // 2d10 - 1 = 19
-    [InlineData(3, 4, -5, 7)] // 3d4 -5 = 7
-
+    [InlineData(1, 6, 0, 6)]     // 1d6 = 6
+    [InlineData(2, 8, 3, 19)]    // 2d8+3 = 19
+    [InlineData(2, 10, -1, 19)]  // 2d10-1 = 19
+    [InlineData(3, 4, -5, 7)]    // 3d4-5 = 7
     public void Dice_properly_shows_MaxValue(int dieCount, int sideCount, int modifier, int expectedValue)
     {
-        // Arrange & Act
         var sut = new Dice(dieCount, sideCount, modifier);
-        // Assert
         Assert.Equal(expectedValue, sut.MaxValue);
     }
 
 
 
     [Fact]
-    public void Can_roll_dice()
+    public void MinValue_and_MaxValue_for_heterogeneous_dice()
     {
-        // Arrange
-        var dice = new Dice();
-        // Act
-        var result = dice.Roll();
-        // Assert
-        Assert.InRange(result, dice.MinValue, dice.MaxValue);
-    }
+        // 2d6 + 1d4 + 3
+        var dice = new Dice(new[] { new Die(6), new Die(6), new Die(4) }, 3);
 
-
-
-    [Fact]
-    public void Roll_when_d6_produces_values_including_max()
-    {
-        // Arrange — roll enough times to statistically guarantee a 6
-        var dice = new Dice(dieCount: 1, sideCount: 6);
-        var results = new HashSet<int>();
-
-        // Act
-        for (var i = 0; i < 1000; i++)
-        {
-            results.Add(dice.Roll());
-        }
-
-        // Assert — all values 1-6 should appear
-        Assert.Contains(1, results);
-        Assert.Contains(6, results);
+        Assert.Equal(6, dice.MinValue);   // 1 + 1 + 1 + 3
+        Assert.Equal(19, dice.MaxValue);  // 6 + 6 + 4 + 3
     }
 
 
@@ -200,10 +337,7 @@ public class DiceTests
     [Fact]
     public void MinValue_when_overflow_throws_OverflowException()
     {
-        // Arrange
-        var dice = new Dice(dieCount: int.MaxValue, sideCount: 2, modifier: 1);
-
-        // Act & Assert
+        var dice = new Dice(new[] { new Die(6) }, int.MaxValue);
         Assert.Throws<OverflowException>(() => dice.MinValue);
     }
 
@@ -212,58 +346,97 @@ public class DiceTests
     [Fact]
     public void MaxValue_when_overflow_throws_OverflowException()
     {
-        // Arrange
-        var dice = new Dice(dieCount: int.MaxValue, sideCount: 2, modifier: 0);
-
-        // Act & Assert
+        var dice = new Dice(new[] { new Die(int.MaxValue), new Die(int.MaxValue) });
         Assert.Throws<OverflowException>(() => dice.MaxValue);
     }
 
+
+
+    // ---- Roll ----
+
+    [Fact]
+    public void Can_roll_dice()
+    {
+        var dice = new Dice();
+        var result = dice.Roll();
+        Assert.InRange(result, dice.MinValue, dice.MaxValue);
+    }
+
+
+
+    [Fact]
+    public void Roll_of_heterogeneous_dice_is_within_range()
+    {
+        var dice = new Dice(new[] { new Die(6), new Die(4) }, 3);
+
+        for (var i = 0; i < 1000; i++)
+        {
+            Assert.InRange(dice.Roll(), dice.MinValue, dice.MaxValue);
+        }
+    }
+
+
+
+    // ---- ToString ----
 
     [Theory]
     [InlineData(1, 6, 0, "1d6")]
     [InlineData(2, 8, 3, "2d8+3")]
     [InlineData(2, 10, -1, "2d10-1")]
     [InlineData(3, 4, -5, "3d4-5")]
-    public void ToString_returns_value_in_dice_notation
-    (
-        int dieCount,
-        int sideCount,
-        int modifier,
-        string expectedValue
-    )
+    public void ToString_returns_value_in_dice_notation(int dieCount, int sideCount, int modifier, string expectedValue)
     {
-        // Arrange
         var dice = new Dice(dieCount, sideCount, modifier);
-
-        // Act
-        var actualValue = dice.ToString();
-
-        // Assert
-        Assert.Equal(expectedValue, actualValue);
+        Assert.Equal(expectedValue, dice.ToString());
     }
 
 
 
     [Fact]
+    public void ToString_groups_heterogeneous_dice_by_side_count_descending()
+    {
+        var dice = new Dice(new[] { new Die(4), new Die(6), new Die(6) }, 3);
+        Assert.Equal("2d6+1d4+3", dice.ToString());
+    }
+
+
+
+    [Fact]
+    public void ToString_when_collection_is_empty_renders_modifier_only()
+    {
+        Assert.Equal(string.Empty, new Dice(Array.Empty<Die>()).ToString());
+        Assert.Equal("+3", new Dice(Array.Empty<Die>(), 3).ToString());
+        Assert.Equal("-2", new Dice(Array.Empty<Die>(), -2).ToString());
+    }
+
+
+
+    // ---- Equality ----
+
+    [Fact]
     public void Two_dice_with_same_parameters_are_equal()
     {
-        // Arrange
-        var dice1 = new Dice(2, 6, 3);
-        var dice2 = new Dice(2, 6, 3);
-        // Act & Assert
-        Assert.Equal(dice1, dice2);
+        Assert.Equal(new Dice(2, 6, 3), new Dice(2, 6, 3));
     }
+
+
+
+    [Fact]
+    public void Heterogeneous_dice_are_equal_regardless_of_order()
+    {
+        var dice1 = new Dice(new[] { new Die(6), new Die(4) }, 3);
+        var dice2 = new Dice(new[] { new Die(4), new Die(6) }, 3);
+
+        Assert.Equal(dice1, dice2);
+        Assert.Equal(dice1.GetHashCode(), dice2.GetHashCode());
+    }
+
 
 
     [Fact]
     public void Two_dice_with_different_DieCount_are_not_equal()
     {
-        // Arrange
-        var dice1 = new Dice(1, 6, 3);
-        var dice2 = new Dice(2, 6, 3);
-        // Act & Assert
-        Assert.NotEqual(dice1, dice2);
+        Assert.NotEqual(new Dice(1, 6, 3), new Dice(2, 6, 3));
     }
 
 
@@ -271,11 +444,7 @@ public class DiceTests
     [Fact]
     public void Two_dice_with_different_SideCount_are_not_equal()
     {
-        // Arrange
-        var dice1 = new Dice(2, 6, 3);
-        var dice2 = new Dice(2, 8, 3);
-        // Act & Assert
-        Assert.NotEqual(dice1, dice2);
+        Assert.NotEqual(new Dice(2, 6, 3), new Dice(2, 8, 3));
     }
 
 
@@ -283,87 +452,7 @@ public class DiceTests
     [Fact]
     public void Two_dice_with_different_Modifier_are_not_equal()
     {
-        // Arrange
-        var dice1 = new Dice(2, 6, 3);
-        var dice2 = new Dice(2, 6, 4);
-        // Act & Assert
-        Assert.NotEqual(dice1, dice2);
-    }
-
-
-    [Fact]
-    public void Two_dice_with_same_parameters_are_equal_using_Equals()
-    {
-        // Arrange
-        var dice1 = new Dice(2, 6, 3);
-        var dice2 = new Dice(2, 6, 3);
-        // Act & Assert
-        Assert.True(dice1.Equals(dice2));
-    }
-
-
-    [Fact]
-    public void Two_dice_with_different_parameters_are_not_equal_using_Equals()
-    {
-        // Arrange
-        var dice1 = new Dice(2, 6, 3);
-        var dice2 = new Dice(2, 6, 4);
-        // Act & Assert
-        Assert.False(dice1.Equals(dice2));
-    }
-
-
-
-    [Fact]
-    public void Dice_can_be_cast_to_IDice()
-    {
-        // Arrange
-        IDice dice = new Dice();
-        // Act & Assert
-        Assert.NotNull(dice);
-        Assert.IsType<Dice>(dice);
-    }
-
-
-    [Fact]
-    public void Dice_can_be_cast_to_IEquatable_Dice()
-    {
-        // Arrange
-        IEquatable<Dice> dice = new Dice();
-        // Act & Assert
-        Assert.NotNull(dice);
-        Assert.IsType<Dice>(dice);
-    }
-
-
-    [Fact]
-    public void Two_Dice_with_the_same_parameters_have_the_same_hash_code()
-    {
-        // Arrange
-        var dice1 = new Dice(2, 6, 3);
-        var dice2 = new Dice(2, 6, 3);
-        // Act
-        var hash1 = dice1.GetHashCode();
-        var hash2 = dice2.GetHashCode();
-        // Assert
-        Assert.Equal(hash1, hash2);
-    }
-
-
-
-    [Fact]
-    public void Two_Dice_with_different_parameters_have_the_different_hash_codes()
-    {
-        // Arrange
-        var dice1 = new Dice(1, 8, 2);
-        var dice2 = new Dice(2, 6, 3);
-
-        // Act
-        var hash1 = dice1.GetHashCode();
-        var hash2 = dice2.GetHashCode();
-
-        // Assert
-        Assert.NotEqual(hash1, hash2);
+        Assert.NotEqual(new Dice(2, 6, 3), new Dice(2, 6, 4));
     }
 
 
@@ -391,48 +480,6 @@ public class DiceTests
 
 
     [Fact]
-    public void EqualsDice_SameValues_ReturnsTrue()
-    {
-        var dice1 = new Dice(2, 8, 1);
-        var dice2 = new Dice(2, 8, 1);
-        Assert.True(dice1.Equals(dice2));
-    }
-
-
-
-    [Fact]
-    public void EqualsDice_DifferentDieCount_ReturnsFalse()
-    {
-        var dice1 = new Dice(1, 6, 0);
-        var dice2 = new Dice(2, 6, 0);
-        Assert.False(dice1.Equals(dice2));
-    }
-
-
-
-    [Fact]
-    public void EqualsDice_DifferentSideCount_ReturnsFalse()
-    {
-        var dice1 = new Dice(1, 6, 0);
-        var dice2 = new Dice(1, 8, 0);
-        Assert.False(dice1.Equals(dice2));
-    }
-
-
-
-    [Fact]
-    public void EqualsDice_DifferentModifier_ReturnsFalse()
-    {
-        var dice1 = new Dice(1, 6, 0);
-        var dice2 = new Dice(1, 6, 1);
-        Assert.False(dice1.Equals(dice2));
-    }
-
-
-
-    // Tests for Equals(object? obj)
-
-    [Fact]
     public void EqualsObject_Null_ReturnsFalse()
     {
         var dice = new Dice(1, 6, 0);
@@ -457,7 +504,7 @@ public class DiceTests
     public void EqualsObject_DifferentType_ReturnsFalse()
     {
         var dice = new Dice(1, 6, 0);
-        var notDice = new { DieCount = 1, SideCount = 6, Modifier = 0 };
+        var notDice = new { DieCount = 1, Modifier = 0 };
         Assert.False(dice.Equals(notDice));
     }
 
@@ -466,68 +513,91 @@ public class DiceTests
     [Fact]
     public void EqualsObject_SameValues_ReturnsTrue()
     {
-        var dice1 = new Dice(2, 8, 1);
-        var dice2 = new Dice(2, 8, 1);
-        Assert.True(dice1.Equals((object)dice2));
+        Assert.True(new Dice(2, 8, 1).Equals((object)new Dice(2, 8, 1)));
     }
 
 
 
     [Fact]
-    public void EqualsObject_DifferentValues_ReturnsFalse()
+    public void Two_Dice_with_the_same_parameters_have_the_same_hash_code()
     {
-        var dice1 = new Dice(1, 6, 0);
-        var dice2 = new Dice(2, 6, 0);
-        Assert.False(dice1.Equals((object)dice2));
+        Assert.Equal(new Dice(2, 6, 3).GetHashCode(), new Dice(2, 6, 3).GetHashCode());
     }
 
 
 
     [Fact]
-    public void EqualsObject_WhenObjectIsNull_ReturnsFalse()
+    public void Two_Dice_with_different_parameters_have_different_hash_codes()
     {
-        var dice = new Dice(1, 6, 0);
-        object? obj = null;
-
-#pragma warning disable CA1508
-        var result = dice.Equals(obj);
-#pragma warning restore CA1508
-
-        Assert.False(result);
+        Assert.NotEqual(new Dice(1, 8, 2).GetHashCode(), new Dice(2, 6, 3).GetHashCode());
     }
 
 
+
+    [Fact]
+    public void Dice_can_be_cast_to_IDice()
+    {
+        IDice dice = new Dice();
+        Assert.NotNull(dice);
+        Assert.IsType<Dice>(dice);
+    }
+
+
+
+    [Fact]
+    public void Dice_can_be_cast_to_IEquatable_Dice()
+    {
+        IEquatable<Dice> dice = new Dice();
+        Assert.NotNull(dice);
+        Assert.IsType<Dice>(dice);
+    }
+
+
+
+    [Fact]
+    public void Dice_can_be_cast_to_ICollection_Die()
+    {
+        ICollection<Die> dice = new Dice();
+        Assert.NotNull(dice);
+        Assert.IsType<Dice>(dice);
+    }
+
+
+
+    // ---- TryParse ----
 
     [Theory]
-    [InlineData("1d6", 1, 6, 0)]
-    [InlineData("2d8+3", 2, 8, 3)]
-    [InlineData("2d10-1", 2, 10, -1)]
-    [InlineData("2d10-1+2", 2, 10, 1)]
-    [InlineData("2d10-1-2", 2, 10, -3)]
-    [InlineData("2d10+1+2", 2, 10, 3)]
-    [InlineData("2d10+0", 2, 10, 0)]
-    [InlineData("2d10-0", 2, 10, 0)]
-    [InlineData("d10", 1, 10, 0)]
-    [InlineData("d10+3", 1, 10, 3)]
-    [InlineData("d6-1", 1, 6, -1)]
-    public void TryParse_when_notation_is_valid_returns_new_Dice(string notation, int dieCount, int sideCount,
-        int modifier)
+    [InlineData("1d6", 1, 0, "1d6")]
+    [InlineData("2d8+3", 2, 3, "2d8+3")]
+    [InlineData("2d10-1", 2, -1, "2d10-1")]
+    [InlineData("2d10-1+2", 2, 1, "2d10+1")]
+    [InlineData("2d10+1+2", 2, 3, "2d10+3")]
+    [InlineData("2d10+0", 2, 0, "2d10")]
+    [InlineData("d10", 1, 0, "1d10")]
+    [InlineData("d10+3", 1, 3, "1d10+3")]
+    [InlineData("d6-1", 1, -1, "1d6-1")]
+    [InlineData("2d6+1d4+3", 3, 3, "2d6+1d4+3")]
+    [InlineData("  2d6 + 1d4 + 3 ", 3, 3, "2d6+1d4+3")]
+    [InlineData("1d4+2d6", 3, 0, "2d6+1d4")]
+    public void TryParse_when_notation_is_valid_returns_new_Dice(string notation, int dieCount, int modifier, string roundTrip)
     {
         var result = Dice.TryParse(notation);
 
         Assert.True(result.Succeeded);
         Assert.NotNull(result.Value);
         Assert.Equal(dieCount, result.Value.DieCount);
-        Assert.Equal(sideCount, result.Value.SideCount);
         Assert.Equal(modifier, result.Value.Modifier);
+        Assert.Equal(roundTrip, result.Value.ToString());
     }
 
 
 
     [Theory]
-    [InlineData("-1d6")] // negative die count
+    [InlineData("-1d6")]   // negative die count
     [InlineData("1d-1")]
     [InlineData("-2147483649d6")]
+    [InlineData("2d6++1d4")]
+    [InlineData("garbage")]
     public void TryParse_when_dice_notation_is_invalid_fails_with_error_message(string? notation)
     {
         var result = Dice.TryParse(notation);
@@ -626,85 +696,14 @@ public class DiceTests
 
 
     [Fact]
-    public void EqualsDiceComparer_BothNull_ReturnsTrue()
+    public void TryParse_round_trips_via_ToString()
     {
-        var comparer = new Dice();
+        var parsed = Dice.TryParse("2d6+1d4+3");
 
-        var result = comparer.Equals(null!, null!);
+        Assert.True(parsed.Succeeded);
+        var reparsed = Dice.TryParse(parsed.Value!.ToString());
 
-        Assert.True(result);
+        Assert.True(reparsed.Succeeded);
+        Assert.Equal(parsed.Value, reparsed.Value);
     }
-
-
-
-    [Fact]
-    public void EqualsDiceComparer_OneNull_ReturnsFalse()
-    {
-        var comparer = new Dice();
-        var dice = new Dice(1, 6, 0);
-
-        Assert.False(comparer.Equals(dice, null!));
-        Assert.False(comparer.Equals(null!, dice));
-    }
-
-
-
-    [Fact]
-    public void EqualsDiceComparer_SameValues_ReturnsTrue()
-    {
-        var comparer = new Dice();
-        var left = new Dice(2, 8, 1);
-        var right = new Dice(2, 8, 1);
-
-        Assert.True(comparer.Equals(left, right));
-    }
-
-
-
-    [Fact]
-    public void EqualsDiceComparer_DifferentValues_ReturnsFalse()
-    {
-        var comparer = new Dice();
-        var left = new Dice(2, 8, 1);
-        var right = new Dice(2, 8, 2);
-
-        Assert.False(comparer.Equals(left, right));
-    }
-
-
-
-    [Fact]
-    public void GetHashCodeDiceComparer_Null_ThrowsArgumentNullException()
-    {
-        var comparer = new Dice();
-
-        Assert.Throws<ArgumentNullException>(() => comparer.GetHashCode(null!));
-    }
-
-    [Fact]
-    public void GetHashCodeDiceComparer_SameValues_ReturnsSameHashCode()
-    {
-        var comparer = new Dice();
-        var left = new Dice(2, 6, 3);
-        var right = new Dice(2, 6, 3);
-
-        var leftHash = comparer.GetHashCode(left);
-        var rightHash = comparer.GetHashCode(right);
-
-        Assert.Equal(leftHash, rightHash);
-    }
-
-    [Fact]
-    public void GetHashCodeDiceComparer_DifferentValues_ReturnsDifferentHashCode()
-    {
-        var comparer = new Dice();
-        var left = new Dice(2, 6, 3);
-        var right = new Dice(1, 8, 4);
-
-        var leftHash = comparer.GetHashCode(left);
-        var rightHash = comparer.GetHashCode(right);
-
-        Assert.NotEqual(leftHash, rightHash);
-    }
-
 }
