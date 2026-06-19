@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780366718144,
+  "lastUpdate": 1781904528007,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -108,6 +108,42 @@ window.BENCHMARK_DATA = {
             "value": 7.271819959084193,
             "unit": "ns",
             "range": "± 0.008257389901619179"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "58bb569ebde2c36bfd7d0469924260473d1944d9",
+          "message": "Merge pull request #195 from Chris-Wolfgang/feature/48-dice-collection\n\nMake Dice a collection of Die for heterogeneous rolls (#48)",
+          "timestamp": "2026-06-19T17:27:43-04:00",
+          "tree_id": "f5ed58bedfd420542f0a5b54440a6aff1a7085c0",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/58bb569ebde2c36bfd7d0469924260473d1944d9"
+        },
+        "date": 1781904526351,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 27.825825442870457,
+            "unit": "ns",
+            "range": "± 0.13675570085161365"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 26.603730867306393,
+            "unit": "ns",
+            "range": "± 0.12859754339945964"
           }
         ]
       }
