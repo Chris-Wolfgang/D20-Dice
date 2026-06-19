@@ -32,7 +32,21 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Wolfgang.D20.Dice",
-      "Summary": "<p sourcefile=\"api/Wolfgang.D20.Dice.yml\" sourcestartlinenumber=\"1\">Represents a number of dice, each with the specified number of sides and an optional modifier.</p>\n"
+      "Summary": "<p sourcefile=\"api/Wolfgang.D20.Dice.yml\" sourcestartlinenumber=\"1\">Represents a collection of <xref href=\"Wolfgang.D20.Die\" data-throw-if-not-resolved=\"false\"></xref> rolled together, with an optional flat modifier.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.D20.Die.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.D20.Die.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.D20.Die",
+      "Summary": "<p sourcefile=\"api/Wolfgang.D20.Die.yml\" sourcestartlinenumber=\"1\">Represents a single die with a fixed number of sides.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -46,7 +60,21 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Wolfgang.D20.IDice",
-      "Summary": "<p sourcefile=\"api/Wolfgang.D20.IDice.yml\" sourcestartlinenumber=\"1\">Represents a number of dice, each with the specified number of sides and an optional modifier.</p>\n"
+      "Summary": "<p sourcefile=\"api/Wolfgang.D20.IDice.yml\" sourcestartlinenumber=\"1\">Represents a collection of <xref href=\"Wolfgang.D20.Die\" data-throw-if-not-resolved=\"false\"></xref> rolled together, with an optional flat modifier.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.D20.IDie.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.D20.IDie.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.D20.IDie",
+      "Summary": "<p sourcefile=\"api/Wolfgang.D20.IDie.yml\" sourcestartlinenumber=\"1\">Represents a single die with a fixed number of sides.</p>\n"
     },
     {
       "type": "ManagedReference",

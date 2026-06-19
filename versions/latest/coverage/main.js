@@ -290,7 +290,8 @@ var assemblies = [
   {
     "name": "Wolfgang.D20.Dice",
     "classes": [
-      { "name": "Wolfgang.D20.Dice", "rp": "Wolfgang.D20.Dice_Dice.html", "cl": 95, "ucl": 0, "cal": 95, "tl": 400, "cb": 56, "tb": 56, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Wolfgang.D20.Dice", "rp": "Wolfgang.D20.Dice_Dice.html", "cl": 142, "ucl": 0, "cal": 142, "tl": 577, "cb": 84, "tb": 84, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Wolfgang.D20.Die", "rp": "Wolfgang.D20.Dice_Die.html", "cl": 24, "ucl": 0, "cal": 24, "tl": 147, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];
 
