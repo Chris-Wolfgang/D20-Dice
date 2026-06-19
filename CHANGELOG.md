@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.6.0] - 2026-06-19
+
+`Dice` is now a collection of individual `Die`, enabling heterogeneous
+rolls such as `2d6+1d4+3`. See #48.
+
+### Added
+
 - **#48** — `Die` type representing a single die (`SideCount`, `MinValue`,
   `MaxValue`, `Roll`, value equality) and its `IDie` interface. Construct a
   die directly from its side count, e.g. `new Die(20)`.
@@ -22,11 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **#48** — `Dice.TryParse` now parses heterogeneous notation
   (e.g. `2d6+1d4+3`) and ignores whitespace. `Dice.ToString` groups dice
-  by side count in descending order.
+  by side count in the order each side count first appears, with the flat
+  modifier always last.
 - **#48** — `Dice` equality now compares the multiset of dice plus the
   modifier (order-independent); `Dice.Modifier` is now settable.
-
-### Deprecated
 
 ### Removed
 
@@ -35,10 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   single `SideCount` on `Dice` is no longer meaningful.
 - **#48 (breaking)** — `Dice` no longer implements `IEqualityComparer<Dice>`.
 - **#48 (breaking)** — `IDice.SideCount` has been removed from the interface.
-
-### Fixed
-
-### Security
 
 ## [0.5.1] - 2026-05-31
 
