@@ -73,7 +73,7 @@ Console.WriteLine($"{pool}: {pool.Roll()}");   // e.g. "1d8+2d6+1d4+3: 19"
 |---------|-------------|
 | Dice Notation | Standard `XdY+Z` format, including heterogeneous pools (e.g., `2d6+1d4+3`) |
 | Heterogeneous dice | `Dice` is an `ICollection<Die>` — `Add`/`Remove` individual `Die` of any side count |
-| Parsing | `Dice.TryParse("2d6+1d4+3")` and `Die.TryParse("d20")`, with full validation via `Result<T>` |
+| Parsing | `Dice.TryParse("2d6+1d4+3")` with full validation via `Result<T>` |
 | Roll | `Roll()` generates a random result within the valid range |
 | Min/Max | `MinValue` and `MaxValue` computed from the dice in the pool and the modifier |
 | Modifiers | Positive, negative, or zero flat modifiers supported |

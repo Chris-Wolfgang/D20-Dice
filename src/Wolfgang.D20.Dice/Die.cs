@@ -1,6 +1,3 @@
-using System.Text.RegularExpressions;
-using Wolfgang.TryPattern;
-
 namespace Wolfgang.D20;
 
 /// <summary>
@@ -146,53 +143,5 @@ public sealed class Die : IDie, IEquatable<Die>
     public override int GetHashCode()
     {
         return SideCount.GetHashCode();
-    }
-
-
-
-    private static readonly Regex DieNotationRegex = new
-    (
-        @"^(?<dieCount>1?)[dD](?<sideCount>\d+)$",
-        RegexOptions.Compiled,
-        TimeSpan.FromSeconds(1)
-    );
-
-
-
-    /// <summary>
-    /// Tries to parse a string representation of a single die into a <see cref="Die"/> instance.
-    /// </summary>
-    /// <param name="notation">
-    /// The string representation of the die in <c>dY</c> or <c>1dY</c> notation (for example <c>d6</c>).
-    /// </param>
-    /// <returns>
-    /// A <see cref="Result{T}"/> containing the parsed <see cref="Die"/> instance if successful;
-    /// otherwise, a failed result with <see cref="Wolfgang.TryPattern.Result.ErrorMessage"/> describing the failure.
-    /// Accessing <see cref="Wolfgang.TryPattern.Result{T}.Value"/> on a failed result throws <see cref="InvalidOperationException"/>.
-    /// </returns>
-    public static Result<Die?> TryParse(string? notation)
-    {
-        if (string.IsNullOrWhiteSpace(notation))
-        {
-            return Result<Die?>.Failure("Value cannot be null or empty.");
-        }
-
-        var match = DieNotationRegex.Match(notation);
-        if (!match.Success)
-        {
-            return Result<Die?>.Failure("Invalid die notation format. Value must be in dY format.");
-        }
-
-        if (!int.TryParse(match.Groups["sideCount"].Value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var sideCount))
-        {
-            return Result<Die?>.Failure("Side count value is out of range.");
-        }
-
-        if (sideCount < 2)
-        {
-            return Result<Die?>.Failure("Side count must be greater than 1.");
-        }
-
-        return Result<Die?>.Success(new Die(sideCount));
     }
 }

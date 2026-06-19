@@ -51,8 +51,8 @@ public interface IDice
     /// Returns a string representation of the dice in standard dice notation, for example <c>2d6+1d4+3</c>.
     /// </summary>
     /// <returns>
-    /// The dice grouped by side count in descending order, followed by the modifier; the modifier is
-    /// omitted when zero, and a negative modifier renders with a leading minus sign.
+    /// The dice grouped by side count, followed by the modifier; dice order is not significant, and the
+    /// modifier (omitted when zero, leading minus when negative) always comes last.
     /// </returns>
     string ToString();
 

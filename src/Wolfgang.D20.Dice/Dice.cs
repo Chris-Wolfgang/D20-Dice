@@ -138,14 +138,10 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     {
         get
         {
+            // Enumerable.Sum performs checked addition and throws OverflowException on overflow.
             checked
             {
-                var total = Modifier;
-                foreach (var die in _dice)
-                {
-                    total += die.SideCount;
-                }
-                return total;
+                return _dice.Sum(die => die.SideCount) + Modifier;
             }
         }
     }
@@ -161,14 +157,10 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// </returns>
     public int Roll()
     {
+        // Enumerable.Sum performs checked addition and throws OverflowException on overflow.
         checked
         {
-            var total = Modifier;
-            foreach (var die in _dice)
-            {
-                total += die.Roll();
-            }
-            return total;
+            return _dice.Sum(die => die.Roll()) + Modifier;
         }
     }
 
@@ -202,6 +194,24 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
             return false;
         }
         return _dice.Remove(item);
+    }
+
+
+
+    /// <summary>
+    /// Removes the die at the specified index in the collection.
+    /// </summary>
+    /// <param name="index">The zero-based index of the die to remove.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="index"/> is less than 0 or not less than <see cref="DieCount"/>.
+    /// </exception>
+    public void RemoveAt(int index)
+    {
+        if (index < 0 || index >= _dice.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index));
+        }
+        _dice.RemoveAt(index);
     }
 
 
@@ -266,17 +276,18 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// Returns a string representation of the dice in standard dice notation, for example <c>2d6+1d4+3</c>.
     /// </summary>
     /// <returns>
-    /// The dice grouped by side count in descending order, followed by the modifier; the modifier is
-    /// omitted when zero, and a negative modifier renders with a leading minus sign. An empty collection
-    /// renders only the modifier (or an empty string when the modifier is zero).
+    /// The dice grouped by side count (in the order each side count first appears), followed by the
+    /// modifier. Dice order is not significant. The modifier is omitted when zero, and a negative
+    /// modifier renders with a leading minus sign. An empty collection renders only the modifier
+    /// (or an empty string when the modifier is zero).
     /// </returns>
     public override string ToString()
     {
         var builder = new StringBuilder();
 
-        var groups = _dice
-            .GroupBy(die => die.SideCount)
-            .OrderByDescending(group => group.Key);
+        // Dice order is not significant (1d4+1d8 == 1d8+1d4); group by side count in the order each
+        // side count first appears. The flat modifier, if any, always comes last.
+        var groups = _dice.GroupBy(die => die.SideCount);
 
         var first = true;
         foreach (var group in groups)

@@ -212,6 +212,30 @@ public class DiceTests
 
 
     [Fact]
+    public void RemoveAt_removes_the_die_at_the_given_index()
+    {
+        var dice = new Dice(new[] { new Die(6), new Die(4), new Die(8) });
+
+        dice.RemoveAt(1);
+
+        Assert.Equal(2, dice.DieCount);
+        Assert.False(dice.Contains(new Die(4)));
+    }
+
+
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(2)]
+    public void RemoveAt_with_index_out_of_range_throws_ArgumentOutOfRangeException(int index)
+    {
+        var dice = new Dice(2, 6);
+        Assert.Throws<ArgumentOutOfRangeException>(() => dice.RemoveAt(index));
+    }
+
+
+
+    [Fact]
     public void Clear_removes_all_dice_but_keeps_modifier()
     {
         var dice = new Dice(3, 6, 2);
@@ -393,10 +417,11 @@ public class DiceTests
 
 
     [Fact]
-    public void ToString_groups_heterogeneous_dice_by_side_count_descending()
+    public void ToString_groups_heterogeneous_dice_in_first_appearance_order_with_modifier_last()
     {
+        // Dice order is not significant; groups appear in the order each side count is first seen.
         var dice = new Dice(new[] { new Die(4), new Die(6), new Die(6) }, 3);
-        Assert.Equal("2d6+1d4+3", dice.ToString());
+        Assert.Equal("1d4+2d6+3", dice.ToString());
     }
 
 
@@ -578,7 +603,7 @@ public class DiceTests
     [InlineData("d6-1", 1, -1, "1d6-1")]
     [InlineData("2d6+1d4+3", 3, 3, "2d6+1d4+3")]
     [InlineData("  2d6 + 1d4 + 3 ", 3, 3, "2d6+1d4+3")]
-    [InlineData("1d4+2d6", 3, 0, "2d6+1d4")]
+    [InlineData("1d4+2d6", 3, 0, "1d4+2d6")]
     public void TryParse_when_notation_is_valid_returns_new_Dice(string notation, int dieCount, int modifier, string roundTrip)
     {
         var result = Dice.TryParse(notation);

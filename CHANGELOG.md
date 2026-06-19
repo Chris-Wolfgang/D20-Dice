@@ -10,11 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **#48** — `Die` type representing a single die (`SideCount`, `MinValue`,
-  `MaxValue`, `Roll`, `Die.TryParse`, value equality) and its `IDie`
-  interface.
+  `MaxValue`, `Roll`, value equality) and its `IDie` interface. Construct a
+  die directly from its side count, e.g. `new Die(20)`.
 - **#48** — `Dice` is now an `ICollection<Die>`: individual dice can be
-  added and removed (`Add`, `Remove`, `Clear`, `Contains`, `CopyTo`,
-  enumeration), enabling heterogeneous pools such as `2d6+1d4+3`.
+  added and removed (`Add`, `Remove`, `RemoveAt`, `Clear`, `Contains`,
+  `CopyTo`, enumeration), enabling heterogeneous pools such as `2d6+1d4+3`.
 - **#48** — `Dice(IEnumerable<Die>, int modifier = 0)` constructor for
   building a pool from existing dice.
 
