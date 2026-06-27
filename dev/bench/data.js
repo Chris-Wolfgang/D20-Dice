@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1781904528007,
+  "lastUpdate": 1782583221835,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -144,6 +144,42 @@ window.BENCHMARK_DATA = {
             "value": 26.603730867306393,
             "unit": "ns",
             "range": "± 0.12859754339945964"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9af020d4ba1c97bbf0a9134145958cbb218038a8",
+          "message": "Merge pull request #197 from Chris-Wolfgang/dependabot/github_actions/github-actions-39b8605068\n\nBump the github-actions group with 2 updates",
+          "timestamp": "2026-06-27T13:59:13-04:00",
+          "tree_id": "319d64e59248c2cbc7ba2fe215d62cdf0a110cff",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/9af020d4ba1c97bbf0a9134145958cbb218038a8"
+        },
+        "date": 1782583219382,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 33.364256183306374,
+            "unit": "ns",
+            "range": "± 0.14051964120484764"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 27.184293270111084,
+            "unit": "ns",
+            "range": "± 0.593518597173771"
           }
         ]
       }
