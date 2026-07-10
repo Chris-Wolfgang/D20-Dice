@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782583221835,
+  "lastUpdate": 1783646596385,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -180,6 +180,42 @@ window.BENCHMARK_DATA = {
             "value": 27.184293270111084,
             "unit": "ns",
             "range": "± 0.593518597173771"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ee0df7895ee8e016b57c2b43e130ceacdd0bda77",
+          "message": "Merge pull request #206 from Chris-Wolfgang/dependabot/nuget/dotnet-dependencies-7d6ae261de\n\nBump the dotnet-dependencies group with 5 updates",
+          "timestamp": "2026-07-09T21:22:08-04:00",
+          "tree_id": "5bdf2aa3795461a28b523ad72c99b653f79f5ab9",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/ee0df7895ee8e016b57c2b43e130ceacdd0bda77"
+        },
+        "date": 1783646594792,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 29.87845532099406,
+            "unit": "ns",
+            "range": "± 0.10253218446654327"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 28.632192850112915,
+            "unit": "ns",
+            "range": "± 0.3013453169862871"
           }
         ]
       }
