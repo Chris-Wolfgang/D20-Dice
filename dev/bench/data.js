@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783815149773,
+  "lastUpdate": 1783882560603,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -252,6 +252,42 @@ window.BENCHMARK_DATA = {
             "value": 26.95057554046313,
             "unit": "ns",
             "range": "± 0.08726108106909931"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8ba729c31a0bc91b52db2cdb1c2c3a72a2e1102b",
+          "message": "Merge pull request #208 from Chris-Wolfgang/feature/49-average-roll\n\nAdd AverageRoundedUp/AverageRoundedDown extensions (#49)",
+          "timestamp": "2026-07-12T14:54:52-04:00",
+          "tree_id": "cb7b49606bc171483a1bfc6751eedf04292e0355",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/8ba729c31a0bc91b52db2cdb1c2c3a72a2e1102b"
+        },
+        "date": 1783882558008,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 29.320256461699802,
+            "unit": "ns",
+            "range": "± 0.05693735488579219"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 27.24166006843249,
+            "unit": "ns",
+            "range": "± 0.09815517401402135"
           }
         ]
       }
