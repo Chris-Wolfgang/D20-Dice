@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **#162** — Internal: added property-based tests (CsCheck, net8.0+) asserting roll results stay
+  within bounds and that `Dice.ToString` round-trips through `Dice.TryParse`.
+
 ### Deprecated
 
 ### Removed
