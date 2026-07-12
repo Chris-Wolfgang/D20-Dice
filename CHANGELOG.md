@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.6.1] - 2026-07-06
+
+### Changed
+
+- Dependabot bump: dotnet-dependencies group (5 packages).
 ## [0.6.0] - 2026-06-19
 
 `Dice` is now a collection of individual `Die`, enabling heterogeneous
@@ -102,3 +107,7 @@ runtime behavior change vs v0.5.0.
   add a binding redirect to upgrade to v0.5.1 from any earlier v0.x.
   See DateTime-Extensions v1.3.1 post-mortem for what happens when this
   pin is dropped and SDK-derived AssemblyVersion changes per release.
+
+[Unreleased]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/Chris-Wolfgang/D20-Dice/releases/tag/v0.6.0
