@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `AverageRoundedUp()` and `AverageRoundedDown()` extension methods on `IDie` and `IDice`,
+  returning the average roll rounded to a whole number. See #49.
+
 ### Changed
 
 ### Deprecated
