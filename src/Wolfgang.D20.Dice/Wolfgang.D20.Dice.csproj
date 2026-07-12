@@ -6,6 +6,10 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
 	  <Version>0.6.1</Version>
+	  <!-- API/ABI compatibility gate (#169): validate the packed API surface against the last released
+	       version so an accidental breaking change fails the pack. Bump the baseline on each release. -->
+	  <EnablePackageValidation>true</EnablePackageValidation>
+	  <PackageValidationBaselineVersion>0.6.1</PackageValidationBaselineVersion>
 	  <!-- Pin AssemblyVersion to a fixed binding-stability baseline so consumers
 	       do not need to recompile / add binding redirects on every minor/patch
 	       bump. Bump only on a deliberate breaking API change. FileVersion +

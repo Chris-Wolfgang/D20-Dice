@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **#169** — Internal: enabled SDK PackageValidation against the last released version
+  (`PackageValidationBaselineVersion`), so an accidental breaking API/ABI change fails `dotnet pack`.
+
 ### Deprecated
 
 ### Removed
