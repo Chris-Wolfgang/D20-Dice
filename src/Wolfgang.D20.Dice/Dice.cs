@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -296,17 +297,24 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
             {
                 builder.Append('+');
             }
-            builder.Append(group.Count()).Append('d').Append(group.Key);
+            // Format counts with the invariant culture so the notation always uses ASCII digits and
+            // round-trips through TryParse regardless of the current thread culture.
+            builder
+                .Append(group.Count().ToString(CultureInfo.InvariantCulture))
+                .Append('d')
+                .Append(group.Key.ToString(CultureInfo.InvariantCulture));
             first = false;
         }
 
         switch (Modifier)
         {
             case > 0:
-                builder.Append('+').Append(Modifier);
+                // The invariant '+' is a literal; only the magnitude needs invariant formatting.
+                builder.Append('+').Append(Modifier.ToString(CultureInfo.InvariantCulture));
                 break;
             case < 0:
-                builder.Append(Modifier);
+                // Invariant formatting emits the ASCII '-' sign, matching what TryParse accepts.
+                builder.Append(Modifier.ToString(CultureInfo.InvariantCulture));
                 break;
         }
 

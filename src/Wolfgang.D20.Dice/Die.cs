@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Wolfgang.D20;
 
 /// <summary>
@@ -76,7 +78,9 @@ public sealed class Die : IDie, IEquatable<Die>
     /// <returns>The die in standard <c>dY</c> notation.</returns>
     public override string ToString()
     {
-        return $"d{SideCount}";
+        // Format the side count with the invariant culture so the notation always uses ASCII digits and
+        // round-trips through TryParse regardless of the current thread culture.
+        return "d" + SideCount.ToString(CultureInfo.InvariantCulture);
     }
 
 

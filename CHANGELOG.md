@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **#177** — `Die.ToString()` and `Dice.ToString()` now format numbers with the invariant
+  culture, so dice notation always uses ASCII digits and an ASCII `-` sign and round-trips
+  through `Dice.TryParse` regardless of the current thread culture.
+
 ### Security
 
 ## [0.6.1] - 2026-07-06
