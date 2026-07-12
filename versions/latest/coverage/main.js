@@ -290,8 +290,8 @@ var assemblies = [
   {
     "name": "Wolfgang.D20.Dice",
     "classes": [
-      { "name": "Wolfgang.D20.Dice", "rp": "Wolfgang.D20.Dice_Dice.html", "cl": 142, "ucl": 0, "cal": 142, "tl": 577, "cb": 84, "tb": 84, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Wolfgang.D20.Die", "rp": "Wolfgang.D20.Dice_Die.html", "cl": 24, "ucl": 0, "cal": 24, "tl": 147, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Wolfgang.D20.Dice", "rp": "Wolfgang.D20.Dice_Dice.html", "cl": 142, "ucl": 0, "cal": 142, "tl": 577, "cb": 84, "tb": 84, "cm": 0, "fcm": 0, "tm": 0, "lch": [100], "bch": [100], "mch": [], "mfch": [], "hc": [{ "et": "7/12/2026 - 1:57:51 AM", "cl": 142, "ucl": 0, "cal": 142, "tl": 577, "lcq": 100, "cb": 84, "tb": 84, "bcq": 100, "cm": 0, "fcm": 0, "tm": 0, "mcq": 0, "mfcq": 0 }], "metrics": { } },
+      { "name": "Wolfgang.D20.Die", "rp": "Wolfgang.D20.Dice_Die.html", "cl": 24, "ucl": 0, "cal": 24, "tl": 147, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [100], "bch": [100], "mch": [], "mfch": [], "hc": [{ "et": "7/12/2026 - 1:57:51 AM", "cl": 24, "ucl": 0, "cal": 24, "tl": 147, "lcq": 100, "cb": 12, "tb": 12, "bcq": 100, "cm": 0, "fcm": 0, "tm": 0, "mcq": 0, "mfcq": 0 }], "metrics": { } },
     ]},
 ];
 
