@@ -9,20 +9,24 @@ public class GlobalizationTests
 {
 
     /// <summary>
-    /// Runs <paramref name="action"/> with <see cref="Thread.CurrentCulture"/> set to
-    /// <paramref name="culture"/>, restoring the original culture afterwards.
+    /// Runs <paramref name="action"/> with both <see cref="Thread.CurrentCulture"/> and
+    /// <see cref="Thread.CurrentUICulture"/> set to <paramref name="culture"/>, restoring both afterwards.
     /// </summary>
     private static void WithCulture(CultureInfo culture, Action action)
     {
-        var original = Thread.CurrentThread.CurrentCulture;
-        Thread.CurrentThread.CurrentCulture = culture;
+        var thread = Thread.CurrentThread;
+        var originalCulture = thread.CurrentCulture;
+        var originalUICulture = thread.CurrentUICulture;
+        thread.CurrentCulture = culture;
+        thread.CurrentUICulture = culture;
         try
         {
             action();
         }
         finally
         {
-            Thread.CurrentThread.CurrentCulture = original;
+            thread.CurrentCulture = originalCulture;
+            thread.CurrentUICulture = originalUICulture;
         }
     }
 
@@ -32,6 +36,12 @@ public class GlobalizationTests
     // dice notation (native digits, non-ASCII signs, RTL scripts).
     public static IEnumerable<object[]> Cultures()
     {
+        // Cultures called out in the #177 acceptance criteria.
+        yield return new object[] { "en-US" };
+        yield return new object[] { "tr-TR" };
+        yield return new object[] { "zh-CN" };
+        yield return new object[] { "ja-JP" };
+        // Additional cultures whose number formatting stresses digits / signs / RTL scripts.
         yield return new object[] { "ar-SA" };
         yield return new object[] { "fa-IR" };
         yield return new object[] { "fi-FI" };
