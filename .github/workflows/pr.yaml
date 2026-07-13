@@ -246,17 +246,25 @@ jobs:
   # SARIF uploads to GitHub Code Scanning (Security tab + inline PR
   # annotations). `error`-severity findings fail the job; `warning`-severity
   # surfaces in Code Scanning but doesn't fail (gated by --severity=WARNING
-  # filter). Tune the noise floor via .DotSettings at the repo root.
+  # filter). Optionally tune the noise floor with a *.DotSettings file at the
+  # repo root (none is present by default).
   # ============================================================================
   inspectcode:
     name: "ReSharper InspectCode"
-    runs-on: ubuntu-latest
+    # windows-latest so every target framework (incl. net462 / net48-only example
+    # projects) builds natively — an unfiltered `dotnet build -c Release` and
+    # whole-solution analysis both fail on ubuntu, which lacks the .NET Framework
+    # reference assemblies. The bash steps below run under Git Bash via defaults.
+    runs-on: windows-latest
     needs: detect-projects
     if: github.repository != 'Chris-Wolfgang/repo-template' && needs.detect-projects.outputs.has-projects == 'true'
     timeout-minutes: 20
     permissions:
       contents: read
       security-events: write   # required for upload-sarif
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: Checkout code
