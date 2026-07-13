@@ -9,16 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `AverageRoundedUp()` and `AverageRoundedDown()` extension methods on `IDie` and `IDice`,
+  returning the average roll rounded to a whole number. See #49.
+
 ### Changed
 
-- **#162** — Internal: added property-based tests (CsCheck, net8.0+) asserting roll results stay
-  within bounds and that `Dice.ToString` round-trips through `Dice.TryParse`.
+- **#179** — `Dice.Roll()` and `Dice.MaxValue` now iterate the underlying dice list directly
+  instead of via LINQ `Sum`, eliminating the boxed-enumerator heap allocation so the roll hot
+  path is allocation-free. Added allocation guard tests (net6.0+).
+- **#162 (partial)** — Internal: added property-based tests (CsCheck, net8.0+) asserting roll
+  results stay within bounds and that `Dice.ToString` round-trips through `Dice.TryParse`. The
+  continuous/scheduled fuzz-running harness from #162 remains a follow-up.
 
 ### Deprecated
 
 ### Removed
 
 ### Fixed
+
+- **#177** — `Die.ToString()` and `Dice.ToString()` now format numbers with the invariant
+  culture, so dice notation always uses ASCII digits and an ASCII `-` sign and round-trips
+  through `Dice.TryParse` regardless of the current thread culture.
 
 ### Security
 

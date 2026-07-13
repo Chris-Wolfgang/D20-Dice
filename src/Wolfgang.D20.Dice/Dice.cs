@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -138,10 +139,16 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     {
         get
         {
-            // Enumerable.Sum performs checked addition and throws OverflowException on overflow.
             checked
             {
-                return _dice.Sum(die => die.SideCount) + Modifier;
+                // foreach over the concrete List<Die> uses its struct enumerator and allocates nothing,
+                // unlike Enumerable.Sum which boxes the enumerator. The checked context guards overflow.
+                var sum = Modifier;
+                foreach (var die in _dice)
+                {
+                    sum += die.SideCount;
+                }
+                return sum;
             }
         }
     }
@@ -157,10 +164,17 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// </returns>
     public int Roll()
     {
-        // Enumerable.Sum performs checked addition and throws OverflowException on overflow.
         checked
         {
-            return _dice.Sum(die => die.Roll()) + Modifier;
+            // Iterate the List<Die> directly rather than via Enumerable.Sum: a foreach over the concrete
+            // list uses its struct enumerator, so this hot path allocates nothing (LINQ would box the
+            // enumerator on the heap). The checked context still guards the running total against overflow.
+            var total = Modifier;
+            foreach (var die in _dice)
+            {
+                total += die.Roll();
+            }
+            return total;
         }
     }
 
@@ -296,17 +310,24 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
             {
                 builder.Append('+');
             }
-            builder.Append(group.Count()).Append('d').Append(group.Key);
+            // Format counts with the invariant culture so the notation always uses ASCII digits and
+            // round-trips through TryParse regardless of the current thread culture.
+            builder
+                .Append(group.Count().ToString(CultureInfo.InvariantCulture))
+                .Append('d')
+                .Append(group.Key.ToString(CultureInfo.InvariantCulture));
             first = false;
         }
 
         switch (Modifier)
         {
             case > 0:
-                builder.Append('+').Append(Modifier);
+                // The invariant '+' is a literal; only the magnitude needs invariant formatting.
+                builder.Append('+').Append(Modifier.ToString(CultureInfo.InvariantCulture));
                 break;
             case < 0:
-                builder.Append(Modifier);
+                // Invariant formatting emits the ASCII '-' sign, matching what TryParse accepts.
+                builder.Append(Modifier.ToString(CultureInfo.InvariantCulture));
                 break;
         }
 
