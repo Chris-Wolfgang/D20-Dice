@@ -6,8 +6,10 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
 	  <Version>0.6.1</Version>
-	  <!-- API/ABI compatibility gate (#169): validate the packed API surface against the last released
-	       version so an accidental breaking change fails the pack. Bump the baseline on each release. -->
+	  <!-- API/ABI compatibility gate (#169), implemented with the SDK's ApiCompat-based
+	       PackageValidation: the packed API surface is validated against the last released version at
+	       pack time (including in release.yaml), so an accidental breaking change fails the pack. Bump
+	       the baseline on each release. Waive an intentional break with an ApiCompatSuppressionFile. -->
 	  <EnablePackageValidation>true</EnablePackageValidation>
 	  <PackageValidationBaselineVersion>0.6.1</PackageValidationBaselineVersion>
 	  <!-- Pin AssemblyVersion to a fixed binding-stability baseline so consumers

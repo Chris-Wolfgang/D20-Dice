@@ -17,8 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **#179** — `Dice.Roll()` and `Dice.MaxValue` now iterate the underlying dice list directly
   instead of via LINQ `Sum`, eliminating the boxed-enumerator heap allocation so the roll hot
   path is allocation-free. Added allocation guard tests (net6.0+).
-- **#169** — Internal: enabled SDK PackageValidation against the last released version
-  (`PackageValidationBaselineVersion`), so an accidental breaking API/ABI change fails `dotnet pack`.
+- **#162 (partial)** — Internal: added property-based tests (CsCheck, net8.0+) asserting roll
+  results stay within bounds and that `Dice.ToString` round-trips through `Dice.TryParse`. The
+  continuous/scheduled fuzz-running harness from #162 remains a follow-up.
+- **#169** — Internal: added an API/ABI compatibility gate via the SDK's ApiCompat-based
+  PackageValidation, baselined against the last release (`PackageValidationBaselineVersion`), so an
+  accidental breaking change fails `dotnet pack` (and therefore the release). Intentional breaks can
+  be waived with an `ApiCompatSuppressionFile`.
 
 ### Deprecated
 
