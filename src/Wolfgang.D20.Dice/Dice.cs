@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Wolfgang.TryPattern;
@@ -452,6 +450,12 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
         }
 
         // Remove all whitespace so "2d6 + 1d4 + 3" parses the same as "2d6+1d4+3".
+        // Kept as an explicit StringBuilder loop rather than a LINQ expression
+        // (e.g. new string(notation.Where(...).ToArray())): the LINQ form allocates an
+        // intermediate IEnumerator plus a char[] per call, whereas this appends straight
+        // into a right-sized StringBuilder. notation! is required on target frameworks
+        // whose string.IsNullOrWhiteSpace lacks [NotNullWhen] (net462/netstandard2.0).
+        // ReSharper disable once LoopCanBeConvertedToLinq
         var compact = new StringBuilder(notation!.Length);
         foreach (var character in notation)
         {
@@ -552,7 +556,7 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
             return Result<int>.Success(1);
         }
 
-        if (!int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var dieCount))
+        if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var dieCount))
         {
             return Result<int>.Failure("Die count value is out of range.");
         }
@@ -569,7 +573,7 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
 
     private static Result<int> TryGetSideCount(string value)
     {
-        if (!int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var sideCount))
+        if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var sideCount))
         {
             return Result<int>.Failure("Side count value is out of range.");
         }
@@ -586,7 +590,7 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
 
     private static Result<int> TryGetModifierValue(string value, bool negative)
     {
-        if (!int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var modifierValue))
+        if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var modifierValue))
         {
             return Result<int>.Failure("Modifier value is out of range.");
         }
