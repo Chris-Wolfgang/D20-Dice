@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783906923916,
+  "lastUpdate": 1783962752565,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -360,6 +360,42 @@ window.BENCHMARK_DATA = {
             "value": 7.443056474129359,
             "unit": "ns",
             "range": "± 0.012417709877980403"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "82a3639cb5e4624d5799c838374cd50c5d40a2f5",
+          "message": "Merge pull request #212 from Chris-Wolfgang/feature/169-apicompat\n\nEnable SDK PackageValidation for API/ABI compat (#169)",
+          "timestamp": "2026-07-13T13:10:59-04:00",
+          "tree_id": "2f39b5beddaa5d30f90b07ae6acfad8933d40ac0",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/82a3639cb5e4624d5799c838374cd50c5d40a2f5"
+        },
+        "date": 1783962750850,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.558847948908806,
+            "unit": "ns",
+            "range": "± 0.2476727583143182"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 7.815252934892972,
+            "unit": "ns",
+            "range": "± 0.0044137984963309555"
           }
         ]
       }
