@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783965102109,
+  "lastUpdate": 1783975753484,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -432,6 +432,42 @@ window.BENCHMARK_DATA = {
             "value": 7.493929862976074,
             "unit": "ns",
             "range": "± 0.02079183367605581"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c6632ea0ec1ddd803793dfb3353eb2c3ea741317",
+          "message": "Merge pull request #217 from Chris-Wolfgang/feature/inspectcode-c-peripheral\n\nInspectCode cleanup (C): remove redundant usings in benchmarks/examples",
+          "timestamp": "2026-07-13T16:47:57-04:00",
+          "tree_id": "37ac33352cf152a4604748e97c27fbea3626a392",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/c6632ea0ec1ddd803793dfb3353eb2c3ea741317"
+        },
+        "date": 1783975750750,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 4.6945245017608,
+            "unit": "ns",
+            "range": "± 0.14794484230196198"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 4.677248453100522,
+            "unit": "ns",
+            "range": "± 0.21323427083315472"
           }
         ]
       }
