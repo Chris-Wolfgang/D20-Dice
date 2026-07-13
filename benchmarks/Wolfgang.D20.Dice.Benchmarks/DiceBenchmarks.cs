@@ -1,5 +1,4 @@
 using BenchmarkDotNet.Attributes;
-using Wolfgang.D20;
 
 namespace Wolfgang.D20.Benchmarks;
 
