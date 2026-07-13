@@ -290,9 +290,11 @@ jobs:
         run: |
           # Find a solution to inspect. Prefer .slnx (new format) then .sln.
           # InspectCode requires SOMETHING solution-shaped — fail loudly if neither exists.
-          SLN=$(ls *.slnx 2>/dev/null | head -n1)
+          # `|| true` keeps a no-match `ls` (non-zero exit) from aborting the step under the
+          # `set -e -o pipefail` shell when only one of .slnx / .sln is present.
+          SLN=$(ls *.slnx 2>/dev/null | head -n1 || true)
           if [ -z "$SLN" ]; then
-            SLN=$(ls *.sln 2>/dev/null | head -n1)
+            SLN=$(ls *.sln 2>/dev/null | head -n1 || true)
           fi
           if [ -z "$SLN" ]; then
             echo "::error::No .slnx or .sln found at repo root — InspectCode needs one to run."
