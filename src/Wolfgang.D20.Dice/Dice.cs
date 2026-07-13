@@ -1,6 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using Wolfgang.TryPattern;
@@ -138,10 +137,16 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     {
         get
         {
-            // Enumerable.Sum performs checked addition and throws OverflowException on overflow.
             checked
             {
-                return _dice.Sum(die => die.SideCount) + Modifier;
+                // foreach over the concrete List<Die> uses its struct enumerator and allocates nothing,
+                // unlike Enumerable.Sum which boxes the enumerator. The checked context guards overflow.
+                var sum = Modifier;
+                foreach (var die in _dice)
+                {
+                    sum += die.SideCount;
+                }
+                return sum;
             }
         }
     }
@@ -157,10 +162,17 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// </returns>
     public int Roll()
     {
-        // Enumerable.Sum performs checked addition and throws OverflowException on overflow.
         checked
         {
-            return _dice.Sum(die => die.Roll()) + Modifier;
+            // Iterate the List<Die> directly rather than via Enumerable.Sum: a foreach over the concrete
+            // list uses its struct enumerator, so this hot path allocates nothing (LINQ would box the
+            // enumerator on the heap). The checked context still guards the running total against overflow.
+            var total = Modifier;
+            foreach (var die in _dice)
+            {
+                total += die.Roll();
+            }
+            return total;
         }
     }
 
@@ -296,17 +308,24 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
             {
                 builder.Append('+');
             }
-            builder.Append(group.Count()).Append('d').Append(group.Key);
+            // Format counts with the invariant culture so the notation always uses ASCII digits and
+            // round-trips through TryParse regardless of the current thread culture.
+            builder
+                .Append(group.Count().ToString(CultureInfo.InvariantCulture))
+                .Append('d')
+                .Append(group.Key.ToString(CultureInfo.InvariantCulture));
             first = false;
         }
 
         switch (Modifier)
         {
             case > 0:
-                builder.Append('+').Append(Modifier);
+                // The invariant '+' is a literal; only the magnitude needs invariant formatting.
+                builder.Append('+').Append(Modifier.ToString(CultureInfo.InvariantCulture));
                 break;
             case < 0:
-                builder.Append(Modifier);
+                // Invariant formatting emits the ASCII '-' sign, matching what TryParse accepts.
+                builder.Append(Modifier.ToString(CultureInfo.InvariantCulture));
                 break;
         }
 
@@ -431,6 +450,12 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
         }
 
         // Remove all whitespace so "2d6 + 1d4 + 3" parses the same as "2d6+1d4+3".
+        // Kept as an explicit StringBuilder loop rather than a LINQ expression
+        // (e.g. new string(notation.Where(...).ToArray())): the LINQ form allocates an
+        // intermediate IEnumerator plus a char[] per call, whereas this appends straight
+        // into a right-sized StringBuilder. notation! is required on target frameworks
+        // whose string.IsNullOrWhiteSpace lacks [NotNullWhen] (net462/netstandard2.0).
+        // ReSharper disable once LoopCanBeConvertedToLinq
         var compact = new StringBuilder(notation!.Length);
         foreach (var character in notation)
         {
@@ -531,7 +556,7 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
             return Result<int>.Success(1);
         }
 
-        if (!int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var dieCount))
+        if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var dieCount))
         {
             return Result<int>.Failure("Die count value is out of range.");
         }
@@ -548,7 +573,7 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
 
     private static Result<int> TryGetSideCount(string value)
     {
-        if (!int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var sideCount))
+        if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var sideCount))
         {
             return Result<int>.Failure("Side count value is out of range.");
         }
@@ -565,7 +590,7 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
 
     private static Result<int> TryGetModifierValue(string value, bool negative)
     {
-        if (!int.TryParse(value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var modifierValue))
+        if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var modifierValue))
         {
             return Result<int>.Failure("Modifier value is out of range.");
         }
