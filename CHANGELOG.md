@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **#179** — `Dice.Roll()` and `Dice.MaxValue` now iterate the underlying dice list directly
+  instead of via LINQ `Sum`, eliminating the boxed-enumerator heap allocation so the roll hot
+  path is allocation-free. Added allocation guard tests (net6.0+).
+
 ### Deprecated
 
 ### Removed

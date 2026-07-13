@@ -139,10 +139,16 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     {
         get
         {
-            // Enumerable.Sum performs checked addition and throws OverflowException on overflow.
             checked
             {
-                return _dice.Sum(die => die.SideCount) + Modifier;
+                // foreach over the concrete List<Die> uses its struct enumerator and allocates nothing,
+                // unlike Enumerable.Sum which boxes the enumerator. The checked context guards overflow.
+                var sum = Modifier;
+                foreach (var die in _dice)
+                {
+                    sum += die.SideCount;
+                }
+                return sum;
             }
         }
     }
@@ -158,10 +164,17 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// </returns>
     public int Roll()
     {
-        // Enumerable.Sum performs checked addition and throws OverflowException on overflow.
         checked
         {
-            return _dice.Sum(die => die.Roll()) + Modifier;
+            // Iterate the List<Die> directly rather than via Enumerable.Sum: a foreach over the concrete
+            // list uses its struct enumerator, so this hot path allocates nothing (LINQ would box the
+            // enumerator on the heap). The checked context still guards the running total against overflow.
+            var total = Modifier;
+            foreach (var die in _dice)
+            {
+                total += die.Roll();
+            }
+            return total;
         }
     }
 
