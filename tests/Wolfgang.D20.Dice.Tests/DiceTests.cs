@@ -1,7 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 // ReSharper disable RedundantArgumentDefaultValue
 
@@ -143,7 +140,7 @@ public class DiceTests
     [Fact]
     public void Constructed_from_null_sequence_throws_ArgumentNullException()
     {
-        Assert.Throws<ArgumentNullException>(() => new Dice((IEnumerable<Die>)null!));
+        Assert.Throws<ArgumentNullException>(() => new Dice(null!));
     }
 
 
