@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783962752565,
+  "lastUpdate": 1783965102109,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -396,6 +396,42 @@ window.BENCHMARK_DATA = {
             "value": 7.815252934892972,
             "unit": "ns",
             "range": "± 0.0044137984963309555"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2c7c01168ff8087d9ef36d22c0bc6d26dd600024",
+          "message": "Merge pull request #215 from Chris-Wolfgang/feature/inspectcode-a-src\n\nInspectCode cleanup (A): src/Dice.cs redundant usings, qualifiers, LINQ note",
+          "timestamp": "2026-07-13T13:50:43-04:00",
+          "tree_id": "dcdb32244943bde8663c64dc3c43561963aa4356",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/2c7c01168ff8087d9ef36d22c0bc6d26dd600024"
+        },
+        "date": 1783965100400,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 8.425962562362352,
+            "unit": "ns",
+            "range": "± 0.03988877470394649"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 7.493929862976074,
+            "unit": "ns",
+            "range": "± 0.02079183367605581"
           }
         ]
       }
