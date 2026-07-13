@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783905774563,
+  "lastUpdate": 1783906923916,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -324,6 +324,42 @@ window.BENCHMARK_DATA = {
             "value": 28.1616437236468,
             "unit": "ns",
             "range": "± 0.49632831517721787"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9fbd0020589a95bba0118ce00aa82a11ed932b6c",
+          "message": "Merge pull request #210 from Chris-Wolfgang/feature/179-allocation-free\n\nMake Dice.Roll allocation-free on the hot path (#179)",
+          "timestamp": "2026-07-12T21:40:57-04:00",
+          "tree_id": "d7be88473e587e6dd21a93bfb5caf78a1458c827",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/9fbd0020589a95bba0118ce00aa82a11ed932b6c"
+        },
+        "date": 1783906922203,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.819701408346494,
+            "unit": "ns",
+            "range": "± 0.02286199451913676"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 7.443056474129359,
+            "unit": "ns",
+            "range": "± 0.012417709877980403"
           }
         ]
       }
