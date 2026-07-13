@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **#162 (partial)** — Internal: added property-based tests (CsCheck, net8.0+) asserting roll
   results stay within bounds and that `Dice.ToString` round-trips through `Dice.TryParse`. The
   continuous/scheduled fuzz-running harness from #162 remains a follow-up.
+- **#169** — Internal: added an API/ABI compatibility gate via the SDK's ApiCompat-based
+  PackageValidation, baselined against the last release (`PackageValidationBaselineVersion`), so an
+  accidental breaking change fails `dotnet pack` (and therefore the release). Intentional breaks can
+  be waived with an `ApiCompatSuppressionFile`.
 
 ### Deprecated
 
