@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   PackageValidation, baselined against the last release (`PackageValidationBaselineVersion`), so an
   accidental breaking change fails `dotnet pack` (and therefore the release). Intentional breaks can
   be waived with an `ApiCompatSuppressionFile`.
+- **#175** — Internal: enabled the trim/AOT/single-file analyzers (`IsAotCompatible`) on the
+  net8.0/net10.0 builds, so an AOT-incompatible change fails the build. The library is AOT-clean.
 
 ### Deprecated
 
