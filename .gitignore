@@ -437,3 +437,5 @@ docs/*
 # Architecture Decision Records are hand-written source, not generated output.
 !docs/adr/
 !docs/adr/**
+# Hand-written operational runbook (not generated output).
+!docs/DISASTER-RECOVERY.md
