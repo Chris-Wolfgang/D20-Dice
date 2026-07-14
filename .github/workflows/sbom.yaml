@@ -1,0 +1,58 @@
+name: SBOM
+
+# Supply-chain hardening — Software Bill of Materials (#171).
+#
+# Generates a CycloneDX SBOM of the library's full dependency graph and uploads
+# it as an artifact, so every build has a machine-readable inventory of what it
+# is composed of. Scoped to the SBOM here; the other parts of #171 are
+# deliberately out of this workflow:
+#   - SLSA provenance attestation belongs on the release artifact (attest the
+#     packed .nupkg in release.yaml via actions/attest-build-provenance).
+#   - Package signing needs a signing certificate/key and is a separate,
+#     credential-bearing change.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sbom-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sbom:
+    name: Generate SBOM
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PROJ: src/Wolfgang.D20.Dice/Wolfgang.D20.Dice.csproj
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install CycloneDX
+        run: dotnet tool install --global CycloneDX
+
+      - name: Restore
+        run: dotnet restore "$PROJ"
+
+      - name: Generate CycloneDX SBOM (JSON)
+        run: dotnet CycloneDX "$PROJ" --output sbom --json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom/
