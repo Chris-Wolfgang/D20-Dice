@@ -31,6 +31,15 @@
 	  <SignAssembly>False</SignAssembly>
   </PropertyGroup>
 
+	<!-- Trim / AOT compatibility gate (#175): on the modern TFMs, enable the trim, AOT and
+	     single-file analyzers so an AOT-incompatible change surfaces as an IL2xxx/IL3xxx warning
+	     (and fails the build under TreatWarningsAsErrors). A library can't be AOT-published on its
+	     own, so this static analysis is the recommended verification. IsAotCompatible is only valid
+	     on net8.0+, so it is scoped away from net462 / netstandard2.0. -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net10.0'">
+		<IsAotCompatible>true</IsAotCompatible>
+	</PropertyGroup>
+
 	<PropertyGroup>
 		<PackageTags>d20;dice</PackageTags>
 		<ApplicationIcon>assets\d20-dice.ico</ApplicationIcon>
