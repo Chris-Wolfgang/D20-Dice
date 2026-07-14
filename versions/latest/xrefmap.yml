@@ -7,6 +7,50 @@ references:
   commentId: N:Wolfgang.D20
   fullName: Wolfgang.D20
   nameWithType: Wolfgang.D20
+- uid: Wolfgang.D20.AverageRollExtensions
+  name: AverageRollExtensions
+  href: api/Wolfgang.D20.AverageRollExtensions.html
+  commentId: T:Wolfgang.D20.AverageRollExtensions
+  fullName: Wolfgang.D20.AverageRollExtensions
+  nameWithType: AverageRollExtensions
+- uid: Wolfgang.D20.AverageRollExtensions.AverageRoundedDown(Wolfgang.D20.IDice)
+  name: AverageRoundedDown(IDice)
+  href: api/Wolfgang.D20.AverageRollExtensions.html#Wolfgang_D20_AverageRollExtensions_AverageRoundedDown_Wolfgang_D20_IDice_
+  commentId: M:Wolfgang.D20.AverageRollExtensions.AverageRoundedDown(Wolfgang.D20.IDice)
+  fullName: Wolfgang.D20.AverageRollExtensions.AverageRoundedDown(Wolfgang.D20.IDice)
+  nameWithType: AverageRollExtensions.AverageRoundedDown(IDice)
+- uid: Wolfgang.D20.AverageRollExtensions.AverageRoundedDown(Wolfgang.D20.IDie)
+  name: AverageRoundedDown(IDie)
+  href: api/Wolfgang.D20.AverageRollExtensions.html#Wolfgang_D20_AverageRollExtensions_AverageRoundedDown_Wolfgang_D20_IDie_
+  commentId: M:Wolfgang.D20.AverageRollExtensions.AverageRoundedDown(Wolfgang.D20.IDie)
+  fullName: Wolfgang.D20.AverageRollExtensions.AverageRoundedDown(Wolfgang.D20.IDie)
+  nameWithType: AverageRollExtensions.AverageRoundedDown(IDie)
+- uid: Wolfgang.D20.AverageRollExtensions.AverageRoundedDown*
+  name: AverageRoundedDown
+  href: api/Wolfgang.D20.AverageRollExtensions.html#Wolfgang_D20_AverageRollExtensions_AverageRoundedDown_
+  commentId: Overload:Wolfgang.D20.AverageRollExtensions.AverageRoundedDown
+  isSpec: "True"
+  fullName: Wolfgang.D20.AverageRollExtensions.AverageRoundedDown
+  nameWithType: AverageRollExtensions.AverageRoundedDown
+- uid: Wolfgang.D20.AverageRollExtensions.AverageRoundedUp(Wolfgang.D20.IDice)
+  name: AverageRoundedUp(IDice)
+  href: api/Wolfgang.D20.AverageRollExtensions.html#Wolfgang_D20_AverageRollExtensions_AverageRoundedUp_Wolfgang_D20_IDice_
+  commentId: M:Wolfgang.D20.AverageRollExtensions.AverageRoundedUp(Wolfgang.D20.IDice)
+  fullName: Wolfgang.D20.AverageRollExtensions.AverageRoundedUp(Wolfgang.D20.IDice)
+  nameWithType: AverageRollExtensions.AverageRoundedUp(IDice)
+- uid: Wolfgang.D20.AverageRollExtensions.AverageRoundedUp(Wolfgang.D20.IDie)
+  name: AverageRoundedUp(IDie)
+  href: api/Wolfgang.D20.AverageRollExtensions.html#Wolfgang_D20_AverageRollExtensions_AverageRoundedUp_Wolfgang_D20_IDie_
+  commentId: M:Wolfgang.D20.AverageRollExtensions.AverageRoundedUp(Wolfgang.D20.IDie)
+  fullName: Wolfgang.D20.AverageRollExtensions.AverageRoundedUp(Wolfgang.D20.IDie)
+  nameWithType: AverageRollExtensions.AverageRoundedUp(IDie)
+- uid: Wolfgang.D20.AverageRollExtensions.AverageRoundedUp*
+  name: AverageRoundedUp
+  href: api/Wolfgang.D20.AverageRollExtensions.html#Wolfgang_D20_AverageRollExtensions_AverageRoundedUp_
+  commentId: Overload:Wolfgang.D20.AverageRollExtensions.AverageRoundedUp
+  isSpec: "True"
+  fullName: Wolfgang.D20.AverageRollExtensions.AverageRoundedUp
+  nameWithType: AverageRollExtensions.AverageRoundedUp
 - uid: Wolfgang.D20.Dice
   name: Dice
   href: api/Wolfgang.D20.Dice.html

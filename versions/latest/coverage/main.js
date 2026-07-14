@@ -290,14 +290,15 @@ var assemblies = [
   {
     "name": "Wolfgang.D20.Dice",
     "classes": [
-      { "name": "Wolfgang.D20.Dice", "rp": "Wolfgang.D20.Dice_Dice.html", "cl": 142, "ucl": 0, "cal": 142, "tl": 577, "cb": 84, "tb": 84, "cm": 0, "fcm": 0, "tm": 0, "lch": [100], "bch": [100], "mch": [], "mfch": [], "hc": [{ "et": "7/12/2026 - 1:57:51 AM", "cl": 142, "ucl": 0, "cal": 142, "tl": 577, "lcq": 100, "cb": 84, "tb": 84, "bcq": 100, "cm": 0, "fcm": 0, "tm": 0, "mcq": 0, "mfcq": 0 }], "metrics": { } },
-      { "name": "Wolfgang.D20.Die", "rp": "Wolfgang.D20.Dice_Die.html", "cl": 24, "ucl": 0, "cal": 24, "tl": 147, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [100], "bch": [100], "mch": [], "mfch": [], "hc": [{ "et": "7/12/2026 - 1:57:51 AM", "cl": 24, "ucl": 0, "cal": 24, "tl": 147, "lcq": 100, "cb": 12, "tb": 12, "bcq": 100, "cm": 0, "fcm": 0, "tm": 0, "mcq": 0, "mfcq": 0 }], "metrics": { } },
+      { "name": "Wolfgang.D20.AverageRollExtensions", "rp": "Wolfgang.D20.Dice_AverageRollExtensions.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 107, "cb": 8, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [100], "bch": [100], "mch": [], "mfch": [], "hc": [{ "et": "7/14/2026 - 1:03:26 AM", "cl": 13, "ucl": 0, "cal": 13, "tl": 107, "lcq": 100, "cb": 8, "tb": 8, "bcq": 100, "cm": 0, "fcm": 0, "tm": 0, "mcq": 0, "mfcq": 0 }], "metrics": { } },
+      { "name": "Wolfgang.D20.Dice", "rp": "Wolfgang.D20.Dice_Dice.html", "cl": 151, "ucl": 0, "cal": 151, "tl": 602, "cb": 88, "tb": 88, "cm": 0, "fcm": 0, "tm": 0, "lch": [100,100], "bch": [100,100], "mch": [], "mfch": [], "hc": [{ "et": "7/12/2026 - 1:57:51 AM", "cl": 142, "ucl": 0, "cal": 142, "tl": 577, "lcq": 100, "cb": 84, "tb": 84, "bcq": 100, "cm": 0, "fcm": 0, "tm": 0, "mcq": 0, "mfcq": 0 }, { "et": "7/14/2026 - 1:03:26 AM", "cl": 151, "ucl": 0, "cal": 151, "tl": 602, "lcq": 100, "cb": 88, "tb": 88, "bcq": 100, "cm": 0, "fcm": 0, "tm": 0, "mcq": 0, "mfcq": 0 }], "metrics": { } },
+      { "name": "Wolfgang.D20.Die", "rp": "Wolfgang.D20.Dice_Die.html", "cl": 24, "ucl": 0, "cal": 24, "tl": 151, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [100,100], "bch": [100,100], "mch": [], "mfch": [], "hc": [{ "et": "7/12/2026 - 1:57:51 AM", "cl": 24, "ucl": 0, "cal": 24, "tl": 147, "lcq": 100, "cb": 12, "tb": 12, "bcq": 100, "cm": 0, "fcm": 0, "tm": 0, "mcq": 0, "mfcq": 0 }, { "et": "7/14/2026 - 1:03:26 AM", "cl": 24, "ucl": 0, "cal": 24, "tl": 151, "lcq": 100, "cb": 12, "tb": 12, "bcq": 100, "cm": 0, "fcm": 0, "tm": 0, "mcq": 0, "mfcq": 0 }], "metrics": { } },
     ]},
 ];
 
 var metrics = [{ "name": "Crap Score", "abbreviation": "crp", "explanationUrl": "https://googletesting.blogspot.de/2011/02/this-code-is-crap.html" }, { "name": "Cyclomatic complexity", "abbreviation": "cc", "explanationUrl": "https://en.wikipedia.org/wiki/Cyclomatic_complexity" }, { "name": "Line coverage", "abbreviation": "cov", "explanationUrl": "https://en.wikipedia.org/wiki/Code_coverage" }, { "name": "Branch coverage", "abbreviation": "bcov", "explanationUrl": "https://en.wikipedia.org/wiki/Code_coverage" }];
 
-var historicCoverageExecutionTimes = [];
+var historicCoverageExecutionTimes = ["7/12/2026 - 1:57:51 AM"];
 
 var riskHotspotMetrics = [
 ];

@@ -22,6 +22,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.D20.AverageRollExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.D20.AverageRollExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.D20.AverageRollExtensions",
+      "Summary": "<p sourcefile=\"api/Wolfgang.D20.AverageRollExtensions.yml\" sourcestartlinenumber=\"1\">Extension methods that compute the average roll of a die or collection of dice, rounded to a whole number.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Wolfgang.D20.Dice.yml",
       "output": {
         ".html": {
