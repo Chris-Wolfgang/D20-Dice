@@ -8,6 +8,20 @@ priority.
 > Related: [`WORKFLOW_SECURITY.md`](WORKFLOW_SECURITY.md) (CI hardening),
 > [`RELEASE-WORKFLOW-SETUP.md`](RELEASE-WORKFLOW-SETUP.md) (how releases publish).
 
+## Key contacts
+
+Have these to hand before an incident so responders don't hunt mid-crisis:
+
+- **NuGet support** — <support@nuget.org>, or the *Contact support* / *Report abuse*
+  links on the [package page](https://www.nuget.org/packages/Wolfgang.D20.Dice).
+  Use this to report a compromise and request help unlisting/removing a malicious
+  version (owners can unlist; hard deletion is a support action).
+- **GitHub support** — <https://support.github.com/> (account/token compromise,
+  audit-log questions). For a security-sensitive report use the private advisory
+  flow on the repo's **Security** tab.
+- **Repo maintainers** — the owners listed on the repository (for coordinating
+  the response).
+
 ## What can be compromised
 
 - **NuGet** — the `NUGET_API_KEY` secret, or the nuget.org account/owner that can
@@ -26,12 +40,13 @@ priority.
      **revoke** the token. For a fine-grained token, also remove its repo access.
    - Compromised GitHub account: reset the password, sign out all sessions,
      confirm 2FA is on and the recovery methods are yours.
-2. **Freeze publishing.** Temporarily disable the `release.yaml` workflow
-   (Actions → Release → ⋯ → Disable workflow) so nothing new can ship while you
-   investigate.
-3. **Assess exposure.** Review the GitHub **audit log** (org/user Settings →
-   Logs) and the nuget.org package **version history** for anything you did not
-   publish. Note timestamps.
+2. **Freeze publishing.** Temporarily disable the release workflow — Actions →
+   **Release on Published Release** (the `release.yaml` workflow) → ⋯ → Disable
+   workflow — so nothing new can ship while you investigate.
+3. **Assess exposure.** Review the account activity log — for a **personal
+   account**, Settings → **Security log**; for an **organization**, the org's
+   Settings → **Audit log** — and the nuget.org package **version history**, for
+   anything you did not publish. Note timestamps.
 
 ## Contain
 
@@ -68,6 +83,27 @@ window; otherwise they are permanent). To neutralize a malicious version:
 13. Write a short post-incident note (what happened, blast radius, fixes) — an
     ADR under [`adr/`](adr/) is a good home if the response changed a process.
 
+## Communicating with consumers
+
+If a compromised or tampered version may have been pulled, tell consumers
+promptly and specifically. Publish a GitHub **Security Advisory** on the repo and
+link it from `CHANGELOG.md`. Template:
+
+```text
+Subject: Security advisory — Wolfgang.D20.Dice <bad-version>
+
+What happened: version <bad-version> of Wolfgang.D20.Dice, published on
+<date/time UTC>, <was published from a compromised credential / may have been
+tampered with>.
+
+Impact: <what a consumer of that version is exposed to, or "under investigation">.
+
+What to do: upgrade to <fixed-version> (or downgrade to <last-known-good>).
+Version <bad-version> has been unlisted and deprecated on NuGet.
+
+More info / questions: <link to the GitHub Security Advisory>.
+```
+
 ## Prevention checklist
 
 - 2FA enforced on all maintainer and org accounts.
@@ -78,3 +114,6 @@ window; otherwise they are permanent). To neutralize a malicious version:
   (see `WORKFLOW_SECURITY.md`).
 - Branch ruleset on `main` requires the full check set before merge.
 - Secret scanning + push protection enabled on the repo.
+- **Review this runbook quarterly** (and after any real incident): verify the
+  contacts, secret names, and workflow names are still accurate, and confirm the
+  team knows where it lives.
