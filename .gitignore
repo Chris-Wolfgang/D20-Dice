@@ -434,3 +434,6 @@ docfx_project/obj/
 # Generated documentation (built by CI/CD)
 docs/*
 !docs/.gitkeep
+# Architecture Decision Records are hand-written source, not generated output.
+!docs/adr/
+!docs/adr/**
