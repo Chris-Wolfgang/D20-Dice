@@ -1,6 +1,5 @@
 #if NET10_0_OR_GREATER
 using System.Text;
-using VerifyXunit;
 using Xunit;
 using static VerifyXunit.Verifier;
 
@@ -33,7 +32,8 @@ public class SnapshotTests
         Add("Dice([d8,d4],+2)", new Dice(new[] { new Die(8), new Die(4) }, 2).ToString());
         Add("Dice([d10,d10,d6],-2)", new Dice(new[] { new Die(10), new Die(10), new Die(6) }, -2).ToString());
 
-        return Verify(builder.ToString());
+        // Keep verified snapshots together under a dedicated Snapshots/ folder.
+        return Verify(builder.ToString()).UseDirectory("Snapshots");
     }
 
 }
