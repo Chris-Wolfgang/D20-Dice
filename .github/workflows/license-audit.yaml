@@ -1,0 +1,58 @@
+name: License Audit
+
+# License audit of transitive dependencies (#180).
+#
+# Produces a license inventory of the library's full (direct + transitive)
+# dependency closure using the `nuget-license` tool, prints it to the log, and
+# uploads it as an artifact. Report-only for now — flip to a gate by adding
+# `--allowed-license-types <allowed.json>` and dropping the report framing once
+# the allow-list is agreed.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: license-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  license-audit:
+    name: License audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PROJ: src/Wolfgang.D20.Dice/Wolfgang.D20.Dice.csproj
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install nuget-license
+        run: dotnet tool install --global nuget-license
+
+      - name: Restore (so transitive deps resolve)
+        run: dotnet restore "$PROJ"
+
+      - name: Audit licenses (table to log)
+        run: nuget-license --input "$PROJ" --include-transitive --output Table
+
+      - name: Audit licenses (JSON report file)
+        run: nuget-license --input "$PROJ" --include-transitive --output JsonPretty --file-output licenses.json
+
+      - name: Upload license report
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-report
+          path: licenses.json
