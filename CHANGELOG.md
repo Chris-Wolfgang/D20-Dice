@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.7.0] - 2026-07-13
+
+### Added
+
 - `AverageRoundedUp()` and `AverageRoundedDown()` extension methods on `IDie` and `IDice`,
   returning the average roll rounded to a whole number. See #49.
 
@@ -31,17 +45,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   net8.0/net10.0 builds, so an AOT-incompatible change fails the build. This is static
   analyzer validation; a `PublishAot` publish-and-run smoke consumer is tracked as a follow-up.
 
-### Deprecated
-
-### Removed
-
 ### Fixed
 
 - **#177** — `Die.ToString()` and `Dice.ToString()` now format numbers with the invariant
   culture, so dice notation always uses ASCII digits and an ASCII `-` sign and round-trips
   through `Dice.TryParse` regardless of the current thread culture.
-
-### Security
 
 ## [0.6.1] - 2026-07-06
 
@@ -132,6 +140,7 @@ runtime behavior change vs v0.5.0.
   See DateTime-Extensions v1.3.1 post-mortem for what happens when this
   pin is dropped and SDK-derived AssemblyVersion changes per release.
 
-[Unreleased]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/Chris-Wolfgang/D20-Dice/releases/tag/v0.6.0
