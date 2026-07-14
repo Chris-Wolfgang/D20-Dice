@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783992793342,
+  "lastUpdate": 1784064504198,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -576,6 +576,42 @@ window.BENCHMARK_DATA = {
             "value": 4.872801020741463,
             "unit": "ns",
             "range": "± 0.11523995143691033"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f92cd2b9133797d84291b502d8e4efa810eb2bf5",
+          "message": "Merge pull request #225 from Chris-Wolfgang/fix/214-gethashcode-doc\n\nDocument mutable-key constraint on Dice.GetHashCode (#214)",
+          "timestamp": "2026-07-14T17:27:05-04:00",
+          "tree_id": "29523c27529ac3ff8f90cf1900ac2f3b05a67973",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/f92cd2b9133797d84291b502d8e4efa810eb2bf5"
+        },
+        "date": 1784064501580,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.820023983716965,
+            "unit": "ns",
+            "range": "± 0.024034977834972892"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 7.480858052770297,
+            "unit": "ns",
+            "range": "± 0.018388034365650535"
           }
         ]
       }
