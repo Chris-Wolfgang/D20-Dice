@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783975753484,
+  "lastUpdate": 1783988416575,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -468,6 +468,42 @@ window.BENCHMARK_DATA = {
             "value": 4.677248453100522,
             "unit": "ns",
             "range": "± 0.21323427083315472"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "db165a4a137d87e23d208f41c81bbed97fc0b81c",
+          "message": "Merge pull request #219 from Chris-Wolfgang/feature/175-aot\n\nEnable trim/AOT analyzers via IsAotCompatible (#175)",
+          "timestamp": "2026-07-13T20:19:08-04:00",
+          "tree_id": "5cfbc6de472517500a3fa603dcf0277683bb266a",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/db165a4a137d87e23d208f41c81bbed97fc0b81c"
+        },
+        "date": 1783988414614,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.475559453169505,
+            "unit": "ns",
+            "range": "± 0.08211567816601968"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 7.8417932242155075,
+            "unit": "ns",
+            "range": "± 0.03987448401786094"
           }
         ]
       }
