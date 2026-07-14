@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **#214** — Docs: documented on `Dice.GetHashCode()` that `Dice` is mutable and must not be
+  mutated while used as a key in a hashed collection (snapshot via `ToString` for a stable key).
+
 ### Deprecated
 
 ### Removed
