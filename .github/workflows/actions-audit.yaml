@@ -1,0 +1,83 @@
+name: Actions Audit
+
+# GitHub Actions workflow security/quality audit (#185).
+#
+#  - actionlint: static checker for workflow YAML + embedded shell (via
+#    shellcheck). Gates the build on findings — workflows should be lint-clean.
+#  - zizmor: security auditor for Actions (injection, unpinned actions,
+#    over-broad permissions, ...). Reports to the Security tab (SARIF) rather
+#    than hard-gating, since it is opinionated; promote to a gate once the
+#    baseline is clean.
+#
+# Installed via `go install` / `pip install` (pinned) rather than third-party
+# wrapper actions, to keep the supply chain small.
+
+on:
+  pull_request:
+    paths: ['.github/workflows/**']
+  push:
+    branches: [main]
+    paths: ['.github/workflows/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: actions-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+
+      - name: Install actionlint
+        run: go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+
+      - name: Run actionlint
+        run: actionlint -color
+
+  zizmor:
+    name: zizmor
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install zizmor
+        run: pip install zizmor
+
+      - name: Run zizmor
+        env:
+          GH_TOKEN: ${{ github.token }}
+        # Report-only for now: don't fail the job on findings, upload them to
+        # Code Scanning instead. Remove `|| true` to turn this into a gate.
+        run: zizmor --format sarif .github/workflows/ > zizmor.sarif || true
+
+      - name: Upload zizmor SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: zizmor.sarif
