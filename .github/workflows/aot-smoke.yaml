@@ -1,0 +1,50 @@
+name: AOT Smoke
+
+# Native-AOT publish-and-run smoke consumer (#220, follow-up to #175).
+#
+# Publishes a tiny console consumer with PublishAot and runs the native binary,
+# so the build fails if the library stops compiling or running under native AOT.
+# This is the *runtime* half of the AOT verification; the *static* half is the
+# IsAotCompatible analyzer gate on the library build (#175).
+#
+# windows-latest ships the MSVC "Desktop development with C++" workload that the
+# native linker requires, so no extra toolchain install is needed.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aot-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  aot-smoke:
+    name: "AOT publish + run"
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish (native AOT, win-x64)
+        run: dotnet publish aot-smoke/Wolfgang.D20.Dice.AotSmoke/Wolfgang.D20.Dice.AotSmoke.csproj -c Release -r win-x64
+
+      - name: Run native binary
+        shell: bash
+        run: |
+          EXE="aot-smoke/Wolfgang.D20.Dice.AotSmoke/bin/Release/net10.0/win-x64/publish/Wolfgang.D20.Dice.AotSmoke.exe"
+          echo "Running: $EXE"
+          "$EXE"
