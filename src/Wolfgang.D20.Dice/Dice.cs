@@ -401,12 +401,24 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// Generates a hash code for this instance based on its <see cref="Modifier"/> and the multiset of
     /// dice side counts (order-independent).
     /// </summary>
+    /// <remarks>
+    /// <see cref="Dice"/> is a mutable collection: dice can be added or removed and <see cref="Modifier"/>
+    /// is settable, and both feed into this hash code (consistent with <see cref="Equals(Dice)"/>). As with
+    /// any mutable type, do not mutate a <see cref="Dice"/> instance while it is being used as a key in a
+    /// hashed collection such as <see cref="System.Collections.Generic.Dictionary{TKey,TValue}"/> or
+    /// <see cref="System.Collections.Generic.HashSet{T}"/> — doing so leaves the instance in the wrong bucket
+    /// and breaks subsequent lookups. If you need a stable key, snapshot the value first (for example the
+    /// result of <see cref="ToString"/>).
+    /// </remarks>
     /// <returns>A combined hash code.</returns>
     public override int GetHashCode()
     {
         unchecked
         {
             // Order-independent: sum the per-die hashes so equal multisets hash identically.
+            // The hash intentionally reflects the mutable Modifier / dice multiset so it stays consistent
+            // with Equals; the mutable-key caveat is documented on this method. See issue #214.
+            // ReSharper disable once NonReadonlyMemberInGetHashCode
             var hashCode = Modifier;
             var sideSum = 0;
             foreach (var die in _dice)
