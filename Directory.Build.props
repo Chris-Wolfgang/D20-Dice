@@ -52,13 +52,13 @@
     </PackageReference>
 
     <!-- Meziantou - Comprehensive code quality -->
-    <PackageReference Include="Meziantou.Analyzer" Version="3.0.121">
+    <PackageReference Include="Meziantou.Analyzer" Version="3.0.122">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 
     <!-- SonarAnalyzer - Industry-standard analysis -->
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.28.0.143324">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.29.0.143774">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
