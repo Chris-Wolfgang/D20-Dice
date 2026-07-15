@@ -11,9 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **#214** — Docs: documented on `Dice.GetHashCode()` that `Dice` is mutable and must not be
-  mutated while used as a key in a hashed collection (snapshot via `ToString` for a stable key).
-
 ### Deprecated
 
 ### Removed
@@ -21,6 +18,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Security
+
+## [0.7.1] - 2026-07-15
+
+Maintenance round — repo hardening, documentation, and internal tests. **No public
+API or runtime behavior change vs 0.7.0.**
+
+### Added
+
+- **#182** — Architecture Decision Records under `docs/adr/`, capturing this line's
+  load-bearing design decisions (mutability, allocation-free roll, invariant-culture
+  notation, AOT posture, API-compat gate, mutation-testing bar).
+- **#183** — a "Release path & compromise scope" appendix in `SECURITY.md`.
+- **#173** — snapshot / approval tests (Verify) pinning the dice-notation format.
+- **#220** — a native-AOT publish-and-run smoke consumer (`aot-smoke/`) and its CI
+  workflow, the runtime counterpart to the #175 `IsAotCompatible` analyzer gate.
+- CI hardening workflows: **#185** Actions audit (actionlint + zizmor), **#164** Semgrep
+  SAST, **#178** build-reproducibility verification, **#180** transitive-license
+  allow-list gate, **#171** CycloneDX SBOM, **#184** OSSF Scorecard, **#186** per-PR
+  performance-regression detection.
+- **#199** — ReSharper InspectCode is now a required status check.
+
+### Changed
+
+- **#214** — documented on `Dice.GetHashCode()` that `Dice` is mutable and must not be
+  mutated while used as a key in a hashed collection (snapshot via `ToString` for a
+  stable key).
+
+### Fixed
+
+- **#224** — the documentation version picker no longer selects the `latest` alias on
+  non-versioned pages (site root / regular docs pages).
 
 ## [0.7.0] - 2026-07-13
 
@@ -143,7 +171,8 @@ runtime behavior change vs v0.5.0.
   See DateTime-Extensions v1.3.1 post-mortem for what happens when this
   pin is dropped and SDK-derived AssemblyVersion changes per release.
 
-[Unreleased]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/Chris-Wolfgang/D20-Dice/releases/tag/v0.6.0

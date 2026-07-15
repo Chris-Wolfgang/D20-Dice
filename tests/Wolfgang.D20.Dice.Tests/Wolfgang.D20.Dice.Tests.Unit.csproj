@@ -95,6 +95,11 @@
   	<PackageReference Include="CsCheck" Version="4.7.0" />
   </ItemGroup>
 
+  <!-- Snapshot / approval tests (SnapshotTests.cs) are guarded to net10.0 (single verified snapshot). -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+  	<PackageReference Include="Verify.Xunit" Version="31.12.5" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\Wolfgang.D20.Dice\Wolfgang.D20.Dice.csproj" />
   </ItemGroup>
