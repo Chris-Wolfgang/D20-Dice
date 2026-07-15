@@ -1,0 +1,90 @@
+name: Perf Regression
+
+# Per-PR performance-regression detection (#186).
+#
+# Runs the BenchmarkDotNet suite on the PR and compares it against the baseline
+# published to gh-pages (dev/bench) by benchmarks.yaml. If a benchmark regresses
+# beyond the alert threshold, github-action-benchmark comments on the PR.
+#
+# Report-only for now: BenchmarkDotNet on shared CI runners is noisy, so this
+# does NOT fail the build (`fail-on-alert: false`) and does NOT update the
+# baseline (`auto-push: false`). Flip `fail-on-alert` to true — with a threshold
+# tuned to the observed noise — to turn it into a gate.
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'benchmarks/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: perf-regression-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    name: Benchmark vs base
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: write   # post the regression alert comment
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Restore
+        run: dotnet restore benchmarks/Wolfgang.D20.Dice.Benchmarks/Wolfgang.D20.Dice.Benchmarks.csproj
+
+      - name: Build (Release)
+        run: dotnet build -c Release --no-restore benchmarks/Wolfgang.D20.Dice.Benchmarks/Wolfgang.D20.Dice.Benchmarks.csproj
+
+      - name: Run benchmarks
+        working-directory: benchmarks/Wolfgang.D20.Dice.Benchmarks
+        run: dotnet run -c Release --no-build -- --filter "*" --job short --memory --exporters json
+
+      - name: Merge per-class BDN reports
+        id: locate
+        working-directory: benchmarks/Wolfgang.D20.Dice.Benchmarks
+        run: |
+          shopt -s nullglob
+          reports=(BenchmarkDotNet.Artifacts/results/*-report-full-compressed.json)
+          if [ ${#reports[@]} -eq 0 ]; then
+            echo "::error::No BenchmarkDotNet JSON report found"
+            exit 1
+          fi
+          jq -s '{
+            Title: "BenchmarkDotNet combined report",
+            HostEnvironmentInfo: .[0].HostEnvironmentInfo,
+            Benchmarks: [.[].Benchmarks[]]
+          }' "${reports[@]}" > benchmarks-result.json
+          echo "report=benchmarks/Wolfgang.D20.Dice.Benchmarks/benchmarks-result.json" >> "$GITHUB_OUTPUT"
+
+      - name: Compare against gh-pages baseline
+        uses: benchmark-action/github-action-benchmark@52576c92bccf6ac60c8223ec7eb2565637cae9ba  # v1.22.1
+        with:
+          name: BenchmarkDotNet
+          tool: 'benchmarkdotnet'
+          output-file-path: ${{ steps.locate.outputs.report }}
+          gh-pages-branch: gh-pages
+          benchmark-data-dir-path: dev/bench
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          alert-threshold: '200%'
+          comment-on-alert: true
+          fail-on-alert: false
+          auto-push: false
+          save-data-file: false
