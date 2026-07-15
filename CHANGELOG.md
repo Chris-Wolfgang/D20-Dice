@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **#214** — Docs: documented on `Dice.GetHashCode()` that `Dice` is mutable and must not be
+  mutated while used as a key in a hashed collection (snapshot via `ToString` for a stable key).
+- **#220** — Internal: added a native-AOT publish-and-run smoke consumer and its CI workflow
+  (`aot-smoke.yaml`) — the runtime counterpart to the #175 `IsAotCompatible` analyzer gate.
+
 ### Deprecated
 
 ### Removed
