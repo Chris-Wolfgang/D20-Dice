@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784126241447,
+  "lastUpdate": 1784147883313,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -648,6 +648,42 @@ window.BENCHMARK_DATA = {
             "value": 8.154978796839714,
             "unit": "ns",
             "range": "± 0.015373671931821207"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5b678d5c1dc0464846f1c184b68c05bba6714577",
+          "message": "Merge pull request #245 from Chris-Wolfgang/chore/bump-apicompat-baseline-0.7.1\n\nBump PackageValidation baseline to 0.7.1",
+          "timestamp": "2026-07-15T16:36:41-04:00",
+          "tree_id": "88983f61a8a668c4b490b6705155a56e79778dcb",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/5b678d5c1dc0464846f1c184b68c05bba6714577"
+        },
+        "date": 1784147881318,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.892464170853297,
+            "unit": "ns",
+            "range": "± 0.021867416919324242"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 7.4404097100098925,
+            "unit": "ns",
+            "range": "± 0.009037726601446939"
           }
         ]
       }
