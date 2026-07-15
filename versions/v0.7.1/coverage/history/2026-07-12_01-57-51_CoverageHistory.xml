@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<coverage version="1.0" date="2026-07-12_01-57-51" tag="">
+  <assembly name="Wolfgang.D20.Dice">
+    <class name="Wolfgang.D20.Dice" coveredlines="142" coverablelines="142" totallines="577" coveredbranches="84" totalbranches="84" coveredcodeelements="27" fullcoveredcodeelements="27" totalcodeelements="27" />
+    <class name="Wolfgang.D20.Die" coveredlines="24" coverablelines="24" totallines="147" coveredbranches="12" totalbranches="12" coveredcodeelements="9" fullcoveredcodeelements="9" totalcodeelements="9" />
+  </assembly>
+</coverage>
