@@ -45,11 +45,15 @@ jobs:
       - name: Restore (so transitive deps resolve)
         run: dotnet restore "$PROJ"
 
+      # Report-only: nuget-license exits non-zero when a package's license can't be
+      # mapped to a known SPDX type (e.g. a licence provided as full text). Don't fail
+      # the job on that — the inventory is still printed / uploaded for review. Add
+      # `--allowed-license-types <allowed.json>` and drop `|| true` to make it a gate.
       - name: Audit licenses (table to log)
-        run: nuget-license --input "$PROJ" --include-transitive --output Table
+        run: nuget-license --input "$PROJ" --include-transitive --output Table || true
 
       - name: Audit licenses (JSON report file)
-        run: nuget-license --input "$PROJ" --include-transitive --output JsonPretty --file-output licenses.json
+        run: nuget-license --input "$PROJ" --include-transitive --output JsonPretty --file-output licenses.json || true
 
       - name: Upload license report
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
