@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784215132439,
+  "lastUpdate": 1784233939259,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -756,6 +756,42 @@ window.BENCHMARK_DATA = {
             "value": 4.624266507724921,
             "unit": "ns",
             "range": "± 0.22165468078540404"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "961ea5611050ffececc1b1dfddf145a6c6a2dc13",
+          "message": "Merge pull request #255 from Chris-Wolfgang/vNext\n\nrelease: v0.8.0 — immutable Dice value type (#239)",
+          "timestamp": "2026-07-16T16:30:57-04:00",
+          "tree_id": "0ea26abdf2004d9f304453f7dede2f4069c7fb53",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/961ea5611050ffececc1b1dfddf145a6c6a2dc13"
+        },
+        "date": 1784233936283,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.809872443477313,
+            "unit": "ns",
+            "range": "± 0.020022258481284704"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 8.32554692029953,
+            "unit": "ns",
+            "range": "± 0.015191304433315041"
           }
         ]
       }
