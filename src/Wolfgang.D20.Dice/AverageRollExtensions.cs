@@ -20,6 +20,11 @@ public static class AverageRollExtensions
     /// The midpoint of <see cref="IDie.MinValue"/> and <see cref="IDie.MaxValue"/>, rounded up.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="die"/> is null.</exception>
+    /// <example>
+    /// <code>
+    /// int average = new Die(6).AverageRoundedUp(); // 3.5 -> 4
+    /// </code>
+    /// </example>
     public static int AverageRoundedUp(this IDie die)
     {
         if (die is null)
@@ -40,6 +45,11 @@ public static class AverageRollExtensions
     /// The midpoint of <see cref="IDice.MinValue"/> and <see cref="IDice.MaxValue"/>, rounded up.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="dice"/> is null.</exception>
+    /// <example>
+    /// <code>
+    /// int average = new Dice(2, 6).AverageRoundedUp(); // 7.0 -> 7
+    /// </code>
+    /// </example>
     public static int AverageRoundedUp(this IDice dice)
     {
         if (dice is null)
@@ -60,6 +70,11 @@ public static class AverageRollExtensions
     /// The midpoint of <see cref="IDie.MinValue"/> and <see cref="IDie.MaxValue"/>, rounded down.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="die"/> is null.</exception>
+    /// <example>
+    /// <code>
+    /// int average = new Die(6).AverageRoundedDown(); // 3.5 -> 3
+    /// </code>
+    /// </example>
     public static int AverageRoundedDown(this IDie die)
     {
         if (die is null)
@@ -80,6 +95,12 @@ public static class AverageRollExtensions
     /// The midpoint of <see cref="IDice.MinValue"/> and <see cref="IDice.MaxValue"/>, rounded down.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="dice"/> is null.</exception>
+    /// <example>
+    /// <code>
+    /// // 2d6 averages 7; half damage on a successful save, rounded down, is 3.
+    /// int half = new Dice(2, 6).AverageRoundedDown() / 2; // 3
+    /// </code>
+    /// </example>
     public static int AverageRoundedDown(this IDice dice)
     {
         if (dice is null)

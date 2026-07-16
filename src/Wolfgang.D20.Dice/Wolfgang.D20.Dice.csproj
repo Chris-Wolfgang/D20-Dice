@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-	  <Version>0.7.1</Version>
+	  <Version>0.7.2</Version>
 	  <!-- API/ABI compatibility gate (#169), implemented with the SDK's ApiCompat-based
 	       PackageValidation: the packed API surface is validated against the last released version at
 	       pack time (including in release.yaml), so an accidental breaking change fails the pack. Bump
