@@ -32,6 +32,13 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// This convenience constructor builds a homogeneous collection of <paramref name="dieCount"/> dice,
     /// each with <paramref name="sideCount"/> sides. A sideCount of 2 represents a coin toss.
     /// </remarks>
+    /// <example>
+    /// <code>
+    /// // 2d6+3: two six-sided dice plus a flat +3.
+    /// var attack = new Dice(dieCount: 2, sideCount: 6, modifier: 3);
+    /// int total = attack.Roll(); // a value in [5, 15]
+    /// </code>
+    /// </example>
     public Dice(int dieCount = 1, int sideCount = 6, int modifier = 0)
     {
         if (dieCount < 1)
@@ -62,6 +69,12 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// <param name="modifier">An optional modifier to add to the result</param>
     /// <exception cref="ArgumentNullException"><paramref name="dice"/> is null</exception>
     /// <exception cref="ArgumentException"><paramref name="dice"/> contains a null element</exception>
+    /// <example>
+    /// <code>
+    /// // 1d6+1d4+1: a heterogeneous pool built from individual dice.
+    /// var dice = new Dice(new[] { new Die(6), new Die(4) }, modifier: 1);
+    /// </code>
+    /// </example>
     public Dice(IEnumerable<Die> dice, int modifier = 0)
     {
         if (dice is null)
@@ -109,6 +122,12 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// <remarks>
     /// The value can be positive or negative, and can be used to adjust the result of the roll.
     /// </remarks>
+    /// <example>
+    /// <code>
+    /// var dice = new Dice(1, 20) { Modifier = 5 }; // 1d20+5
+    /// int total = dice.Roll(); // a value in [6, 25]
+    /// </code>
+    /// </example>
     public int Modifier { get; set; }
 
 
@@ -160,6 +179,12 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// The sum of an independent roll of each die in the collection plus <see cref="Modifier"/>.
     /// Always between <see cref="MinValue"/> and <see cref="MaxValue"/> inclusive.
     /// </returns>
+    /// <example>
+    /// <code>
+    /// var dice = new Dice(3, 6); // 3d6
+    /// int total = dice.Roll(); // a value in [3, 18]
+    /// </code>
+    /// </example>
     public int Roll()
     {
         checked
@@ -293,6 +318,11 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// modifier renders with a leading minus sign. An empty collection renders only the modifier
     /// (or an empty string when the modifier is zero).
     /// </returns>
+    /// <example>
+    /// <code>
+    /// string notation = new Dice(2, 6, 3).ToString(); // "2d6+3"
+    /// </code>
+    /// </example>
     public override string ToString()
     {
         var builder = new StringBuilder();
@@ -454,6 +484,16 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// otherwise, a failed result with <see cref="Wolfgang.TryPattern.Result.ErrorMessage"/> describing the failure.
     /// Accessing <see cref="Wolfgang.TryPattern.Result{T}.Value"/> on a failed result throws <see cref="InvalidOperationException"/>.
     /// </returns>
+    /// <example>
+    /// <code>
+    /// var result = Dice.TryParse("2d6+3");
+    /// if (result.Succeeded)
+    /// {
+    ///     Dice dice = result.Value!;
+    ///     int total = dice.Roll(); // a value in [5, 15]
+    /// }
+    /// </code>
+    /// </example>
     public static Result<Dice?> TryParse(string? notation)
     {
         if (string.IsNullOrWhiteSpace(notation))
