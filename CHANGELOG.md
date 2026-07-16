@@ -19,6 +19,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.7.2] - 2026-07-16
+
+Maintenance round — public-API documentation plus supply-chain and debug-tooling
+verification. **No public API or runtime behavior change vs 0.7.1.**
+
+### Added
+
+- **#174** — runnable `<example>` blocks on the public API XML docs (`Die`, `Dice`,
+  `IDie`/`IDice`, and the `AverageRoundedUp`/`AverageRoundedDown` extensions). Every
+  snippet is compile-verified against the library.
+- **#171** — SLSA build-provenance attestation for the published `.nupkg`
+  (`actions/attest-build-provenance`, keyless via the release workflow's OIDC identity),
+  binding each package's digest to the exact commit and workflow run that built it. A new
+  "Verifying a release" section in `SECURITY.md` documents `gh attestation verify` and the
+  CycloneDX SBOM. (NuGet author signing remains tracked in #171 — it needs a certificate.)
+- **#176** — a SourceLink verification gate (`dotnet sourcelink test`) that fetches every
+  PDB source document from GitHub and checksum-matches it, so consumer debug step-into
+  cannot silently regress to decompiled source on a mis-tagged or mis-uploaded release.
+
 ## [0.7.1] - 2026-07-15
 
 Maintenance round — repo hardening, documentation, and internal tests. **No public
@@ -171,7 +190,8 @@ runtime behavior change vs v0.5.0.
   See DateTime-Extensions v1.3.1 post-mortem for what happens when this
   pin is dropped and SDK-derived AssemblyVersion changes per release.
 
-[Unreleased]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.2...HEAD
+[0.7.2]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.0...v0.6.1
