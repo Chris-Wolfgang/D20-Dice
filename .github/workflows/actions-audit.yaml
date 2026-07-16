@@ -13,11 +13,12 @@ name: Actions Audit
 # wrapper actions, to keep the supply chain small.
 
 on:
+  # Runs on every PR (not path-filtered) so the actionlint job can be a required
+  # status check — a path-filtered required check would hang PRs that don't touch
+  # .github/workflows/**. actionlint/zizmor are cheap (~20s) and idempotent.
   pull_request:
-    paths: ['.github/workflows/**']
   push:
     branches: [main]
-    paths: ['.github/workflows/**']
   workflow_dispatch:
 
 permissions:
