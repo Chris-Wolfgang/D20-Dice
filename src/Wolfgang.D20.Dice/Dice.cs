@@ -11,9 +11,12 @@ namespace Wolfgang.D20;
 /// </summary>
 /// <remarks>
 /// The dice need not be homogeneous; a single <see cref="Dice"/> can contain dice with differing
-/// side counts, for example <c>2d6+1d4+3</c>. Individual dice can be added and removed after construction.
+/// side counts, for example <c>2d6+1d4+3</c>. <see cref="Dice"/> is immutable: the "with" builders
+/// (<see cref="WithDie"/>, <see cref="Without"/>, <see cref="WithModifier"/>) return a new instance
+/// rather than modifying the current one, so an instance is safe to use as a dictionary key and to
+/// share across threads.
 /// </remarks>
-public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
+public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
 {
     private readonly List<Die> _dice = new();
 
@@ -103,16 +106,9 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
 
 
     /// <summary>
-    /// The number of dice in the collection. <see cref="ICollection{T}"/> implementation; equal to <see cref="DieCount"/>.
+    /// The number of dice in the collection. <see cref="IReadOnlyCollection{T}"/> implementation; equal to <see cref="DieCount"/>.
     /// </summary>
     public int Count => _dice.Count;
-
-
-
-    /// <summary>
-    /// Always false; the collection is mutable. <see cref="ICollection{T}"/> implementation.
-    /// </summary>
-    public bool IsReadOnly => false;
 
 
 
@@ -121,14 +117,15 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// </summary>
     /// <remarks>
     /// The value can be positive or negative, and can be used to adjust the result of the roll.
+    /// It is fixed at construction; use <see cref="WithModifier"/> to obtain a copy with a different modifier.
     /// </remarks>
     /// <example>
     /// <code>
-    /// var dice = new Dice(1, 20) { Modifier = 5 }; // 1d20+5
-    /// int total = dice.Roll(); // a value in [6, 25]
+    /// var attack = new Dice(1, 20, 2);        // 1d20+2 — modifier set at construction
+    /// var blessed = attack.WithModifier(5);   // 1d20+5 — a new pool; 'attack' is unchanged
     /// </code>
     /// </example>
-    public int Modifier { get; set; }
+    public int Modifier { get; }
 
 
 
@@ -204,89 +201,69 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
 
 
     /// <summary>
-    /// Adds a die to the collection.
+    /// Returns a new <see cref="Dice"/> containing every die in this instance plus <paramref name="die"/>,
+    /// keeping the same <see cref="Modifier"/>. This instance is not modified.
     /// </summary>
-    /// <param name="item">The die to add.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="item"/> is null</exception>
-    public void Add(Die item)
+    /// <param name="die">The die to add.</param>
+    /// <returns>A new <see cref="Dice"/> with <paramref name="die"/> appended.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="die"/> is null.</exception>
+    /// <example>
+    /// <code>
+    /// var pool = new Dice(2, 6).WithDie(new Die(4)); // 2d6 -> 2d6+1d4
+    /// </code>
+    /// </example>
+    public Dice WithDie(Die die)
     {
-        if (item is null)
+        if (die is null)
         {
-            throw new ArgumentNullException(nameof(item));
+            throw new ArgumentNullException(nameof(die));
         }
-        _dice.Add(item);
+
+        // The Dice(IEnumerable<Die>, int) constructor copies the sequence, so the new instance
+        // never shares this instance's backing list.
+        var dice = new List<Die>(_dice) { die };
+        return new Dice(dice, Modifier);
     }
 
 
 
     /// <summary>
-    /// Removes the first occurrence of a die with the same number of sides from the collection.
+    /// Returns a new <see cref="Dice"/> with the first die matching <paramref name="die"/> removed,
+    /// keeping the same <see cref="Modifier"/>. If no die matches, an equal copy is returned. This
+    /// instance is not modified.
     /// </summary>
-    /// <param name="item">The die to remove.</param>
-    /// <returns>true if a matching die was removed; otherwise, false.</returns>
-    public bool Remove(Die item)
+    /// <param name="die">The die to remove.</param>
+    /// <returns>A new <see cref="Dice"/> without the first matching die.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="die"/> is null.</exception>
+    public Dice Without(Die die)
     {
-        if (item is null)
+        if (die is null)
         {
-            return false;
+            throw new ArgumentNullException(nameof(die));
         }
-        return _dice.Remove(item);
+
+        var dice = new List<Die>(_dice);
+        dice.Remove(die);
+        return new Dice(dice, Modifier);
     }
 
 
 
     /// <summary>
-    /// Removes the die at the specified index in the collection.
+    /// Returns a new <see cref="Dice"/> with the same dice but the specified <paramref name="modifier"/>.
+    /// This instance is not modified.
     /// </summary>
-    /// <param name="index">The zero-based index of the die to remove.</param>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <paramref name="index"/> is less than 0 or not less than <see cref="DieCount"/>.
-    /// </exception>
-    public void RemoveAt(int index)
+    /// <param name="modifier">The flat modifier for the new instance.</param>
+    /// <returns>A new <see cref="Dice"/> whose <see cref="Modifier"/> is <paramref name="modifier"/>.</returns>
+    /// <example>
+    /// <code>
+    /// var attack = new Dice(1, 20, 2);      // 1d20+2
+    /// var buffed = attack.WithModifier(5);  // 1d20+5 — derived from attack, which is unchanged
+    /// </code>
+    /// </example>
+    public Dice WithModifier(int modifier)
     {
-        if (index < 0 || index >= _dice.Count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(index));
-        }
-        _dice.RemoveAt(index);
-    }
-
-
-
-    /// <summary>
-    /// Removes all dice from the collection. The <see cref="Modifier"/> is left unchanged.
-    /// </summary>
-    public void Clear()
-    {
-        _dice.Clear();
-    }
-
-
-
-    /// <summary>
-    /// Determines whether the collection contains a die with the same number of sides.
-    /// </summary>
-    /// <param name="item">The die to locate.</param>
-    /// <returns>true if a matching die is found; otherwise, false.</returns>
-    public bool Contains(Die item)
-    {
-        if (item is null)
-        {
-            return false;
-        }
-        return _dice.Contains(item);
-    }
-
-
-
-    /// <summary>
-    /// Copies the dice in the collection to an array, starting at the specified index.
-    /// </summary>
-    /// <param name="array">The destination array.</param>
-    /// <param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param>
-    public void CopyTo(Die[] array, int arrayIndex)
-    {
-        _dice.CopyTo(array, arrayIndex);
+        return new Dice(_dice, modifier);
     }
 
 
@@ -432,13 +409,10 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
     /// dice side counts (order-independent).
     /// </summary>
     /// <remarks>
-    /// <see cref="Dice"/> is a mutable collection: dice can be added or removed and <see cref="Modifier"/>
-    /// is settable, and both feed into this hash code (consistent with <see cref="Equals(Dice)"/>). As with
-    /// any mutable type, do not mutate a <see cref="Dice"/> instance while it is being used as a key in a
-    /// hashed collection such as <see cref="System.Collections.Generic.Dictionary{TKey,TValue}"/> or
-    /// <see cref="System.Collections.Generic.HashSet{T}"/> — doing so leaves the instance in the wrong bucket
-    /// and breaks subsequent lookups. If you need a stable key, snapshot the value first (for example the
-    /// result of <see cref="ToString"/>).
+    /// <see cref="Dice"/> is immutable, so this hash code is stable for the life of the instance and a
+    /// <see cref="Dice"/> is safe to use as a key in a hashed collection such as
+    /// <see cref="System.Collections.Generic.Dictionary{TKey,TValue}"/> or
+    /// <see cref="System.Collections.Generic.HashSet{T}"/>.
     /// </remarks>
     /// <returns>A combined hash code.</returns>
     public override int GetHashCode()
@@ -446,9 +420,6 @@ public sealed class Dice : IDice, ICollection<Die>, IEquatable<Dice>
         unchecked
         {
             // Order-independent: sum the per-die hashes so equal multisets hash identically.
-            // The hash intentionally reflects the mutable Modifier / dice multiset so it stays consistent
-            // with Equals; the mutable-key caveat is documented on this method. See issue #214.
-            // ReSharper disable once NonReadonlyMemberInGetHashCode
             var hashCode = Modifier;
             var sideSum = 0;
             foreach (var die in _dice)

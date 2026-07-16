@@ -104,21 +104,6 @@ public class DiceTests
 
 
 
-    [Fact]
-    public void Modifier_can_be_set()
-    {
-        // Arrange
-        var dice = new Dice(1, 6, 0);
-
-        // Act
-        dice.Modifier = 5;
-
-        // Assert
-        Assert.Equal(5, dice.Modifier);
-    }
-
-
-
     // ---- Collection construction ----
 
     [Fact]
@@ -154,135 +139,135 @@ public class DiceTests
 
 
 
-    // ---- ICollection<Die> behaviour ----
+    // ---- Immutable "with" builders ----
 
     [Fact]
-    public void Add_appends_a_die()
+    public void WithDie_returns_a_new_pool_with_the_die_added()
     {
-        var dice = new Dice(1, 6);
-        dice.Add(new Die(4));
+        var dice = new Dice(1, 6, 2);
 
-        Assert.Equal(2, dice.DieCount);
-        Assert.Equal(2, dice.Count);
+        var result = dice.WithDie(new Die(4));
+
+        Assert.Equal(2, result.DieCount);
+        Assert.Equal(2, result.Modifier);
+        Assert.Contains(result, die => die.SideCount == 4);
     }
 
 
 
     [Fact]
-    public void Add_null_throws_ArgumentNullException()
+    public void WithDie_does_not_modify_the_original()
     {
         var dice = new Dice(1, 6);
-        Assert.Throws<ArgumentNullException>(() => dice.Add(null!));
-    }
 
+        dice.WithDie(new Die(4));
 
-
-    [Fact]
-    public void Remove_removes_a_matching_die_and_returns_true()
-    {
-        var dice = new Dice(new[] { new Die(6), new Die(4) });
-
-        var removed = dice.Remove(new Die(4));
-
-        Assert.True(removed);
         Assert.Equal(1, dice.DieCount);
     }
 
 
 
     [Fact]
-    public void Remove_when_no_match_returns_false()
+    public void WithDie_null_throws_ArgumentNullException()
     {
         var dice = new Dice(1, 6);
-        Assert.False(dice.Remove(new Die(20)));
+        Assert.Throws<ArgumentNullException>(() => dice.WithDie(null!));
     }
 
 
 
     [Fact]
-    public void Remove_null_returns_false()
-    {
-        var dice = new Dice(1, 6);
-        Assert.False(dice.Remove(null!));
-    }
-
-
-
-    [Fact]
-    public void RemoveAt_removes_the_die_at_the_given_index()
-    {
-        var dice = new Dice(new[] { new Die(6), new Die(4), new Die(8) });
-
-        dice.RemoveAt(1);
-
-        Assert.Equal(2, dice.DieCount);
-        Assert.False(dice.Contains(new Die(4)));
-    }
-
-
-
-    [Theory]
-    [InlineData(-1)]
-    [InlineData(2)]
-    public void RemoveAt_with_index_out_of_range_throws_ArgumentOutOfRangeException(int index)
-    {
-        var dice = new Dice(2, 6);
-        Assert.Throws<ArgumentOutOfRangeException>(() => dice.RemoveAt(index));
-    }
-
-
-
-    [Fact]
-    public void Clear_removes_all_dice_but_keeps_modifier()
-    {
-        var dice = new Dice(3, 6, 2);
-
-        dice.Clear();
-
-        Assert.Equal(0, dice.DieCount);
-        Assert.Equal(2, dice.Modifier);
-    }
-
-
-
-    [Fact]
-    public void Contains_returns_true_for_matching_die()
+    public void Without_returns_a_new_pool_with_the_first_match_removed()
     {
         var dice = new Dice(new[] { new Die(6), new Die(4) });
 
-        Assert.True(dice.Contains(new Die(4)));
-        Assert.False(dice.Contains(new Die(20)));
+        var result = dice.Without(new Die(4));
+
+        Assert.Equal(1, result.DieCount);
+        Assert.DoesNotContain(result, die => die.SideCount == 4);
     }
 
 
 
     [Fact]
-    public void Contains_null_returns_false()
+    public void Without_when_no_match_returns_an_equal_copy()
     {
         var dice = new Dice(1, 6);
-        Assert.False(dice.Contains(null!));
+
+        var result = dice.Without(new Die(20));
+
+        Assert.Equal(dice, result);
     }
 
 
 
     [Fact]
-    public void CopyTo_copies_dice_to_array()
+    public void Without_does_not_modify_the_original()
     {
-        var dice = new Dice(2, 6);
-        var array = new Die[2];
+        var dice = new Dice(new[] { new Die(6), new Die(4) });
 
-        dice.CopyTo(array, 0);
+        dice.Without(new Die(4));
 
-        Assert.All(array, die => Assert.Equal(6, die.SideCount));
+        Assert.Equal(2, dice.DieCount);
     }
 
 
 
     [Fact]
-    public void IsReadOnly_is_false()
+    public void Without_null_throws_ArgumentNullException()
     {
-        var dice = new Dice();
-        Assert.False(dice.IsReadOnly);
+        var dice = new Dice(1, 6);
+        Assert.Throws<ArgumentNullException>(() => dice.Without(null!));
+    }
+
+
+
+    [Fact]
+    public void WithModifier_returns_a_new_pool_with_the_modifier()
+    {
+        var dice = new Dice(2, 6, 1);
+
+        var result = dice.WithModifier(5);
+
+        Assert.Equal(5, result.Modifier);
+        Assert.Equal(2, result.DieCount);
+    }
+
+
+
+    [Fact]
+    public void WithModifier_does_not_modify_the_original()
+    {
+        var dice = new Dice(2, 6, 1);
+
+        dice.WithModifier(5);
+
+        Assert.Equal(1, dice.Modifier);
+    }
+
+
+
+    // ---- Immutability / read-only collection ----
+
+    [Fact]
+    public void Count_reflects_the_number_of_dice()
+    {
+        var dice = new Dice(new[] { new Die(6), new Die(4) });
+        Assert.Equal(2, dice.Count);
+    }
+
+
+
+    [Fact]
+    public void Dice_is_stable_as_a_dictionary_key()
+    {
+        var key = new Dice(2, 6, 1);
+        var map = new Dictionary<Dice, string> { [key] = "attack" };
+
+        // An equal but distinct instance resolves to the same entry (stable hash + equality).
+        var lookup = new Dice(2, 6, 1);
+        Assert.True(map.ContainsKey(lookup));
+        Assert.Equal("attack", map[lookup]);
     }
 
 
@@ -577,9 +562,9 @@ public class DiceTests
 
 
     [Fact]
-    public void Dice_can_be_cast_to_ICollection_Die()
+    public void Dice_can_be_cast_to_IReadOnlyCollection_Die()
     {
-        ICollection<Die> dice = new Dice();
+        IReadOnlyCollection<Die> dice = new Dice();
         Assert.NotNull(dice);
         Assert.IsType<Dice>(dice);
     }
