@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784147883313,
+  "lastUpdate": 1784209946164,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -684,6 +684,42 @@ window.BENCHMARK_DATA = {
             "value": 7.4404097100098925,
             "unit": "ns",
             "range": "± 0.009037726601446939"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "48f5201cb627a89e122fad3fd2270d81981aab15",
+          "message": "Merge pull request #250 from Chris-Wolfgang/release/v0.7.2\n\nrelease: v0.7.2 — public-API examples + release docs",
+          "timestamp": "2026-07-16T09:50:59-04:00",
+          "tree_id": "2d13f63ca0df08a8de88e28899729d78bac7a6e3",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/48f5201cb627a89e122fad3fd2270d81981aab15"
+        },
+        "date": 1784209943643,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 8.12142051756382,
+            "unit": "ns",
+            "range": "± 0.008261646285861249"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 8.129675477743149,
+            "unit": "ns",
+            "range": "± 0.005763440961912536"
           }
         ]
       }
