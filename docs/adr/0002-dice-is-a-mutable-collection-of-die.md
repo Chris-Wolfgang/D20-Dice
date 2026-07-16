@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Superseded by [ADR-0008](0008-dice-is-an-immutable-value-type.md)
 
 ## Context
 

@@ -9,11 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **#239** — non-mutating "with" builders on `Dice`: `WithDie(Die)`, `Without(Die)`, and
+  `WithModifier(int)`, each returning a new `Dice` (replacing the removed mutators).
+
 ### Changed
+
+- **#239 (breaking)** — `Dice` is now an **immutable value type**. It implements
+  `IReadOnlyCollection<Die>` instead of `ICollection<Die>`, and `Modifier` is get-only (set via
+  the constructor or `WithModifier`). Equality/hashing are unchanged in behaviour but now stable
+  for the life of an instance, so a `Dice` is safe as a dictionary key and to share across threads.
+  Recorded in [ADR-0008](docs/adr/0008-dice-is-an-immutable-value-type.md) (supersedes ADR-0002);
+  resolves the mutable-key hazard previously documented for #214 and the thread-safety concern #170.
+  Because the library is pre-1.0, this ships as a MINOR bump.
+  - **Migration**: replace `dice.Add(die)` → `dice = dice.WithDie(die)`; `dice.Remove(die)` →
+    `dice = dice.Without(die)`; `dice.Modifier = m` / `new Dice(...) { Modifier = m }` →
+    `new Dice(dieCount, sideCount, m)` or `dice.WithModifier(m)`. `RemoveAt`/`Clear` have no direct
+    replacement — rebuild the pool from the constructors or `TryParse`. Enumeration (`foreach`,
+    LINQ) and `Count` still work via `IReadOnlyCollection<Die>`.
 
 ### Deprecated
 
 ### Removed
+
+- **#239 (breaking)** — the mutating surface on `Dice`: `Add(Die)`, `Remove(Die)`, `RemoveAt(int)`,
+  `Clear()`, `Contains(Die)`, `CopyTo(Die[], int)`, `IsReadOnly`, the `Modifier` setter, and
+  `ICollection<Die>` membership.
 
 ### Fixed
 
