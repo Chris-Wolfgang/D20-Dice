@@ -121,8 +121,8 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     /// </remarks>
     /// <example>
     /// <code>
-    /// var dice = new Dice(1, 20).WithModifier(5); // 1d20+5
-    /// int total = dice.Roll(); // a value in [6, 25]
+    /// var attack = new Dice(1, 20, 2);        // 1d20+2 — modifier set at construction
+    /// var blessed = attack.WithModifier(5);   // 1d20+5 — a new pool; 'attack' is unchanged
     /// </code>
     /// </example>
     public int Modifier { get; }
@@ -257,7 +257,8 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     /// <returns>A new <see cref="Dice"/> whose <see cref="Modifier"/> is <paramref name="modifier"/>.</returns>
     /// <example>
     /// <code>
-    /// var buffed = new Dice(1, 20).WithModifier(5); // 1d20+5
+    /// var attack = new Dice(1, 20, 2);      // 1d20+2
+    /// var buffed = attack.WithModifier(5);  // 1d20+5 — derived from attack, which is unchanged
     /// </code>
     /// </example>
     public Dice WithModifier(int modifier)
