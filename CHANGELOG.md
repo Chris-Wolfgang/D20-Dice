@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.8.0] - 2026-07-16
+
+`Dice` becomes an **immutable value type** (#239) — a breaking API change, shipped as a MINOR
+bump because the library is pre-1.0. See
+[ADR-0008](docs/adr/0008-dice-is-an-immutable-value-type.md) (supersedes ADR-0002).
+
+### Added
+
 - **#239** — non-mutating "with" builders on `Dice`: `WithDie(Die)`, `Without(Die)`, and
   `WithModifier(int)`, each returning a new `Dice` (replacing the removed mutators).
 
@@ -18,26 +36,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `IReadOnlyCollection<Die>` instead of `ICollection<Die>`, and `Modifier` is get-only (set via
   the constructor or `WithModifier`). Equality/hashing are unchanged in behaviour but now stable
   for the life of an instance, so a `Dice` is safe as a dictionary key and to share across threads.
-  Recorded in [ADR-0008](docs/adr/0008-dice-is-an-immutable-value-type.md) (supersedes ADR-0002);
-  resolves the mutable-key hazard previously documented for #214 and the thread-safety concern #170.
-  Because the library is pre-1.0, this ships as a MINOR bump.
+  Resolves the mutable-key hazard previously documented for #214 and the thread-safety concern #170.
   - **Migration**: replace `dice.Add(die)` → `dice = dice.WithDie(die)`; `dice.Remove(die)` →
     `dice = dice.Without(die)`; `dice.Modifier = m` / `new Dice(...) { Modifier = m }` →
     `new Dice(dieCount, sideCount, m)` or `dice.WithModifier(m)`. `RemoveAt`/`Clear` have no direct
     replacement — rebuild the pool from the constructors or `TryParse`. Enumeration (`foreach`,
     LINQ) and `Count` still work via `IReadOnlyCollection<Die>`.
 
-### Deprecated
-
 ### Removed
 
 - **#239 (breaking)** — the mutating surface on `Dice`: `Add(Die)`, `Remove(Die)`, `RemoveAt(int)`,
   `Clear()`, `Contains(Die)`, `CopyTo(Die[], int)`, `IsReadOnly`, the `Modifier` setter, and
   `ICollection<Die>` membership.
-
-### Fixed
-
-### Security
 
 ## [0.7.2] - 2026-07-16
 
@@ -210,7 +220,8 @@ runtime behavior change vs v0.5.0.
   See DateTime-Extensions v1.3.1 post-mortem for what happens when this
   pin is dropped and SDK-derived AssemblyVersion changes per release.
 
-[Unreleased]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.2...HEAD
+[Unreleased]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.2...v0.8.0
 [0.7.2]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.1...v0.7.0
