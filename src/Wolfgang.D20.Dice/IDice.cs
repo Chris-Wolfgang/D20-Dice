@@ -7,6 +7,12 @@ namespace Wolfgang.D20;
 /// The dice need not be homogeneous; a single <see cref="Dice"/> can contain dice with differing
 /// side counts, for example <c>2d6+1d4+3</c>.
 /// </remarks>
+/// <example>
+/// <code>
+/// IDice dice = new Dice(2, 6, 3); // 2d6+3
+/// int total = dice.Roll(); // a value in [5, 15]
+/// </code>
+/// </example>
 public interface IDice
 {
 
