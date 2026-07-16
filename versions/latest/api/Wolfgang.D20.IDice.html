@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/D20-Dice/new/v0.7.1/apiSpec/new?filename=Wolfgang_D20_IDice.md&amp;value=---%0Auid%3A%20Wolfgang.D20.IDice%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/D20-Dice/new/v0.7.2/apiSpec/new?filename=Wolfgang_D20_IDice.md&amp;value=---%0Auid%3A%20Wolfgang.D20.IDice%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,7 +75,7 @@
 
 
   <h1 id="Wolfgang_D20_IDice" data-uid="Wolfgang.D20.IDice" class="text-break">
-Interface IDice  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.1/src/Wolfgang.D20.Dice/IDice.cs/#L10"><i class="bi bi-code-slash"></i></a>
+Interface IDice  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/IDice.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -110,6 +110,10 @@ Interface IDice  <a class="header-action link-secondary" title="View source" hre
   </dd></dl>
 
 
+  <h2 id="Wolfgang_D20_IDice_examples">Examples</h2>
+  <pre><code class="lang-csharp">IDice dice = new Dice(2, 6, 3); // 2d6+3
+int total = dice.Roll(); // a value in [5, 15]</code></pre>
+
 
   <h2 id="Wolfgang_D20_IDice_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>The dice need not be homogeneous; a single <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> can contain dice with differing
@@ -125,7 +129,7 @@ side counts, for example <code>2d6+1d4+3</code>.</p>
 
   <h3 id="Wolfgang_D20_IDice_DieCount" data-uid="Wolfgang.D20.IDice.DieCount">
   DieCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.1/src/Wolfgang.D20.Dice/IDice.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/IDice.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The number of dice in the collection.</p>
@@ -157,7 +161,7 @@ side counts, for example <code>2d6+1d4+3</code>.</p>
 
   <h3 id="Wolfgang_D20_IDice_MaxValue" data-uid="Wolfgang.D20.IDice.MaxValue">
   MaxValue
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.1/src/Wolfgang.D20.Dice/IDice.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/IDice.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The maximum value that can be rolled with the dice in the collection and the modifier.</p>
@@ -189,7 +193,7 @@ side counts, for example <code>2d6+1d4+3</code>.</p>
 
   <h3 id="Wolfgang_D20_IDice_MinValue" data-uid="Wolfgang.D20.IDice.MinValue">
   MinValue
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.1/src/Wolfgang.D20.Dice/IDice.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/IDice.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The minimum value that can be rolled with the dice in the collection and the modifier.</p>
@@ -221,7 +225,7 @@ side counts, for example <code>2d6+1d4+3</code>.</p>
 
   <h3 id="Wolfgang_D20_IDice_Modifier" data-uid="Wolfgang.D20.IDice.Modifier">
   Modifier
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.1/src/Wolfgang.D20.Dice/IDice.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/IDice.cs/#L31"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>An optional modifier to add to the total of the dice rolled.</p>
@@ -260,7 +264,7 @@ side counts, for example <code>2d6+1d4+3</code>.</p>
 
   <h3 id="Wolfgang_D20_IDice_Roll" data-uid="Wolfgang.D20.IDice.Roll">
   Roll()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.1/src/Wolfgang.D20.Dice/IDice.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/IDice.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Rolls every die in the collection and returns the total value rolled, including any modifier.</p>
@@ -294,7 +298,7 @@ Always between <a class="xref" href="Wolfgang.D20.IDice.html#Wolfgang_D20_IDice_
 
   <h3 id="Wolfgang_D20_IDice_ToString" data-uid="Wolfgang.D20.IDice.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.1/src/Wolfgang.D20.Dice/IDice.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/IDice.cs/#L63"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a string representation of the dice in standard dice notation, for example <code>2d6+1d4+3</code>.</p>
@@ -328,7 +332,7 @@ modifier (omitted when zero, leading minus when negative) always comes last.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.1/src/Wolfgang.D20.Dice/IDice.cs/#L10" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/IDice.cs/#L16" class="edit-link">Edit this page</a>
         </div>
 
 
