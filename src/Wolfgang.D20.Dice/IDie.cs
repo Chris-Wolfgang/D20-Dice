@@ -3,6 +3,12 @@ namespace Wolfgang.D20;
 /// <summary>
 /// Represents a single die with a fixed number of sides.
 /// </summary>
+/// <example>
+/// <code>
+/// IDie die = new Die(20);
+/// int result = die.Roll(); // a value in [1, 20]
+/// </code>
+/// </example>
 public interface IDie
 {
 

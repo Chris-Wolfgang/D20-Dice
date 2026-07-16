@@ -19,6 +19,12 @@ public sealed class Die : IDie, IEquatable<Die>
     /// <param name="sideCount">The number of sides on the die</param>
     /// <exception cref="ArgumentOutOfRangeException">sideCount is less than 2</exception>
     /// <remarks>sideCount of 2 represents a coin toss</remarks>
+    /// <example>
+    /// <code>
+    /// var d20 = new Die(20);
+    /// int result = d20.Roll(); // a value in [1, 20]
+    /// </code>
+    /// </example>
     public Die(int sideCount = 6)
     {
         if (sideCount < 2)
@@ -60,6 +66,12 @@ public sealed class Die : IDie, IEquatable<Die>
     /// <returns>
     /// A uniform random value in [<see cref="MinValue"/>, <see cref="MaxValue"/>] inclusive.
     /// </returns>
+    /// <example>
+    /// <code>
+    /// var d6 = new Die(6);
+    /// int result = d6.Roll(); // a value in [1, 6]
+    /// </code>
+    /// </example>
     public int Roll()
     {
 #if NET6_0_OR_GREATER
@@ -76,6 +88,11 @@ public sealed class Die : IDie, IEquatable<Die>
     /// Returns a string representation of the die in the format "dY" where Y is the number of sides.
     /// </summary>
     /// <returns>The die in standard <c>dY</c> notation.</returns>
+    /// <example>
+    /// <code>
+    /// string notation = new Die(20).ToString(); // "d20"
+    /// </code>
+    /// </example>
     public override string ToString()
     {
         // Format the side count with the invariant culture so the notation always uses ASCII digits and
