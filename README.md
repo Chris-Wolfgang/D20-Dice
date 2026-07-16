@@ -59,10 +59,10 @@ if (parseResult.Succeeded)
     Console.WriteLine($"Parsed: {parseResult.Value} → {parseResult.Value.Roll()}");
 }
 
-// Heterogeneous dice — Dice is a collection of Die you can build up
+// Heterogeneous dice — Dice is an immutable value; the "with" builders return a new pool
 var pool = Dice.TryParse("2d6+1d4+3").Value;   // mixed dice plus a flat modifier
-pool.Add(new Die(8));                          // add a d8 to the pool
-Console.WriteLine($"{pool}: {pool.Roll()}");   // e.g. "1d8+2d6+1d4+3: 19"
+var bigger = pool.WithDie(new Die(8));         // returns a new pool with a d8 added (pool is unchanged)
+Console.WriteLine($"{bigger}: {bigger.Roll()}"); // e.g. "2d6+1d4+1d8+3: 19"
 ```
 
 ---
@@ -72,7 +72,7 @@ Console.WriteLine($"{pool}: {pool.Roll()}");   // e.g. "1d8+2d6+1d4+3: 19"
 | Feature | Description |
 |---------|-------------|
 | Dice Notation | Standard `XdY+Z` format, including heterogeneous pools (e.g., `2d6+1d4+3`) |
-| Heterogeneous dice | `Dice` is an `ICollection<Die>` — `Add`/`Remove` individual `Die` of any side count |
+| Heterogeneous dice | `Dice` is an immutable `IReadOnlyCollection<Die>` of any side count; `WithDie`/`Without` return a new pool |
 | Parsing | `Dice.TryParse("2d6+1d4+3")` with full validation via `Result<T>` |
 | Roll | `Roll()` generates a random result within the valid range |
 | Min/Max | `MinValue` and `MaxValue` computed from the dice in the pool and the modifier |
