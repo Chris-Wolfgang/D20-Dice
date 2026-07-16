@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784209946164,
+  "lastUpdate": 1784215132439,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -720,6 +720,42 @@ window.BENCHMARK_DATA = {
             "value": 8.129675477743149,
             "unit": "ns",
             "range": "± 0.005763440961912536"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "656542476db9108051a27ec78f758b481ba8e6e5",
+          "message": "Merge pull request #252 from Chris-Wolfgang/release/v0.7.2-baseline\n\nrelease: bump PackageValidation baseline to 0.7.2 (post-release) [DO NOT MERGE until 0.7.2 published]",
+          "timestamp": "2026-07-16T11:17:21-04:00",
+          "tree_id": "7d5c4ba5e77a3535858d161b26b2a9b79cecc59c",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/656542476db9108051a27ec78f758b481ba8e6e5"
+        },
+        "date": 1784215129670,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 4.618718355894089,
+            "unit": "ns",
+            "range": "± 0.12922489984695162"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 4.624266507724921,
+            "unit": "ns",
+            "range": "± 0.22165468078540404"
           }
         ]
       }
