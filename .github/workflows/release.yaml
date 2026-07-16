@@ -673,7 +673,8 @@ jobs:
     if: needs.pack-and-validate.outputs.has-packages == 'true'
     runs-on: windows-latest
     permissions:
-      id-token: write   # required for OIDC token issuance to nuget.org (Trusted Publishing)
+      id-token: write       # required for OIDC token issuance to nuget.org (Trusted Publishing) AND for SLSA provenance signing
+      attestations: write   # required to record the SLSA build-provenance attestation on GitHub (#171)
       contents: read
     steps:
       - name: Setup .NET
@@ -693,6 +694,18 @@ jobs:
         with:
           name: nuget-packages
           path: ./packages
+
+      # SLSA build provenance (#171): generate a signed attestation binding each packed
+      # .nupkg (by SHA-256 digest) to the exact repo, commit and workflow run that produced
+      # it. Uses the workflow's OIDC identity — no signing key to manage (same keyless trust
+      # model as NuGet Trusted Publishing below). Attest BEFORE pushing so the provenance
+      # covers the exact bytes we publish; consumers verify with `gh attestation verify`.
+      # Package *signing* (an author signature) is intentionally out of scope — it needs a
+      # code-signing certificate.
+      - name: Attest build provenance for packages
+        uses: actions/attest-build-provenance@78e6cbd37d0ac1a40113c04f2037dacf1ea3f12e # v4
+        with:
+          subject-path: './packages/*.nupkg'
 
       - name: NuGet login (OIDC → temporary API key)
         uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1

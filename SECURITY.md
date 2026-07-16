@@ -37,3 +37,28 @@ Facts a maintainer would need at 2am if the release identity is compromised. Gen
 - **Owner**: @Chris-Wolfgang.
 - **Downstream consumers**: none known inside the Wolfgang.* org at time of writing; the package is public on nuget.org, so unknown downstream consumers may exist. Re-check via `dotnet-outdated`, GitHub code-search, and the NuGet package's `Used By` dependents list before communicating during an incident.
 - **Package coordinates for unlisting**: `Wolfgang.D20.Dice` on nuget.org — <https://www.nuget.org/packages/Wolfgang.D20.Dice/>.
+
+## Verifying a release
+
+Every published release carries supply-chain evidence so consumers can prove a package
+was built from this repository and not tampered with:
+
+- **SLSA build provenance** — `release.yaml` generates a signed [SLSA](https://slsa.dev)
+  provenance attestation for each `.nupkg` via `actions/attest-build-provenance`, using the
+  workflow's OIDC identity (`Chris-Wolfgang/D20-Dice`). The attestation binds the package's
+  SHA-256 digest to the exact commit and workflow run that produced it. To verify a
+  downloaded package with the [GitHub CLI](https://cli.github.com/):
+
+  ```bash
+  gh attestation verify Wolfgang.D20.Dice.<version>.nupkg --repo Chris-Wolfgang/D20-Dice
+  ```
+
+  A successful verification confirms the package was built by this repo's release workflow.
+- **SBOM** — a CycloneDX Software Bill of Materials (`Wolfgang.D20.Dice.bom.json`) is
+  generated at release time and attached to the GitHub Release, giving a machine-readable
+  inventory of the package's full dependency closure.
+
+> **Not yet author-signed.** The `.nupkg` does not currently carry a NuGet author signature
+> (`nuget verify` / trusted-signers), because that requires a code-signing certificate. NuGet
+> still applies its own repository signature on publish. Author signing is tracked in
+> [#171](https://github.com/Chris-Wolfgang/D20-Dice/issues/171).
