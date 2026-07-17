@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-## [0.8.0] - 2026-07-16
+## [0.8.0] - 2026-07-17
 
 `Dice` becomes an **immutable value type** (#239) — a breaking API change, shipped as a MINOR
 bump because the library is pre-1.0. See
