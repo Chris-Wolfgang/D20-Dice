@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<coverage version="1.0" date="2026-07-17_12-50-03" tag="">
+  <assembly name="Wolfgang.D20.Dice">
+    <class name="Wolfgang.D20.AverageRollExtensions" coveredlines="13" coverablelines="13" totallines="128" coveredbranches="8" totalbranches="8" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+    <class name="Wolfgang.D20.Dice" coveredlines="142" coverablelines="142" totallines="625" coveredbranches="82" totalbranches="82" coveredcodeelements="23" fullcoveredcodeelements="23" totalcodeelements="23" />
+    <class name="Wolfgang.D20.Die" coveredlines="24" coverablelines="24" totallines="168" coveredbranches="12" totalbranches="12" coveredcodeelements="9" fullcoveredcodeelements="9" totalcodeelements="9" />
+  </assembly>
+</coverage>

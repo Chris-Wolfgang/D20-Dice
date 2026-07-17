@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/D20-Dice/new/v0.7.2/apiSpec/new?filename=Wolfgang_D20_Dice.md&amp;value=---%0Auid%3A%20Wolfgang.D20.Dice%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/D20-Dice/new/v0.8.0/apiSpec/new?filename=Wolfgang_D20_Dice.md&amp;value=---%0Auid%3A%20Wolfgang.D20.Dice%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,7 +75,7 @@
 
 
   <h1 id="Wolfgang_D20_Dice" data-uid="Wolfgang.D20.Dice" class="text-break">
-Class Dice  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L16"><i class="bi bi-code-slash"></i></a>
+Class Dice  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -88,7 +88,7 @@ Class Dice  <a class="header-action link-secondary" title="View source" href="ht
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class Dice : IDice, ICollection&lt;Die&gt;, IEnumerable&lt;Die&gt;, IEnumerable, IEquatable&lt;Dice&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class Dice : IDice, IReadOnlyCollection&lt;Die&gt;, IEnumerable&lt;Die&gt;, IEnumerable, IEquatable&lt;Dice&gt;</code></pre>
   </div>
 
 
@@ -106,7 +106,7 @@ Class Dice  <a class="header-action link-secondary" title="View source" href="ht
     <dt>Implements</dt>
     <dd>
       <div><a class="xref" href="Wolfgang.D20.IDice.html">IDice</a></div>
-      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection</a>&lt;<a class="xref" href="Wolfgang.D20.Die.html">Die</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;<a class="xref" href="Wolfgang.D20.Die.html">Die</a>&gt;</div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="Wolfgang.D20.Die.html">Die</a>&gt;</div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Wolfgang.D20.Dice.html">Dice</a>&gt;</div>
@@ -143,7 +143,10 @@ Class Dice  <a class="header-action link-secondary" title="View source" href="ht
 
   <h2 id="Wolfgang_D20_Dice_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>The dice need not be homogeneous; a single <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> can contain dice with differing
-side counts, for example <code>2d6+1d4+3</code>. Individual dice can be added and removed after construction.</p>
+side counts, for example <code>2d6+1d4+3</code>. <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> is immutable: the &quot;with&quot; builders
+(<a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_WithDie_Wolfgang_D20_Die_">WithDie(Die)</a>, <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Without_Wolfgang_D20_Die_">Without(Die)</a>, <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_WithModifier_System_Int32_">WithModifier(int)</a>) return a new instance
+rather than modifying the current one, so an instance is safe to use as a dictionary key and to
+share across threads.</p>
 </div>
 
 
@@ -155,7 +158,7 @@ side counts, for example <code>2d6+1d4+3</code>. Individual dice can be added an
 
   <h3 id="Wolfgang_D20_Dice__ctor_System_Collections_Generic_IEnumerable_Wolfgang_D20_Die__System_Int32_" data-uid="Wolfgang.D20.Dice.#ctor(System.Collections.Generic.IEnumerable{Wolfgang.D20.Die},System.Int32)">
   Dice(IEnumerable&lt;Die&gt;, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs a new instance of <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> from an existing sequence of <a class="xref" href="Wolfgang.D20.Die.html">Die</a>
@@ -205,7 +208,7 @@ var dice = new Dice(new[] { new Die(6), new Die(4) }, modifier: 1);</code></pre>
 
   <h3 id="Wolfgang_D20_Dice__ctor_System_Int32_System_Int32_System_Int32_" data-uid="Wolfgang.D20.Dice.#ctor(System.Int32,System.Int32,System.Int32)">
   Dice(int, int, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L45"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs a new instance of <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> containing the specified number of identical dice
@@ -267,10 +270,10 @@ each with <code class="paramref">sideCount</code> sides. A sideCount of 2 repres
 
   <h3 id="Wolfgang_D20_Dice_Count" data-uid="Wolfgang.D20.Dice.Count">
   Count
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L111"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The number of dice in the collection. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection&lt;T&gt;</a> implementation; equal to <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_DieCount">DieCount</a>.</p>
+  <div class="markdown level1 summary"><p>The number of dice in the collection. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection&lt;T&gt;</a> implementation; equal to <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_DieCount">DieCount</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -299,7 +302,7 @@ each with <code class="paramref">sideCount</code> sides. A sideCount of 2 repres
 
   <h3 id="Wolfgang_D20_Dice_DieCount" data-uid="Wolfgang.D20.Dice.DieCount">
   DieCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L104"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The number of dice in the collection.</p>
@@ -327,43 +330,11 @@ each with <code class="paramref">sideCount</code> sides. A sideCount of 2 repres
 
 
 
-  <a id="Wolfgang_D20_Dice_IsReadOnly_" data-uid="Wolfgang.D20.Dice.IsReadOnly*"></a>
-
-  <h3 id="Wolfgang_D20_Dice_IsReadOnly" data-uid="Wolfgang.D20.Dice.IsReadOnly">
-  IsReadOnly
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L115"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Always false; the collection is mutable. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection&lt;T&gt;</a> implementation.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsReadOnly { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="Wolfgang_D20_Dice_MaxValue_" data-uid="Wolfgang.D20.Dice.MaxValue*"></a>
 
   <h3 id="Wolfgang_D20_Dice_MaxValue" data-uid="Wolfgang.D20.Dice.MaxValue">
   MaxValue
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L155"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L152"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The maximum value that can be rolled with the dice in the collection and the modifier.</p>
@@ -395,7 +366,7 @@ each with <code class="paramref">sideCount</code> sides. A sideCount of 2 repres
 
   <h3 id="Wolfgang_D20_Dice_MinValue" data-uid="Wolfgang.D20.Dice.MinValue">
   MinValue
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L135"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The minimum value that can be rolled with the dice in the collection and the modifier.</p>
@@ -427,7 +398,7 @@ each with <code class="paramref">sideCount</code> sides. A sideCount of 2 repres
 
   <h3 id="Wolfgang_D20_Dice_Modifier" data-uid="Wolfgang.D20.Dice.Modifier">
   Modifier
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L131"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L128"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>An optional modifier to add to the total of the dice rolled.</p>
@@ -435,7 +406,7 @@ each with <code class="paramref">sideCount</code> sides. A sideCount of 2 repres
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Modifier { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int Modifier { get; }</code></pre>
   </div>
 
 
@@ -451,12 +422,13 @@ each with <code class="paramref">sideCount</code> sides. A sideCount of 2 repres
 
 
   <h4 class="section" id="Wolfgang_D20_Dice_Modifier_examples">Examples</h4>
-  <pre><code class="lang-csharp">var dice = new Dice(1, 20) { Modifier = 5 }; // 1d20+5
-int total = dice.Roll(); // a value in [6, 25]</code></pre>
+  <pre><code class="lang-csharp">var attack = new Dice(1, 20, 2);        // 1d20+2 — modifier set at construction
+var blessed = attack.WithModifier(5);   // 1d20+5 — a new pool; 'attack' is unchanged</code></pre>
 
 
   <h4 class="section" id="Wolfgang_D20_Dice_Modifier_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>The value can be positive or negative, and can be used to adjust the result of the roll.</p>
+  <div class="markdown level1 remarks"><p>The value can be positive or negative, and can be used to adjust the result of the roll.
+It is fixed at construction; use <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_WithModifier_System_Int32_">WithModifier(int)</a> to obtain a copy with a different modifier.</p>
 </div>
 
 
@@ -466,152 +438,11 @@ int total = dice.Roll(); // a value in [6, 25]</code></pre>
 </h2>
 
 
-  <a id="Wolfgang_D20_Dice_Add_" data-uid="Wolfgang.D20.Dice.Add*"></a>
-
-  <h3 id="Wolfgang_D20_Dice_Add_Wolfgang_D20_Die_" data-uid="Wolfgang.D20.Dice.Add(Wolfgang.D20.Die)">
-  Add(Die)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L211"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Adds a die to the collection.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Add(Die item)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>item</code> <a class="xref" href="Wolfgang.D20.Die.html">Die</a></dt>
-    <dd><p>The die to add.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-  <h4 class="section">Exceptions</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
-    <dd><p><code class="paramref">item</code> is null</p>
-</dd>
-  </dl>
-
-
-
-  <a id="Wolfgang_D20_Dice_Clear_" data-uid="Wolfgang.D20.Dice.Clear*"></a>
-
-  <h3 id="Wolfgang_D20_Dice_Clear" data-uid="Wolfgang.D20.Dice.Clear">
-  Clear()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L259"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Removes all dice from the collection. The <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Modifier">Modifier</a> is left unchanged.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Clear()</code></pre>
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <a id="Wolfgang_D20_Dice_Contains_" data-uid="Wolfgang.D20.Dice.Contains*"></a>
-
-  <h3 id="Wolfgang_D20_Dice_Contains_Wolfgang_D20_Die_" data-uid="Wolfgang.D20.Dice.Contains(Wolfgang.D20.Die)">
-  Contains(Die)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L271"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Determines whether the collection contains a die with the same number of sides.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Contains(Die item)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>item</code> <a class="xref" href="Wolfgang.D20.Die.html">Die</a></dt>
-    <dd><p>The die to locate.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>true if a matching die is found; otherwise, false.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="Wolfgang_D20_Dice_CopyTo_" data-uid="Wolfgang.D20.Dice.CopyTo*"></a>
-
-  <h3 id="Wolfgang_D20_Dice_CopyTo_Wolfgang_D20_Die___System_Int32_" data-uid="Wolfgang.D20.Dice.CopyTo(Wolfgang.D20.Die[],System.Int32)">
-  CopyTo(Die[], int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L287"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Copies the dice in the collection to an array, starting at the specified index.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CopyTo(Die[] array, int arrayIndex)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>array</code> <a class="xref" href="Wolfgang.D20.Die.html">Die</a>[]</dt>
-    <dd><p>The destination array.</p>
-</dd>
-    <dt><code>arrayIndex</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>The zero-based index in <code class="paramref">array</code> at which copying begins.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <a id="Wolfgang_D20_Dice_Equals_" data-uid="Wolfgang.D20.Dice.Equals*"></a>
 
   <h3 id="Wolfgang_D20_Dice_Equals_System_Object_" data-uid="Wolfgang.D20.Dice.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L408"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L385"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Checks if this instance is equal to another object.</p>
@@ -650,7 +481,7 @@ int total = dice.Roll(); // a value in [6, 25]</code></pre>
 
   <h3 id="Wolfgang_D20_Dice_Equals_Wolfgang_D20_Dice_" data-uid="Wolfgang.D20.Dice.Equals(Wolfgang.D20.Dice)">
   Equals(Dice?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L377"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L354"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Checks if this instance is equal to another instance of <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a>.</p>
@@ -690,7 +521,7 @@ int total = dice.Roll(); // a value in [6, 25]</code></pre>
 
   <h3 id="Wolfgang_D20_Dice_GetEnumerator" data-uid="Wolfgang.D20.Dice.GetEnumerator">
   GetEnumerator()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L298"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L275"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns an enumerator that iterates through the dice in the collection.</p>
@@ -723,7 +554,7 @@ int total = dice.Roll(); // a value in [6, 25]</code></pre>
 
   <h3 id="Wolfgang_D20_Dice_GetHashCode" data-uid="Wolfgang.D20.Dice.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L444"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L418"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Generates a hash code for this instance based on its <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Modifier">Modifier</a> and the multiset of
@@ -750,93 +581,12 @@ dice side counts (order-independent).</p>
 
 
   <h4 class="section" id="Wolfgang_D20_Dice_GetHashCode_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p><a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> is a mutable collection: dice can be added or removed and <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Modifier">Modifier</a>
-is settable, and both feed into this hash code (consistent with <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Equals_Wolfgang_D20_Dice_">Equals(Dice?)</a>). As with
-any mutable type, do not mutate a <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> instance while it is being used as a key in a
-hashed collection such as <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary&lt;TKey, TValue&gt;</a> or
-<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1">HashSet&lt;T&gt;</a> — doing so leaves the instance in the wrong bucket
-and breaks subsequent lookups. If you need a stable key, snapshot the value first (for example the
-result of <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_ToString">ToString()</a>).</p>
+  <div class="markdown level1 remarks"><p><a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> is immutable, so this hash code is stable for the life of the instance and a
+<a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> is safe to use as a key in a hashed collection such as
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary&lt;TKey, TValue&gt;</a> or
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1">HashSet&lt;T&gt;</a>.</p>
 </div>
 
-
-
-
-  <a id="Wolfgang_D20_Dice_Remove_" data-uid="Wolfgang.D20.Dice.Remove*"></a>
-
-  <h3 id="Wolfgang_D20_Dice_Remove_Wolfgang_D20_Die_" data-uid="Wolfgang.D20.Dice.Remove(Wolfgang.D20.Die)">
-  Remove(Die)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L227"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Removes the first occurrence of a die with the same number of sides from the collection.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Remove(Die item)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>item</code> <a class="xref" href="Wolfgang.D20.Die.html">Die</a></dt>
-    <dd><p>The die to remove.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>true if a matching die was removed; otherwise, false.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="Wolfgang_D20_Dice_RemoveAt_" data-uid="Wolfgang.D20.Dice.RemoveAt*"></a>
-
-  <h3 id="Wolfgang_D20_Dice_RemoveAt_System_Int32_" data-uid="Wolfgang.D20.Dice.RemoveAt(System.Int32)">
-  RemoveAt(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L245"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Removes the die at the specified index in the collection.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void RemoveAt(int index)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>The zero-based index of the die to remove.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-  <h4 class="section">Exceptions</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
-    <dd><p><code class="paramref">index</code> is less than 0 or not less than <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_DieCount">DieCount</a>.</p>
-</dd>
-  </dl>
 
 
 
@@ -844,7 +594,7 @@ result of <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_ToStrin
 
   <h3 id="Wolfgang_D20_Dice_Roll" data-uid="Wolfgang.D20.Dice.Roll">
   Roll()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L188"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L185"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Rolls every die in the collection and returns the total value rolled, including any modifier.</p>
@@ -882,7 +632,7 @@ int total = dice.Roll(); // a value in [3, 18]</code></pre>
 
   <h3 id="Wolfgang_D20_Dice_ToString" data-uid="Wolfgang.D20.Dice.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L326"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L303"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a string representation of the dice in standard dice notation, for example <code>2d6+1d4+3</code>.</p>
@@ -921,7 +671,7 @@ modifier renders with a leading minus sign. An empty collection renders only the
 
   <h3 id="Wolfgang_D20_Dice_TryParse_System_String_" data-uid="Wolfgang.D20.Dice.TryParse(System.String)">
   TryParse(string?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L497"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L468"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Tries to parse a string representation of dice notation into a <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> instance.</p>
@@ -967,11 +717,151 @@ if (result.Succeeded)
 
 
 
+  <a id="Wolfgang_D20_Dice_WithDie_" data-uid="Wolfgang.D20.Dice.WithDie*"></a>
+
+  <h3 id="Wolfgang_D20_Dice_WithDie_Wolfgang_D20_Die_" data-uid="Wolfgang.D20.Dice.WithDie(Wolfgang.D20.Die)">
+  WithDie(Die)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L215"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a new <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> containing every die in this instance plus <code class="paramref">die</code>,
+keeping the same <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Modifier">Modifier</a>. This instance is not modified.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Dice WithDie(Die die)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>die</code> <a class="xref" href="Wolfgang.D20.Die.html">Die</a></dt>
+    <dd><p>The die to add.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Wolfgang.D20.Dice.html">Dice</a></dt>
+    <dd><p>A new <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> with <code class="paramref">die</code> appended.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="Wolfgang_D20_Dice_WithDie_Wolfgang_D20_Die__examples">Examples</h4>
+  <pre><code class="lang-csharp">var pool = new Dice(2, 6).WithDie(new Die(4)); // 2d6 -&gt; 2d6+1d4</code></pre>
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">die</code> is null.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_D20_Dice_WithModifier_" data-uid="Wolfgang.D20.Dice.WithModifier*"></a>
+
+  <h3 id="Wolfgang_D20_Dice_WithModifier_System_Int32_" data-uid="Wolfgang.D20.Dice.WithModifier(System.Int32)">
+  WithModifier(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a new <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> with the same dice but the specified <code class="paramref">modifier</code>.
+This instance is not modified.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Dice WithModifier(int modifier)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>modifier</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The flat modifier for the new instance.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Wolfgang.D20.Dice.html">Dice</a></dt>
+    <dd><p>A new <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> whose <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Modifier">Modifier</a> is <code class="paramref">modifier</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="Wolfgang_D20_Dice_WithModifier_System_Int32__examples">Examples</h4>
+  <pre><code class="lang-csharp">var attack = new Dice(1, 20, 2);      // 1d20+2
+var buffed = attack.WithModifier(5);  // 1d20+5 — derived from attack, which is unchanged</code></pre>
+
+
+
+
+
+
+  <a id="Wolfgang_D20_Dice_Without_" data-uid="Wolfgang.D20.Dice.Without*"></a>
+
+  <h3 id="Wolfgang_D20_Dice_Without_Wolfgang_D20_Die_" data-uid="Wolfgang.D20.Dice.Without(Wolfgang.D20.Die)">
+  Without(Die)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L238"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a new <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> with the first die matching <code class="paramref">die</code> removed,
+keeping the same <a class="xref" href="Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Modifier">Modifier</a>. If no die matches, an equal copy is returned. This
+instance is not modified.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Dice Without(Die die)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>die</code> <a class="xref" href="Wolfgang.D20.Die.html">Die</a></dt>
+    <dd><p>The die to remove.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Wolfgang.D20.Dice.html">Dice</a></dt>
+    <dd><p>A new <a class="xref" href="Wolfgang.D20.Dice.html">Dice</a> without the first matching die.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">die</code> is null.</p>
+</dd>
+  </dl>
+
+
+
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.7.2/src/Wolfgang.D20.Dice/Dice.cs/#L16" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/D20-Dice/blob/v0.8.0/src/Wolfgang.D20.Dice/Dice.cs/#L19" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -85,61 +85,6 @@ references:
   fullName.vb: Wolfgang.D20.Dice.New
   nameWithType: Dice.Dice
   nameWithType.vb: Dice.New
-- uid: Wolfgang.D20.Dice.Add(Wolfgang.D20.Die)
-  name: Add(Die)
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Add_Wolfgang_D20_Die_
-  commentId: M:Wolfgang.D20.Dice.Add(Wolfgang.D20.Die)
-  fullName: Wolfgang.D20.Dice.Add(Wolfgang.D20.Die)
-  nameWithType: Dice.Add(Die)
-- uid: Wolfgang.D20.Dice.Add*
-  name: Add
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Add_
-  commentId: Overload:Wolfgang.D20.Dice.Add
-  isSpec: "True"
-  fullName: Wolfgang.D20.Dice.Add
-  nameWithType: Dice.Add
-- uid: Wolfgang.D20.Dice.Clear
-  name: Clear()
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Clear
-  commentId: M:Wolfgang.D20.Dice.Clear
-  fullName: Wolfgang.D20.Dice.Clear()
-  nameWithType: Dice.Clear()
-- uid: Wolfgang.D20.Dice.Clear*
-  name: Clear
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Clear_
-  commentId: Overload:Wolfgang.D20.Dice.Clear
-  isSpec: "True"
-  fullName: Wolfgang.D20.Dice.Clear
-  nameWithType: Dice.Clear
-- uid: Wolfgang.D20.Dice.Contains(Wolfgang.D20.Die)
-  name: Contains(Die)
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Contains_Wolfgang_D20_Die_
-  commentId: M:Wolfgang.D20.Dice.Contains(Wolfgang.D20.Die)
-  fullName: Wolfgang.D20.Dice.Contains(Wolfgang.D20.Die)
-  nameWithType: Dice.Contains(Die)
-- uid: Wolfgang.D20.Dice.Contains*
-  name: Contains
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Contains_
-  commentId: Overload:Wolfgang.D20.Dice.Contains
-  isSpec: "True"
-  fullName: Wolfgang.D20.Dice.Contains
-  nameWithType: Dice.Contains
-- uid: Wolfgang.D20.Dice.CopyTo(Wolfgang.D20.Die[],System.Int32)
-  name: CopyTo(Die[], int)
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_CopyTo_Wolfgang_D20_Die___System_Int32_
-  commentId: M:Wolfgang.D20.Dice.CopyTo(Wolfgang.D20.Die[],System.Int32)
-  name.vb: CopyTo(Die(), Integer)
-  fullName: Wolfgang.D20.Dice.CopyTo(Wolfgang.D20.Die[], int)
-  fullName.vb: Wolfgang.D20.Dice.CopyTo(Wolfgang.D20.Die(), Integer)
-  nameWithType: Dice.CopyTo(Die[], int)
-  nameWithType.vb: Dice.CopyTo(Die(), Integer)
-- uid: Wolfgang.D20.Dice.CopyTo*
-  name: CopyTo
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_CopyTo_
-  commentId: Overload:Wolfgang.D20.Dice.CopyTo
-  isSpec: "True"
-  fullName: Wolfgang.D20.Dice.CopyTo
-  nameWithType: Dice.CopyTo
 - uid: Wolfgang.D20.Dice.Count
   name: Count
   href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Count
@@ -217,19 +162,6 @@ references:
   isSpec: "True"
   fullName: Wolfgang.D20.Dice.GetHashCode
   nameWithType: Dice.GetHashCode
-- uid: Wolfgang.D20.Dice.IsReadOnly
-  name: IsReadOnly
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_IsReadOnly
-  commentId: P:Wolfgang.D20.Dice.IsReadOnly
-  fullName: Wolfgang.D20.Dice.IsReadOnly
-  nameWithType: Dice.IsReadOnly
-- uid: Wolfgang.D20.Dice.IsReadOnly*
-  name: IsReadOnly
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_IsReadOnly_
-  commentId: Overload:Wolfgang.D20.Dice.IsReadOnly
-  isSpec: "True"
-  fullName: Wolfgang.D20.Dice.IsReadOnly
-  nameWithType: Dice.IsReadOnly
 - uid: Wolfgang.D20.Dice.MaxValue
   name: MaxValue
   href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_MaxValue
@@ -269,35 +201,6 @@ references:
   isSpec: "True"
   fullName: Wolfgang.D20.Dice.Modifier
   nameWithType: Dice.Modifier
-- uid: Wolfgang.D20.Dice.Remove(Wolfgang.D20.Die)
-  name: Remove(Die)
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Remove_Wolfgang_D20_Die_
-  commentId: M:Wolfgang.D20.Dice.Remove(Wolfgang.D20.Die)
-  fullName: Wolfgang.D20.Dice.Remove(Wolfgang.D20.Die)
-  nameWithType: Dice.Remove(Die)
-- uid: Wolfgang.D20.Dice.Remove*
-  name: Remove
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Remove_
-  commentId: Overload:Wolfgang.D20.Dice.Remove
-  isSpec: "True"
-  fullName: Wolfgang.D20.Dice.Remove
-  nameWithType: Dice.Remove
-- uid: Wolfgang.D20.Dice.RemoveAt(System.Int32)
-  name: RemoveAt(int)
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_RemoveAt_System_Int32_
-  commentId: M:Wolfgang.D20.Dice.RemoveAt(System.Int32)
-  name.vb: RemoveAt(Integer)
-  fullName: Wolfgang.D20.Dice.RemoveAt(int)
-  fullName.vb: Wolfgang.D20.Dice.RemoveAt(Integer)
-  nameWithType: Dice.RemoveAt(int)
-  nameWithType.vb: Dice.RemoveAt(Integer)
-- uid: Wolfgang.D20.Dice.RemoveAt*
-  name: RemoveAt
-  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_RemoveAt_
-  commentId: Overload:Wolfgang.D20.Dice.RemoveAt
-  isSpec: "True"
-  fullName: Wolfgang.D20.Dice.RemoveAt
-  nameWithType: Dice.RemoveAt
 - uid: Wolfgang.D20.Dice.Roll
   name: Roll()
   href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Roll
@@ -340,6 +243,48 @@ references:
   isSpec: "True"
   fullName: Wolfgang.D20.Dice.TryParse
   nameWithType: Dice.TryParse
+- uid: Wolfgang.D20.Dice.WithDie(Wolfgang.D20.Die)
+  name: WithDie(Die)
+  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_WithDie_Wolfgang_D20_Die_
+  commentId: M:Wolfgang.D20.Dice.WithDie(Wolfgang.D20.Die)
+  fullName: Wolfgang.D20.Dice.WithDie(Wolfgang.D20.Die)
+  nameWithType: Dice.WithDie(Die)
+- uid: Wolfgang.D20.Dice.WithDie*
+  name: WithDie
+  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_WithDie_
+  commentId: Overload:Wolfgang.D20.Dice.WithDie
+  isSpec: "True"
+  fullName: Wolfgang.D20.Dice.WithDie
+  nameWithType: Dice.WithDie
+- uid: Wolfgang.D20.Dice.WithModifier(System.Int32)
+  name: WithModifier(int)
+  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_WithModifier_System_Int32_
+  commentId: M:Wolfgang.D20.Dice.WithModifier(System.Int32)
+  name.vb: WithModifier(Integer)
+  fullName: Wolfgang.D20.Dice.WithModifier(int)
+  fullName.vb: Wolfgang.D20.Dice.WithModifier(Integer)
+  nameWithType: Dice.WithModifier(int)
+  nameWithType.vb: Dice.WithModifier(Integer)
+- uid: Wolfgang.D20.Dice.WithModifier*
+  name: WithModifier
+  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_WithModifier_
+  commentId: Overload:Wolfgang.D20.Dice.WithModifier
+  isSpec: "True"
+  fullName: Wolfgang.D20.Dice.WithModifier
+  nameWithType: Dice.WithModifier
+- uid: Wolfgang.D20.Dice.Without(Wolfgang.D20.Die)
+  name: Without(Die)
+  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Without_Wolfgang_D20_Die_
+  commentId: M:Wolfgang.D20.Dice.Without(Wolfgang.D20.Die)
+  fullName: Wolfgang.D20.Dice.Without(Wolfgang.D20.Die)
+  nameWithType: Dice.Without(Die)
+- uid: Wolfgang.D20.Dice.Without*
+  name: Without
+  href: api/Wolfgang.D20.Dice.html#Wolfgang_D20_Dice_Without_
+  commentId: Overload:Wolfgang.D20.Dice.Without
+  isSpec: "True"
+  fullName: Wolfgang.D20.Dice.Without
+  nameWithType: Dice.Without
 - uid: Wolfgang.D20.Die
   name: Die
   href: api/Wolfgang.D20.Die.html
