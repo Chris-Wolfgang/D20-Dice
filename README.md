@@ -106,19 +106,15 @@ Console.WriteLine(a.Equals(b));  // True
 
 ---
 
-## 🎯 Target Frameworks
+## 🎯 Supported Frameworks
 
-The shipped library targets four TFMs:
+This library targets:
 
-| Family | Targets |
-|---|---|
-| .NET Framework | `net462` |
-| .NET Standard | `netstandard2.0` |
-| Modern .NET | `net8.0`, `net10.0` |
+- **.NET Framework:** 4.6.2
+- **.NET Standard:** 2.0
+- **.NET:** 8.0, 10.0
 
-`netstandard2.0` lets the package be consumed on `net47/471/472/48/481` and `net5.0`–`net9.0` consumers without the library shipping per-TFM assemblies for each. The test project multi-targets the full `net462`–`net10.0` matrix to verify behaviour end-to-end.
-
----
+See the [NuGet package page](https://www.nuget.org/packages/Wolfgang.D20.Dice/) for the authoritative per-TFM compatibility matrix.
 
 ## 🔍 Code Quality & Static Analysis
 
