@@ -274,7 +274,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
 
@@ -422,7 +422,7 @@ jobs:
           sudo rm /etc/apt/sources.list.d/focal-security.list
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: |
             3.1.x
@@ -710,7 +710,7 @@ jobs:
 
       - name: Upload Linux coverage results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: coverage-linux
           path: |
@@ -718,7 +718,7 @@ jobs:
             CoverageReport/
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: build-output
           path: |
@@ -791,7 +791,7 @@ jobs:
           Write-Host "✅ Configuration files secured - using versions from main branch"
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: |
             3.1.x
@@ -1029,7 +1029,7 @@ jobs:
 
       - name: Upload Windows coverage results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: coverage-windows
           path: |
@@ -1119,7 +1119,7 @@ jobs:
           echo "✅ Configuration files secured - using versions from main branch"
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: |
             6.0.x
@@ -1384,7 +1384,7 @@ jobs:
 
       - name: Upload macOS coverage results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: coverage-macos
           path: |
@@ -1539,7 +1539,7 @@ jobs:
 
       - name: Upload security scan results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: devskim-results
           path: devskim-results.txt
