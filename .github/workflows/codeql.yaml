@@ -31,7 +31,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v7
+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       with:
         persist-credentials: false
 
@@ -77,7 +77,7 @@ jobs:
 
     - name: Initialize CodeQL
       if: steps.check-csharp.outputs.has-csharp == 'true'
-      uses: github/codeql-action/init@v4
+      uses: github/codeql-action/init@99df26d4f13ea111d4ec1a7dddef6063f76b97e9 # v4
       with:
         languages: ${{ matrix.language }}
         # security-extended adds the broader security query pack on top of the
@@ -86,7 +86,7 @@ jobs:
 
     - name: Setup .NET
       if: steps.check-csharp.outputs.has-csharp == 'true'
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
       with:
         dotnet-version: '10.0.x'
 
@@ -159,21 +159,30 @@ jobs:
     - name: Perform CodeQL Analysis
       id: perform-codeql-analysis
       if: steps.check-csharp.outputs.has-csharp == 'true'
-      uses: github/codeql-action/analyze@v4
+      uses: github/codeql-action/analyze@99df26d4f13ea111d4ec1a7dddef6063f76b97e9 # v4
       with:
         category: "/language:${{matrix.language}}"
 
     - name: Complete Security Scan
       if: always()
       shell: pwsh
+      # Pass step outcomes / outputs via env rather than expanding `${{ … }}` directly into
+      # the script body — zizmor flags any `${{ steps.*.outputs.* }}` expansion inside a
+      # `run:` block as a potential template-injection vector, even for internal-only outputs.
+      # Reading through `$env:*` treats the values as opaque strings and closes the vector.
+      env:
+        CHECK_CSHARP_OUTCOME: ${{ steps.check-csharp.outcome }}
+        HAS_CSHARP: ${{ steps.check-csharp.outputs.has-csharp }}
+        BUILD_OUTCOME: ${{ steps.build.outcome }}
+        CODEQL_OUTCOME: ${{ steps.perform-codeql-analysis.outcome }}
       run: |
         Write-Host "=== CodeQL Security Scan Complete ===" -ForegroundColor Cyan
-        
+
         # Check the outcome of previous steps
-        $checkCsharpOutcome = "${{ steps.check-csharp.outcome }}"
-        $hasCsharp = "${{ steps.check-csharp.outputs.has-csharp }}"
-        $buildOutcome = "${{ steps.build.outcome }}"
-        $codeqlOutcome = "${{ steps.perform-codeql-analysis.outcome }}"
+        $checkCsharpOutcome = $env:CHECK_CSHARP_OUTCOME
+        $hasCsharp = $env:HAS_CSHARP
+        $buildOutcome = $env:BUILD_OUTCOME
+        $codeqlOutcome = $env:CODEQL_OUTCOME
         
         # Determine overall status
         $hasFailure = $false
