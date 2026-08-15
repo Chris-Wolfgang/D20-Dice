@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1786656477258,
+  "lastUpdate": 1786801274373,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -900,6 +900,42 @@ window.BENCHMARK_DATA = {
             "value": 7.931837792197864,
             "unit": "ns",
             "range": "± 0.1369275941842274"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c2f4f87ceebedaf152744586a01287b0edc1bf32",
+          "message": "Merge pull request #272 from Chris-Wolfgang/fix/publicapi-tracking-262\n\nAdd PublicAPI tracking files (closes #262)",
+          "timestamp": "2026-08-15T09:39:48-04:00",
+          "tree_id": "d085ad90d293c9b1eeece85ec971dca22b028e9e",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/c2f4f87ceebedaf152744586a01287b0edc1bf32"
+        },
+        "date": 1786801271005,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.87076635658741,
+            "unit": "ns",
+            "range": "± 0.06087294235062759"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 7.862412800391515,
+            "unit": "ns",
+            "range": "± 0.0374519353147809"
           }
         ]
       }
