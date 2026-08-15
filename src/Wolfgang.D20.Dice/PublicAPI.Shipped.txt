@@ -1,0 +1,47 @@
+#nullable enable
+override Wolfgang.D20.Dice.Equals(object? obj) -> bool
+override Wolfgang.D20.Dice.GetHashCode() -> int
+override Wolfgang.D20.Dice.ToString() -> string!
+override Wolfgang.D20.Die.Equals(object? obj) -> bool
+override Wolfgang.D20.Die.GetHashCode() -> int
+override Wolfgang.D20.Die.ToString() -> string!
+static Wolfgang.D20.AverageRollExtensions.AverageRoundedDown(this Wolfgang.D20.IDice! dice) -> int
+static Wolfgang.D20.AverageRollExtensions.AverageRoundedDown(this Wolfgang.D20.IDie! die) -> int
+static Wolfgang.D20.AverageRollExtensions.AverageRoundedUp(this Wolfgang.D20.IDice! dice) -> int
+static Wolfgang.D20.AverageRollExtensions.AverageRoundedUp(this Wolfgang.D20.IDie! die) -> int
+static Wolfgang.D20.Dice.TryParse(string? notation) -> Wolfgang.TryPattern.Result<Wolfgang.D20.Dice?>!
+Wolfgang.D20.AverageRollExtensions
+Wolfgang.D20.Dice
+Wolfgang.D20.Dice.Count.get -> int
+Wolfgang.D20.Dice.Dice(int dieCount = 1, int sideCount = 6, int modifier = 0) -> void
+Wolfgang.D20.Dice.Dice(System.Collections.Generic.IEnumerable<Wolfgang.D20.Die!>! dice, int modifier = 0) -> void
+Wolfgang.D20.Dice.DieCount.get -> int
+Wolfgang.D20.Dice.Equals(Wolfgang.D20.Dice? other) -> bool
+Wolfgang.D20.Dice.GetEnumerator() -> System.Collections.Generic.IEnumerator<Wolfgang.D20.Die!>!
+Wolfgang.D20.Dice.MaxValue.get -> int
+Wolfgang.D20.Dice.MinValue.get -> int
+Wolfgang.D20.Dice.Modifier.get -> int
+Wolfgang.D20.Dice.Roll() -> int
+Wolfgang.D20.Dice.WithDie(Wolfgang.D20.Die! die) -> Wolfgang.D20.Dice!
+Wolfgang.D20.Dice.WithModifier(int modifier) -> Wolfgang.D20.Dice!
+Wolfgang.D20.Dice.Without(Wolfgang.D20.Die! die) -> Wolfgang.D20.Dice!
+Wolfgang.D20.Die
+Wolfgang.D20.Die.Die(int sideCount = 6) -> void
+Wolfgang.D20.Die.Equals(Wolfgang.D20.Die? other) -> bool
+Wolfgang.D20.Die.MaxValue.get -> int
+Wolfgang.D20.Die.MinValue.get -> int
+Wolfgang.D20.Die.Roll() -> int
+Wolfgang.D20.Die.SideCount.get -> int
+Wolfgang.D20.IDice
+Wolfgang.D20.IDice.DieCount.get -> int
+Wolfgang.D20.IDice.MaxValue.get -> int
+Wolfgang.D20.IDice.MinValue.get -> int
+Wolfgang.D20.IDice.Modifier.get -> int
+Wolfgang.D20.IDice.Roll() -> int
+Wolfgang.D20.IDice.ToString() -> string!
+Wolfgang.D20.IDie
+Wolfgang.D20.IDie.MaxValue.get -> int
+Wolfgang.D20.IDie.MinValue.get -> int
+Wolfgang.D20.IDie.Roll() -> int
+Wolfgang.D20.IDie.SideCount.get -> int
+Wolfgang.D20.IDie.ToString() -> string!
