@@ -1,4 +1,5 @@
 using BenchmarkDotNet.Attributes;
+// ReSharper disable RedundantArgumentDefaultValue — explicit `Dice(1, 20)` / `Dice(1, 6)` names the benchmark scenario.
 
 namespace Wolfgang.D20.Benchmarks;
 

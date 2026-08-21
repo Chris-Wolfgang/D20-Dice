@@ -1,4 +1,5 @@
 using System.Collections;
+// ReSharper disable once RedundantUsingDirective — required on TFMs where Verify.Xunit's global usings aren't in play (net10.0 only pulls Verify.Xunit)
 using Xunit;
 // ReSharper disable RedundantArgumentDefaultValue
 
@@ -133,6 +134,10 @@ public class DiceTests
     [Fact]
     public void Constructed_from_sequence_containing_null_throws_ArgumentException()
     {
+        // Explicit `Die?[]` is required because arrays are invariant: an inferred
+        // `new[] { new Die(6), null }` would bind to `Die[]` under nullable-enabled
+        // and can't legally hold a null element.
+        // ReSharper disable once RedundantExplicitArrayCreation
         var source = new Die?[] { new Die(6), null };
         Assert.Throws<ArgumentException>(() => new Dice(source!));
     }

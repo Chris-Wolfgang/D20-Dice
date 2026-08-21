@@ -9,13 +9,13 @@ namespace Example1_Console
         {
 
             Console.Write("Enter the number of sides: ");
-            var sideCount = int.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+            var sideCount = int.Parse(Console.ReadLine() ?? string.Empty, System.Globalization.CultureInfo.InvariantCulture);
 
             Console.Write("Enter the number of dice: ");
-            var dieCount = int.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+            var dieCount = int.Parse(Console.ReadLine() ?? string.Empty, System.Globalization.CultureInfo.InvariantCulture);
 
             Console.Write("Enter a modifier (default 0): ");
-            var modifier = int.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+            var modifier = int.Parse(Console.ReadLine() ?? string.Empty, System.Globalization.CultureInfo.InvariantCulture);
 
             var dice = new Dice(dieCount, sideCount, modifier);
 
