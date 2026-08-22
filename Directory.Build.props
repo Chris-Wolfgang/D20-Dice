@@ -67,13 +67,16 @@
 
   <ItemGroup>
     <!-- A1: PublicApiAnalyzers — track public API surface for breaking-change
-         detection. AdditionalFiles below are opt-in PER PROJECT via Exists():
-         drop PublicAPI.Shipped.txt + PublicAPI.Unshipped.txt into a src
-         project directory and the analyzer activates for that project only.
-         Library projects under src/ should opt in; test / example /
-         benchmark projects should not. Per-repo enablement is tracked as a
-         follow-up maintenance issue. -->
-    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0">
+         detection. The analyzer PackageReference AND its AdditionalFiles are
+         both gated on Exists('PublicAPI.Shipped.txt'), so drop the two
+         baseline files (PublicAPI.Shipped.txt + PublicAPI.Unshipped.txt)
+         into a src project directory and the analyzer activates for that
+         project only. Library projects under src/ opt in; test / example /
+         benchmark projects don't, which stops RS0016 / RS0037 from firing
+         on every public test method (they'd otherwise flood Code Scanning
+         with false positives — 100+ alerts per test project without a
+         baseline). See ref: reference_inspectcode_publicapi_false_positives. -->
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0" Condition="Exists('PublicAPI.Shipped.txt')">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
