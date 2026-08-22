@@ -9,7 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **#262 / #272** — `PublicAPI.Shipped.txt` and `PublicAPI.Unshipped.txt` for
+  `src/Wolfgang.D20.Dice`, seeded from the v0.8.0 public API surface.
+  Enables `Microsoft.CodeAnalysis.PublicApiAnalyzers` to guard against
+  accidental breaking-change removals (RS0017) going forward.
+
 ### Changed
+
+- **#282** — `Microsoft.CodeAnalysis.PublicApiAnalyzers` `PackageReference` in
+  `Directory.Build.props` is now gated on `Exists('PublicAPI.Shipped.txt')`,
+  matching the pattern already used for its `AdditionalFiles`. The analyzer
+  now activates only on library projects that opt in (drop the two baseline
+  files into their directory); test / benchmark / example projects no longer
+  load it. Follow-up to #272 that stopped RS0016 / RS0037 from firing on
+  every public test method + benchmark method (100+ false-positive Code
+  Scanning alerts).
+- **#277** — Bumped the github-actions dependency group (Dependabot):
+  `actions/checkout`, `actions/setup-dotnet`, `github/codeql-action/*`, and
+  other workflow actions moved to fresh SHA pins.
 
 ### Deprecated
 
@@ -17,7 +34,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **#271 / #273** — Silenced the remaining InspectCode findings on the src /
+  test / benchmark / example projects. All suppressions per-site
+  (`[SuppressMessage]` / per-line `// ReSharper disable once` / file-scoped
+  `// ReSharper disable`); no solution-wide `.DotSettings`. Real bug in
+  `examples/Net4.8/Example1-Console/Program.cs`: `int.Parse(Console.ReadLine(), …)`
+  now null-coalesces `ReadLine()` to `string.Empty`, replacing an unhelpful
+  `NullReferenceException` on EOF with a `FormatException` naming the invalid
+  input.
+- **#275** — `codeql.yaml` `Complete Security Scan` step moved
+  `${{ steps.*.outcome }}` / `${{ steps.*.outputs.* }}` expansions into an
+  `env:` map, read via `$env:*` in the pwsh body. Closes zizmor
+  `template-injection`.
+- **#279** — Expanded the `# v4` pin comments on the six `github/codeql-action/*`
+  usages to the specific `# v4.37.7` matching the pinned SHA. Closes six
+  zizmor `ref-version-mismatch` alerts. Comment-only; no SHA moved.
+
 ### Security
+
+- **#271** — Umbrella code-scanning cleanup landed. Fleet-audit baseline of
+  331 open alerts (223 InspectCode / 62 Scorecard / 46 zizmor on 2026-08-13)
+  reduced to under the DoD ceilings across all three tools. Remaining
+  deferred-by-design alerts: zizmor `superfluous-actions` on
+  `release.yaml:786` (`softprops/action-gh-release` → `gh release upload`
+  is a release-critical migration deferred to its own PR) and zizmor
+  `dangerous-triggers` on `pr.yaml:26` (`pull_request_target` is
+  intentional, used to run trusted config from `main` against untrusted PR
+  heads).
 
 ## [0.8.0] - 2026-07-17
 
