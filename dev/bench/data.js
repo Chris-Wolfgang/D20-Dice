@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1786801274373,
+  "lastUpdate": 1787404562229,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -936,6 +936,42 @@ window.BENCHMARK_DATA = {
             "value": 7.862412800391515,
             "unit": "ns",
             "range": "± 0.0374519353147809"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "75884cd06c9974fe910524c70cd456170536100c",
+          "message": "Merge pull request #280 from Chris-Wolfgang/vNext\n\nPromote vNext → main: #271 code-scanning cleanup + Dependabot github-actions bump",
+          "timestamp": "2026-08-22T09:14:56-04:00",
+          "tree_id": "06210921e0140f3a016f156b1dc9b5bc992e994b",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/75884cd06c9974fe910524c70cd456170536100c"
+        },
+        "date": 1787404559666,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 4.243982228140037,
+            "unit": "ns",
+            "range": "± 0.030762857560309602"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 4.156050170461337,
+            "unit": "ns",
+            "range": "± 0.0012086607033717554"
           }
         ]
       }
