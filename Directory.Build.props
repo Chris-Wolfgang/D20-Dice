@@ -102,6 +102,12 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+
+    <!-- Pin NuGet dependencies by content hash via a committed packages.lock.json
+         (OSSF Scorecard Pinned-Dependencies: "nugetCommand not pinned by hash").
+         The matching RestoreLockedMode property lives in each csproj instead of
+         here: Scorecard parses *.csproj for it and does not read this file. -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <ItemGroup>
