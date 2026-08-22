@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -42,6 +43,7 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     /// int total = attack.Roll(); // a value in [5, 15]
     /// </code>
     /// </example>
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple overloads with optional parameters", Justification = "This constructor was released in 0.8.0 alongside the (IEnumerable<Die>, int) overload; changing either signature is a SemVer breaking change.")]
     public Dice(int dieCount = 1, int sideCount = 6, int modifier = 0)
     {
         if (dieCount < 1)
@@ -78,6 +80,7 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     /// var dice = new Dice(new[] { new Die(6), new Die(4) }, modifier: 1);
     /// </code>
     /// </example>
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple overloads with optional parameters", Justification = "This constructor was released in 0.8.0 alongside the (int, int, int) overload; changing either signature is a SemVer breaking change.")]
     public Dice(IEnumerable<Die> dice, int modifier = 0)
     {
         if (dice is null)
@@ -465,6 +468,8 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     /// }
     /// </code>
     /// </example>
+    [SuppressMessage("Major Code Smell", "S8969:Remove this null-forgiving operator", Justification = "`notation!` is required on net462/netstandard2.0 whose string.IsNullOrWhiteSpace lacks [NotNullWhen(false)]; the ! is redundant on modern TFMs only.")]
+    [SuppressMessage("Major Code Smell", "S3267:Loops should be simplified with 'LINQ' expressions", Justification = "The explicit foreach + StringBuilder loop is a zero-allocation hot path; LINQ .Where(...).ToArray() would allocate an IEnumerator plus intermediate char[].")]
     public static Result<Dice?> TryParse(string? notation)
     {
         if (string.IsNullOrWhiteSpace(notation))
@@ -478,8 +483,9 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
         // intermediate IEnumerator plus a char[] per call, whereas this appends straight
         // into a right-sized StringBuilder. notation! is required on target frameworks
         // whose string.IsNullOrWhiteSpace lacks [NotNullWhen] (net462/netstandard2.0).
-        // ReSharper disable once LoopCanBeConvertedToLinq
+        // ReSharper disable once RedundantSuppressNullableWarningExpression
         var compact = new StringBuilder(notation!.Length);
+        // ReSharper disable once LoopCanBeConvertedToLinq
         foreach (var character in notation)
         {
             if (!char.IsWhiteSpace(character))

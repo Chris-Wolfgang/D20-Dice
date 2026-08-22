@@ -1,5 +1,6 @@
 #if NET8_0_OR_GREATER
 using CsCheck;
+// ReSharper disable once RedundantUsingDirective — required on TFMs where Verify.Xunit's global usings aren't in play (net10.0 only pulls Verify.Xunit)
 using Xunit;
 
 namespace Wolfgang.D20.Tests.Unit;
