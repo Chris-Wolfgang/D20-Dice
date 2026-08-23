@@ -306,13 +306,13 @@
       },
       "Wolfgang.TryPattern": {
         "type": "Transitive",
-        "resolved": "0.4.0",
-        "contentHash": "sBRdP/7C0tbNm9bvNqWpSfeO8S+2knGWimpOl3M9WjSSSxYm/P75d5yfpyV+iHri5iTn9G5OEx0eBBMx6MyPTw=="
+        "resolved": "0.4.1",
+        "contentHash": "AcKI6fKKZxoAs90TsD6B6nPjbnTySMgb9eE6BJhzx6+oOZzzVGKuaoKVzyUNRqPiXRjILEUDxiA5JFgxO3iNiA=="
       },
       "wolfgang.d20.dice": {
         "type": "Project",
         "dependencies": {
-          "Wolfgang.TryPattern": "[0.4.0, )"
+          "Wolfgang.TryPattern": "[0.4.1, )"
         }
       }
     }
