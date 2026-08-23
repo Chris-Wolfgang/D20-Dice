@@ -52,6 +52,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- **#284** — NuGet restores are now pinned by content hash. Every project
+  carries a committed `packages.lock.json` (`RestorePackagesWithLockFile` in
+  `Directory.Build.props`), and each csproj sets `RestoreLockedMode` gated on
+  `ContinuousIntegrationBuild`, so CI restores fail with `NU1004` if a lock
+  file is stale while local development is unaffected. Closes the seven OSSF
+  Scorecard `PinnedDependenciesID` "nugetCommand not pinned by hash" alerts.
+  After changing a `PackageReference`, run
+  `dotnet restore /p:RestoreForceEvaluate=true` and commit the updated lock
+  file.
+
 - **#271** — Umbrella code-scanning cleanup landed. Fleet-audit baseline of
   331 open alerts (223 InspectCode / 62 Scorecard / 46 zizmor on 2026-08-13)
   reduced to under the DoD ceilings across all three tools. Remaining
