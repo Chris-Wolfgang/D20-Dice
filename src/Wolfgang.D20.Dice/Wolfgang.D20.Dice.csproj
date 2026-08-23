@@ -29,6 +29,16 @@
 	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
 	  <SignAssembly>False</SignAssembly>
+
+    <!-- Pin NuGet dependencies by content hash: generate and maintain a committed
+         packages.lock.json, and restore from it, failing when it is stale.
+         Declared here rather than in Directory.Build.props because OSSF Scorecard's
+         Pinned-Dependencies check reads RestoreLockedMode from *.csproj only (and
+         Directory.Build.props is a protected file).
+         CI-only, so local work is unaffected; after changing a PackageReference run
+         `dotnet restore -p:RestoreForceEvaluate=true` and commit the updated lock file. -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
   </PropertyGroup>
 
 	<!-- Trim / AOT compatibility gate (#175): on the modern TFMs, enable the trim, AOT and
@@ -68,5 +78,16 @@
 	<ItemGroup>
 	  <PackageReference Include="Wolfgang.TryPattern" Version="0.4.0" />
 	</ItemGroup>
+
+  <!-- The .NET SDK adds this implicitly when targeting .NET Framework on a host without
+       the targeting packs (i.e. the Linux CI runners), which makes the restore graph
+       host-dependent and breaks locked-mode restore against a Windows-authored lock
+       file. Referencing it explicitly keeps the graph identical on every host. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>
