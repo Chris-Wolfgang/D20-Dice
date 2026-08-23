@@ -13,7 +13,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <PublishAot>true</PublishAot>
+    <!-- Only while publishing. A PublishAot project restores a different package
+         graph from a plain restore: the SDK pulls in the ILCompiler packs and
+         resolves a runtime identifier, and that RID is the *host* one, so the graph
+         reads `win-x64` on the Windows runners and `linux-x64;win-x64` on the Linux
+         ones. No single committed lock file can satisfy both shapes, and enumerating
+         every host RID would drag a per-RID ILCompiler runtime pack into every
+         restore on every runner. Gating on _IsPublishing (set by the CLI for
+         `dotnet publish`) keeps every ordinary restore RID-agnostic and identical
+         across hosts; aot-smoke.yaml still publishes with PublishAot in force, and
+         that one step opts out of locked mode. -->
+    <PublishAot Condition="'$(_IsPublishing)' == 'true'">true</PublishAot>
     <IsPackable>false</IsPackable>
     <IsTestProject>false</IsTestProject>
     <!-- Invariant globalization keeps the AOT binary small and avoids ICU; the app only
@@ -27,16 +37,6 @@
          Directory.Build.props is a protected file).
          CI-only, so local work is unaffected; after changing a PackageReference run
          `dotnet restore -p:RestoreForceEvaluate=true` and commit the updated lock file. -->
-    <!-- aot-smoke.yaml publishes with `-r win-x64`. A RID-specific restore only
-         satisfies locked mode when the RID is recorded in the lock file.
-         UseCurrentRuntimeIdentifier is disabled because the SDK otherwise appends
-         the *host* RID for a PublishAot project, so the restore graph would read
-         `win-x64` on the Windows runners and `linux-x64;win-x64` on the Linux ones
-         and no single lock file could satisfy both. Enumerating every host RID
-         instead would drag a per-RID ILCompiler runtime pack into every restore. -->
-    <UseCurrentRuntimeIdentifier>false</UseCurrentRuntimeIdentifier>
-    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
-
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
   </PropertyGroup>
