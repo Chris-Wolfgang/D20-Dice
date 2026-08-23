@@ -44,9 +44,12 @@ jobs:
         # restores a different package graph from an ordinary restore -- it adds the
         # ILCompiler packs and a runtime identifier -- so the committed
         # packages.lock.json, which records the RID-agnostic graph every other job
-        # restores, cannot also describe this one. Every other restore in CI stays
-        # locked.
-        run: dotnet publish aot-smoke/Wolfgang.D20.Dice.AotSmoke/Wolfgang.D20.Dice.AotSmoke.csproj -c Release -r win-x64 -p:RestoreLockedMode=false
+        # restores, cannot also describe this one. RestorePackagesWithLockFile is
+        # off for the same reason: without it this publish would REWRITE the
+        # committed lock file with the publish graph, which is how a stale lock
+        # file would get committed from a local `dotnet publish` run. Every other
+        # restore in CI stays locked.
+        run: dotnet publish aot-smoke/Wolfgang.D20.Dice.AotSmoke/Wolfgang.D20.Dice.AotSmoke.csproj -c Release -r win-x64 -p:RestoreLockedMode=false -p:RestorePackagesWithLockFile=false
 
       - name: Run native binary
         shell: bash
