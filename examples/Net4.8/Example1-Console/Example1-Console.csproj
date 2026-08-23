@@ -21,7 +21,7 @@
          Pinned-Dependencies check reads RestoreLockedMode from *.csproj only (and
          Directory.Build.props is a protected file).
          CI-only, so local work is unaffected; after changing a PackageReference run
-         `dotnet restore /p:RestoreForceEvaluate=true` and commit the updated lock file. -->
+         `dotnet restore -p:RestoreForceEvaluate=true` and commit the updated lock file. -->
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
   </PropertyGroup>

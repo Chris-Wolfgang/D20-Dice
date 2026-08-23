@@ -36,7 +36,7 @@
          Pinned-Dependencies check reads RestoreLockedMode from *.csproj only (and
          Directory.Build.props is a protected file).
          CI-only, so local work is unaffected; after changing a PackageReference run
-         `dotnet restore /p:RestoreForceEvaluate=true` and commit the updated lock file. -->
+         `dotnet restore -p:RestoreForceEvaluate=true` and commit the updated lock file. -->
     <!-- aot-smoke.yaml publishes with `-r win-x64`. A RID-specific restore only
          satisfies locked mode when the RID is recorded in the lock file. -->
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
