@@ -40,7 +40,13 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Publish (native AOT, win-x64)
-        run: dotnet publish aot-smoke/Wolfgang.D20.Dice.AotSmoke/Wolfgang.D20.Dice.AotSmoke.csproj -c Release -r win-x64
+        # RestoreLockedMode is off for this one step (#284). A PublishAot publish
+        # restores a different package graph from an ordinary restore -- it adds the
+        # ILCompiler packs and a runtime identifier -- so the committed
+        # packages.lock.json, which records the RID-agnostic graph every other job
+        # restores, cannot also describe this one. Every other restore in CI stays
+        # locked.
+        run: dotnet publish aot-smoke/Wolfgang.D20.Dice.AotSmoke/Wolfgang.D20.Dice.AotSmoke.csproj -c Release -r win-x64 -p:RestoreLockedMode=false
 
       - name: Run native binary
         shell: bash
