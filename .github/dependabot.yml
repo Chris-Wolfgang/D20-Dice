@@ -68,3 +68,19 @@ updates:
       github-actions:
         patterns:
           - "*"
+
+  # Keep the hash-pinned security-tool requirements fresh. Without this the
+  # `--require-hashes` pins in .github/requirements/*.txt would silently rot,
+  # leaving semgrep and zizmor frozen at whatever version was current when they
+  # were pinned. Dependabot regenerates the hashes along with the versions.
+  - package-ecosystem: "pip"
+    directory: "/.github/requirements"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+    groups:
+      security-tools:
+        patterns:
+          - "*"
