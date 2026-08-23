@@ -74,6 +74,15 @@ jobs:
           }' "${reports[@]}" > benchmarks-result.json
           echo "report=benchmarks/Wolfgang.D20.Dice.Benchmarks/benchmarks-result.json" >> "$GITHUB_OUTPUT"
 
+      - name: Restore tracked files before gh-pages switch
+        # `dotnet restore`/`build` above can rewrite packages.lock.json
+        # (RestorePackagesWithLockFile, #284): the Linux runner regenerates the
+        # Windows-authored lock files. The publish action below runs
+        # `git switch gh-pages`, which aborts on a dirty tree. Revert the
+        # tracked-file churn; the untracked benchmark outputs
+        # (benchmarks-result.json, BenchmarkDotNet.Artifacts/) are preserved.
+        run: git checkout -- .
+
       - name: Publish chart to gh-pages
         uses: benchmark-action/github-action-benchmark@52576c92bccf6ac60c8223ec7eb2565637cae9ba  # v1.22.1
         with:
