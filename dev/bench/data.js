@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1787444486234,
+  "lastUpdate": 1787518721273,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1008,6 +1008,42 @@ window.BENCHMARK_DATA = {
             "value": 8.163206165035566,
             "unit": "ns",
             "range": "± 0.011109858207913683"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d112817393ebbf396522689b76338561a261682a",
+          "message": "Merge pull request #284 from Chris-Wolfgang/chore/pin-nuget-restore-lockfiles\n\nPin NuGet restores by content hash via committed packages.lock.json",
+          "timestamp": "2026-08-23T16:57:31-04:00",
+          "tree_id": "b4a1b55fc47c2e77b182099003537164a823ffa0",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/d112817393ebbf396522689b76338561a261682a"
+        },
+        "date": 1787518718824,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 8.193853452801704,
+            "unit": "ns",
+            "range": "± 0.04969143010863822"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 8.405870616436005,
+            "unit": "ns",
+            "range": "± 0.03447334519242263"
           }
         ]
       }
