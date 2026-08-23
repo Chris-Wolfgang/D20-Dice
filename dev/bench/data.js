@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1787404562229,
+  "lastUpdate": 1787444486234,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -972,6 +972,42 @@ window.BENCHMARK_DATA = {
             "value": 4.156050170461337,
             "unit": "ns",
             "range": "± 0.0012086607033717554"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "60dc42d3827d36c793b4c126369a7d4b108df699",
+          "message": "Merge pull request #285 from Chris-Wolfgang/protected/lockfile-benchmark-guard\n\nRevert lock-file churn before the gh-pages switch (protected companion to #284)",
+          "timestamp": "2026-08-22T20:20:20-04:00",
+          "tree_id": "9ad7a4498643a2b932309c122455d497a33d3ad3",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/60dc42d3827d36c793b4c126369a7d4b108df699"
+        },
+        "date": 1787444482951,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 8.866769840319952,
+            "unit": "ns",
+            "range": "± 0.01636658520608423"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 8.163206165035566,
+            "unit": "ns",
+            "range": "± 0.011109858207913683"
           }
         ]
       }
