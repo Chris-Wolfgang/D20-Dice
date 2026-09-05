@@ -786,8 +786,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
-          gh release upload "${{ github.event.release.tag_name }}" \
+          gh release upload "$TAG_NAME" \
             ./nuget-packages/*.nupkg \
             ./nuget-packages/*.snupkg \
             ./nuget-packages/*.bom.json \
