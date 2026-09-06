@@ -788,6 +788,10 @@ jobs:
           GH_REPO: ${{ github.repository }}
           TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
+          # SBOM generation continues on per-project failure, so *.bom.json
+          # can legitimately be absent — nullglob drops the pattern instead
+          # of passing gh the literal unmatched glob string.
+          shopt -s nullglob
           gh release upload "$TAG_NAME" \
             ./nuget-packages/*.nupkg \
             ./nuget-packages/*.snupkg \
