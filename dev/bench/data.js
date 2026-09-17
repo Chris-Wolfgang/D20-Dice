@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788290021513,
+  "lastUpdate": 1789603528033,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1116,6 +1116,42 @@ window.BENCHMARK_DATA = {
             "value": 8.621395389238993,
             "unit": "ns",
             "range": "± 0.051199543728440065"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a4645180bd3707af3cc5519c2e0426fef566212",
+          "message": "build: drop NuGet lock files and RestoreLockedMode (#309)\n\nEvery csproj pins exact versions and nuget.org is immutable, so the lock\nfiles only added a content hash — while RestoreLockedMode broke every PR on\neach SDK patch: the SDK injects Microsoft.NET.ILLink.Tasks at the version it\nbundles (8.0.30 -> 8.0.31, 10.0.11 -> 10.0.12 with SDK 10.0.401) and locked\nrestore refuses the drift (NU1004 on #299, #300, #308). Fleet decision\n2026-09-16; the Scorecard nugetCommand finding is suppressed in\nrepo-template#557.\n\nRemoved the RestorePackagesWithLockFile/RestoreLockedMode block from all six\ncsproj files and deleted the six packages.lock.json files. The\n`-p:RestoreLockedMode=false` on the AOT publish step and the \"restore tracked\nfiles\" step in benchmarks/perf-regression are now no-ops; left as-is because\nworkflow edits need the bypass.\n\nVerified: `dotnet restore -p:ContinuousIntegrationBuild=true` on src succeeds\nand creates no lock file.\n\nCo-authored-by: Chris Wolfgang <cwolfgan@ptd.net>\nCo-authored-by: Claude Opus 5 <noreply@anthropic.com>",
+          "timestamp": "2026-09-16T20:04:07-04:00",
+          "tree_id": "1a868c455f86c0325c681fc913ec6f70fdc37900",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/8a4645180bd3707af3cc5519c2e0426fef566212"
+        },
+        "date": 1789603524681,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 8.55753610531489,
+            "unit": "ns",
+            "range": "± 0.007232486676647233"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 7.439583450555801,
+            "unit": "ns",
+            "range": "± 0.016272063403509094"
           }
         ]
       }
