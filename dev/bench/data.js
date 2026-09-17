@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789603528033,
+  "lastUpdate": 1789614132762,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1152,6 +1152,42 @@ window.BENCHMARK_DATA = {
             "value": 7.439583450555801,
             "unit": "ns",
             "range": "± 0.016272063403509094"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "527d8d9c244d587f213fc331dc1092ab45ed55f3",
+          "message": "ci: pin every workflow action to a commit SHA with an exact # vX.Y.Z comment (#308)\n\nRan repo-template's scripts/pin-actions.ps1 -PinTags: tag references become\nSHA pins and major-only comments (# v7) become the exact tag on the pinned\ncommit (# v7.0.1), so zizmor's ref-version-mismatch stops firing when the\nmajor tag moves on. Only the ref/comment text changed. Dependabot keeps the\nprecision it finds, so this stays converted.\n\n34 already exact, 40 line(s) rewritten, 0 tag reference(s), 0 pinned SHA(s) with no tag\n\nRefs Chris-Wolfgang/repo-template#447\n\nCo-authored-by: Chris Wolfgang <cwolfgan@ptd.net>\nCo-authored-by: Claude Opus 5 <noreply@anthropic.com>",
+          "timestamp": "2026-09-16T23:00:52-04:00",
+          "tree_id": "6632a9766d7a5bc13b66ce6089bc4e2f2c3540c1",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/527d8d9c244d587f213fc331dc1092ab45ed55f3"
+        },
+        "date": 1789614130002,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 8.164576907952627,
+            "unit": "ns",
+            "range": "± 0.008680427756922099"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 8.188600411017736,
+            "unit": "ns",
+            "range": "± 0.07772748104424299"
           }
         ]
       }
