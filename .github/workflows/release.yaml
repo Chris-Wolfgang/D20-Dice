@@ -783,12 +783,19 @@ jobs:
         run: zip -r release-coverage.zip ./release-coverage
 
       - name: Attach artifacts to release
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64  # v3.0.3
-        with:
-          tag_name: ${{ github.event.release.tag_name }}
-          files: |
-            ./nuget-packages/*.nupkg
-            ./nuget-packages/*.snupkg
-            ./nuget-packages/*.bom.json
-            release-coverage.zip
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          # SBOM generation continues on per-project failure, so *.bom.json
+          # can legitimately be absent — nullglob drops the pattern instead
+          # of passing gh the literal unmatched glob string.
+          shopt -s nullglob
+          gh release upload "$TAG_NAME" \
+            ./nuget-packages/*.nupkg \
+            ./nuget-packages/*.snupkg \
+            ./nuget-packages/*.bom.json \
+            release-coverage.zip \
+            --clobber
 
