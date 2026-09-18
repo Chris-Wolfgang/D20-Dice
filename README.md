@@ -9,6 +9,7 @@ A random number generator that simulates dice rolls using standard `XdY+Z` notat
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-Multi--Targeted-purple.svg)](https://dotnet.microsoft.com/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/Chris-Wolfgang/D20-Dice)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Chris-Wolfgang/D20-Dice/badge)](https://scorecard.dev/viewer/?uri=github.com/Chris-Wolfgang/D20-Dice)
 
 ---
 
