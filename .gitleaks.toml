@@ -6,9 +6,18 @@
 
 title = "gitleaks config"
 
+# REQUIRED. gitleaks loads this file INSTEAD of its built-in rules whenever it exists,
+# so without this block the file defines zero detection rules and every scan passes.
+[extend]
+useDefault = true
+
 [allowlist]
   description = "Global allowlist"
   paths = [
     '''(^|/)tests?/.*fixtures?/''',
     '''(^|/)tests?/.*testdata/''',
+    # docfx's generated site bundle on gh-pages (public/chunk-*.min.js + source maps, also
+    # under versions/<tag>/public/). `gitleaks git` scans every fetched ref, and the
+    # minified vendor code trips generic-api-key on embedded constants.
+    '''(^|/)public/[^/]+\.min\.js(\.map)?$''',
   ]
