@@ -209,7 +209,7 @@ jobs:
           protected=(); other=()
           for file in "${all_changed[@]}"; do
             case "$file" in
-              .editorconfig|Directory.Build.props|Directory.Build.targets|BannedSymbols.txt) protected+=("$file") ;;
+              .editorconfig|Directory.Build.props|Directory.Build.targets|BannedSymbols.txt|coverlet.runsettings|.config/dotnet-tools.json) protected+=("$file") ;;
               *)
                 if echo "$file" | grep -qiE '(\.(globalconfig|ruleset|DotSettings)|^\.github/workflows/.*\.ya?ml)$'; then protected+=("$file"); else other+=("$file"); fi ;;
             esac
