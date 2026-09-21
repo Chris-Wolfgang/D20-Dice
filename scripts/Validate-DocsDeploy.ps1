@@ -252,7 +252,11 @@ try {
             # point outside the worktree, so canonicalise segment by segment
             # before comparing (the .sh used realpath for this).
             $realFolder = Resolve-RealPath $folder
-            if (-not $realFolder.StartsWith($realRoot + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)) {
+            # Match the comparison to the filesystem, not the OS: Windows is case-insensitive,
+            # Linux is not, macOS is either (APFS/HFS+ default insensitive). Probe the worktree
+            # root itself - if its upper-cased path resolves, the volume ignores case.
+            $cmp = if (Test-Path -LiteralPath $realRoot.ToUpperInvariant()) { [System.StringComparison]::OrdinalIgnoreCase } else { [System.StringComparison]::Ordinal }
+            if (-not $realFolder.StartsWith($realRoot + [System.IO.Path]::DirectorySeparatorChar, $cmp)) {
                 $missing += "$ver  (resolved path '$realFolder' is outside gh-pages root - rejected)"
                 continue
             }
@@ -281,11 +285,13 @@ try {
 
     # 'public/' is a DocFX build artifact that should never appear at the
     # gh-pages root; its presence means a previous deploy did not clean up.
+    # A hard failure (the .sh this replaced only warned): a botched deploy
+    # must not validate as good.
     $stalePatterns = @('public')
     $foundStale = $false
     foreach ($p in $stalePatterns) {
         if (Test-Path (Join-Path $workDir $p)) {
-            Write-Warn "Potentially stale artifact found at root: '$p'"
+            Write-Fail "Stale DocFX artifact at the gh-pages root: '$p' - a previous deploy did not clean up"
             $foundStale = $true
         }
     }

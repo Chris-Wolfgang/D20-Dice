@@ -1,7 +1,7 @@
 {
   "template": "Chris-Wolfgang/repo-template",
-  "commit": "a7bed5df70323fefbf791a093b7644086431b781",
-  "updated": "2026-09-17",
+  "commit": "d16994ec7f57e52dcbe8dd7dc700dc54649e9bcf",
+  "updated": "2026-09-20",
   "placeholders": {
     "GITHUB_OWNER": "Chris-Wolfgang",
     "REPO_NAME": "D20-Dice",
