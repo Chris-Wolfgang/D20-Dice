@@ -40,7 +40,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Install nuget-license
-        run: dotnet tool install --global nuget-license
+        run: dotnet tool restore
 
       - name: Restore (so transitive deps resolve)
         run: dotnet restore "$PROJ"
@@ -54,7 +54,7 @@ jobs:
       #    License, so it imposes no obligation on consumers of the package.
       - name: Audit licenses (gate on allow-list)
         run: |
-          nuget-license -i "$PROJ" -t \
+          dotnet nuget-license -i "$PROJ" -t \
             -a .github/license-audit/allowed-licenses.json \
             -ignore .github/license-audit/ignored-packages.json \
             -mapping .github/license-audit/url-license-mappings.json \
@@ -62,7 +62,7 @@ jobs:
 
       - name: License report (JSON artifact)
         run: |
-          nuget-license -i "$PROJ" -t \
+          dotnet nuget-license -i "$PROJ" -t \
             -a .github/license-audit/allowed-licenses.json \
             -ignore .github/license-audit/ignored-packages.json \
             -mapping .github/license-audit/url-license-mappings.json \

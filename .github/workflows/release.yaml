@@ -106,17 +106,17 @@ jobs:
         shell: pwsh
         run: |
           $testProjects = Get-ChildItem -Path './tests' -Recurse -Filter '*Test*.csproj'
-          
+
           if ($testProjects.Count -eq 0) {
             Write-Error "❌ No test projects found - release requires tests to validate quality"
             exit 1
           }
-          
+
           foreach ($testProj in $testProjects) {
             Write-Host "==========================================" -ForegroundColor Cyan
             Write-Host "Testing project: $($testProj.Name)" -ForegroundColor Cyan
             Write-Host "==========================================" -ForegroundColor Cyan
-            
+
             # Parse the project file to extract target frameworks
             try {
               [xml]$projectXml = Get-Content $testProj.FullName
@@ -124,7 +124,7 @@ jobs:
               Write-Error "❌ Failed to parse project file $($testProj.Name): $_"
               exit 1
             }
-            
+
             # Search all PropertyGroup elements for TargetFramework(s)
             $targetFramework = $null
             $targetFrameworks = $null
@@ -137,7 +137,7 @@ jobs:
                 break
               }
             }
-            
+
             # Determine which frameworks this project targets
             $frameworks = @()
             if ($targetFrameworks) {
@@ -158,7 +158,7 @@ jobs:
               # If no TargetFramework/TargetFrameworks are defined directly in the project file,
               # attempt to resolve them via MSBuild (to account for Directory.Build.props, imports, etc.).
               Write-Host "No TargetFramework or TargetFrameworks found directly in $($testProj.Name); querying MSBuild..." -ForegroundColor Yellow
-              
+
               $msbuildOutput = @()
               $msbuildExitCode = 0
               foreach ($prop in @("TargetFrameworks", "TargetFramework")) {
@@ -170,7 +170,7 @@ jobs:
                   $msbuildOutput += $result
                 }
               }
-              
+
               if ($msbuildExitCode -ne 0) {
                 # MSBuild query failed, fall back to running tests without explicit --framework
                 Write-Warning "MSBuild query failed for $($testProj.Name). Tests will run without explicit --framework."
@@ -182,7 +182,7 @@ jobs:
                   if ([string]::IsNullOrWhiteSpace($line)) {
                     continue
                   }
-                  
+
                   # Expect lines like "TargetFrameworks=net7.0;net8.0" or "TargetFramework=net8.0"
                   # Support both '=' and ':' separators for different MSBuild output formats
                   if ($line -match '^\s*TargetFrameworks\s*[:=]\s*(.+)$') {
@@ -194,13 +194,13 @@ jobs:
                     if ($propertyValue) {
                       $resolvedFrameworks = @($propertyValue)
                     }
-                    
+
                     if ($resolvedFrameworks.Count -gt 0) {
                       break
                     }
                   }
                 }
-                
+
                 if ($resolvedFrameworks.Count -gt 0) {
                   $frameworks = $resolvedFrameworks
                 } else {
@@ -209,13 +209,13 @@ jobs:
                 }
               }
             }
-            
+
             Write-Host "Detected frameworks: $($frameworks -join ', ')" -ForegroundColor Cyan
-            
+
             foreach ($fw in $frameworks) {
               if ([string]::IsNullOrWhiteSpace($fw)) {
                 Write-Host "Testing project $($testProj.Name) without explicit --framework (using SDK/MSBuild defaults)" -ForegroundColor Yellow
-                
+
                 # When framework cannot be determined, run tests once without specifying --framework.
                 # Collect coverage in this case to avoid missing data due to unknown TFM.
                 dotnet test $testProj.FullName `
@@ -225,17 +225,17 @@ jobs:
                   --collect:"XPlat Code Coverage" `
                   --results-directory "./TestResults" `
                   --logger "console;verbosity=minimal"
-                
+
                 if ($LASTEXITCODE -ne 0) {
                   Write-Error "❌ Tests failed (no explicit TargetFramework) in $($testProj.Name)"
                   exit $LASTEXITCODE
                 }
-                
+
                 continue
               }
-              
+
               Write-Host "Testing framework: $fw" -ForegroundColor Yellow
-              
+
               # Collect coverage only for .NET 5.0+ TFMs; still run tests for all frameworks
               if ($fw -match '^net([5-9]|[1-9][0-9]+)\.') {
                 dotnet test $testProj.FullName `
@@ -256,7 +256,7 @@ jobs:
                   --results-directory "./TestResults" `
                   --logger "console;verbosity=minimal"
               }
-              
+
               if ($LASTEXITCODE -ne 0) {
                 if ($fw) {
                   Write-Error "❌ Tests failed for $fw in $($testProj.Name)"
@@ -275,40 +275,40 @@ jobs:
         run: |
           # Check if coverage files exist
           $coverageFiles = Get-ChildItem -Path "TestResults" -Recurse -Filter "coverage.cobertura.xml" -ErrorAction SilentlyContinue
-          
+
           if ($coverageFiles.Count -eq 0) {
             Write-Error "❌ No coverage files found - coverage data is required to enforce the 90% threshold"
             exit 1
           }
-          
-          dotnet tool install -g dotnet-reportgenerator-globaltool
-          
-          reportgenerator `
+
+          dotnet tool restore
+
+          dotnet reportgenerator `
             -reports:"TestResults/**/coverage.cobertura.xml" `
             -targetdir:"CoverageReport" `
             -reporttypes:"TextSummary;Html"
-          
+
           Write-Host "==========================================" -ForegroundColor Cyan
           Write-Host "Coverage Summary:" -ForegroundColor Cyan
           Write-Host "==========================================" -ForegroundColor Cyan
           Get-Content CoverageReport/Summary.txt
           Write-Host ""
-          
+
           # Parse coverage and enforce threshold per module (matching pr.yaml)
           $summaryContent = Get-Content CoverageReport/Summary.txt
           $threshold = if ($env:CODECOV_MINIMUM) { [int]$env:CODECOV_MINIMUM } else { 90 }
           $failedModules = @()
           $coverageFound = $false
-          
+
           foreach ($line in $summaryContent) {
             # Match lines with module names and percentages (skip Summary line)
             if ($line -match '^([^ ]+)\s+.*\s+(\d+(?:\.\d+)?)%$' -and $line -notmatch '^Summary') {
               $coverageFound = $true
               $module = $matches[1]
               $coverage = [decimal]$matches[2]
-              
+
               Write-Host "Checking module: '$module' - Coverage: ${coverage}%" -ForegroundColor Cyan
-              
+
               if ($coverage -lt $threshold) {
                 Write-Host "  ❌ FAIL: Below ${threshold}% threshold" -ForegroundColor Red
                 $failedModules += "$module (${coverage}%)"
@@ -317,13 +317,13 @@ jobs:
               }
             }
           }
-          
+
           # Ensure we found and parsed coverage data
           if (-not $coverageFound) {
             Write-Error "❌ Failed to parse coverage data from Summary.txt - cannot enforce threshold"
             exit 1
           }
-          
+
           if ($failedModules.Count -gt 0) {
             Write-Host ""
             Write-Host "==========================================" -ForegroundColor Red
@@ -332,7 +332,7 @@ jobs:
             Write-Host "Modules below ${threshold}% coverage: $($failedModules -join ', ')" -ForegroundColor Red
             exit 1
           }
-          
+
           Write-Host ""
           Write-Host "==========================================" -ForegroundColor Green
           Write-Host "✅ All modules meet ${threshold}% coverage threshold" -ForegroundColor Green
@@ -385,7 +385,7 @@ jobs:
 
           # Find all .csproj files in the src directory recursively
           $projects = Get-ChildItem -Path 'src' -Recurse -Filter '*.csproj'
-          
+
           # Handle case when no projects are found (e.g., template repository)
           if ($projects.Count -eq 0) {
             Write-Warning "No projects found in src/ directory - skipping package creation"
@@ -396,28 +396,28 @@ jobs:
             "has-packages=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
             exit 0
           }
-          
+
           # Iterate through each project and create NuGet package
           foreach ($proj in $projects) {
             Write-Host "📦 Packing $($proj.Name)" -ForegroundColor Cyan
             dotnet pack $proj.FullName --no-build --configuration Release --output $packagesPath
-            
+
             # Check if pack operation failed and exit with error
             if ($LASTEXITCODE -ne 0) {
               Write-Error "❌ Pack failed for $($proj.Name)"
               exit $LASTEXITCODE
             }
           }
-          
+
           # Check whether any .nupkg files were actually created
           $packages = Get-ChildItem -Path $packagesPath -Filter '*.nupkg' -ErrorAction SilentlyContinue
-          
+
           if ($packages.Count -eq 0) {
             Write-Warning "No .nupkg files were produced during packing - downstream publish and release jobs will be skipped"
             "has-packages=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
             exit 0
           }
-          
+
           # At least one package was created successfully
           Write-Host "✅ NuGet packages created successfully" -ForegroundColor Green
           "has-packages=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
@@ -426,12 +426,12 @@ jobs:
         shell: pwsh
         run: |
           $packages = Get-ChildItem -Path 'nuget-packages' -Filter '*.nupkg' -ErrorAction SilentlyContinue
-          
+
           if ($packages.Count -eq 0) {
             Write-Warning "No .nupkg files found - skipping smoke test"
             exit 0
           }
-          
+
           # Helper to read package ID and version from the .nuspec inside a .nupkg
           Add-Type -AssemblyName System.IO.Compression.FileSystem
           function Get-PackageMetadata {
@@ -471,7 +471,7 @@ jobs:
               $zip.Dispose()
             }
           }
-          
+
           # Create temporary test project
           $testDir = Join-Path $PWD 'package-smoke-test'
           New-Item -ItemType Directory -Force -Path $testDir | Out-Null
@@ -494,40 +494,40 @@ jobs:
             '</configuration>'
           )
           $nugetConfigContent | Set-Content -Path $nugetConfigPath -Encoding UTF8
-          
+
           Push-Location $testDir
           try {
             dotnet new console -n SmokeTest -f net8.0
-            
+
             # Try to install the newly created package(s)
             foreach ($package in $packages) {
               Write-Host "🧪 Smoke testing package: $($package.Name)" -ForegroundColor Yellow
-              
+
               $metadata = Get-PackageMetadata -NupkgPath $package.FullName
               $packageId = $metadata.Id
               $packageVersion = $metadata.Version
-              
+
               dotnet add SmokeTest/SmokeTest.csproj package $packageId --version $packageVersion --source '../nuget-packages'
-              
+
               if ($LASTEXITCODE -ne 0) {
                 Write-Error "❌ Failed to install package $($package.Name)"
                 exit $LASTEXITCODE
               }
-              
+
               Write-Host "✅ Package $($package.Name) installed successfully" -ForegroundColor Green
             }
-            
+
             # Try to build the test project with the package
             Write-Host "Building smoke test project..." -ForegroundColor Yellow
             dotnet build SmokeTest/SmokeTest.csproj
-            
+
             if ($LASTEXITCODE -ne 0) {
               Write-Error "❌ Smoke test project failed to build with installed packages"
               exit $LASTEXITCODE
             }
-            
+
             Write-Host "✅ Smoke test passed - packages are installable and buildable" -ForegroundColor Green
-            
+
           } finally {
             Pop-Location
           }
@@ -536,7 +536,7 @@ jobs:
         if: steps.check-packages.outputs.has-packages == 'true'
         shell: pwsh
         run: |
-          dotnet tool install --global CycloneDX
+          dotnet tool restore
 
           $sbomDir = Join-Path $PWD 'nuget-packages'
           $srcProjects = Get-ChildItem -Path 'src' -Filter '*.csproj' -Recurse -ErrorAction SilentlyContinue
@@ -640,16 +640,16 @@ jobs:
       - name: Install DocFX
         if: steps.check.outputs.found == 'true'
         shell: pwsh
-        run: dotnet tool update docfx --global || dotnet tool install docfx --global
+        run: dotnet tool restore
 
       - name: Build DocFX metadata
         if: steps.check.outputs.found == 'true'
-        run: docfx metadata
+        run: dotnet docfx metadata
         working-directory: docfx_project
 
       - name: Build documentation (no deploy)
         if: steps.check.outputs.found == 'true'
-        run: docfx build
+        run: dotnet docfx build
         working-directory: docfx_project
 
       - name: Verify documentation output
@@ -719,29 +719,29 @@ jobs:
           NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
         run: |
           $packages = Get-ChildItem -Path './packages' -Filter '*.nupkg' -ErrorAction SilentlyContinue
-          
+
           if ($packages.Count -eq 0) {
             Write-Warning "No .nupkg files found - nothing to publish"
             exit 0
           }
-          
+
           foreach ($package in $packages) {
             Write-Host "📤 Publishing $($package.Name) to NuGet.org" -ForegroundColor Cyan
-            
+
             dotnet nuget push $package.FullName `
               --api-key $env:NUGET_API_KEY `
               --source https://api.nuget.org/v3/index.json `
               --skip-duplicate
-            
+
             # Exit code 0 = success, 409 would be duplicate (handled by --skip-duplicate flag)
             if ($LASTEXITCODE -ne 0) {
               Write-Error "❌ Failed to publish $($package.Name)"
               exit $LASTEXITCODE
             }
-            
+
             Write-Host "✅ Successfully published $($package.Name)" -ForegroundColor Green
           }
-          
+
           Write-Host ""
           Write-Host "==========================================" -ForegroundColor Green
           Write-Host "✅ All packages published to NuGet.org" -ForegroundColor Green
@@ -798,4 +798,3 @@ jobs:
             ./nuget-packages/*.bom.json \
             release-coverage.zip \
             --clobber
-
