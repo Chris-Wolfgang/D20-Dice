@@ -1,15 +1,15 @@
 name: SBOM
 
-# Supply-chain hardening — Software Bill of Materials (#171).
+# Supply-chain hardening — Software Bill of Materials. Generates a CycloneDX SBOM
+# for each src/ project's dependency graph and uploads them as an artifact, so every
+# build has a machine-readable inventory of what it is composed of.
 #
-# Generates a CycloneDX SBOM of the library's full dependency graph and uploads
-# it as an artifact, so every build has a machine-readable inventory of what it
-# is composed of. Scoped to the SBOM here; the other parts of #171 are
-# deliberately out of this workflow:
-#   - SLSA provenance attestation belongs on the release artifact (attest the
-#     packed .nupkg in release.yaml via actions/attest-build-provenance).
-#   - Package signing needs a signing certificate/key and is a separate,
-#     credential-bearing change.
+# Scoped to the SBOM. The other supply-chain parts are deliberately out of this
+# workflow: SLSA provenance attestation belongs on the release artifact (attest the
+# packed .nupkg in release.yaml via actions/attest-build-provenance), and package
+# signing needs a signing certificate/key.
+#
+# Skips automatically when the repo has no src/ project (e.g. the template repo).
 
 on:
   pull_request:
@@ -29,30 +29,59 @@ jobs:
     name: Generate SBOM
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      PROJ: src/Wolfgang.D20.Dice/Wolfgang.D20.Dice.csproj
     steps:
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           persist-credentials: false
 
+      - name: Detect src projects
+        id: detect
+        run: |
+          if git ls-files 'src/**/*.csproj' 'src/*.csproj' | grep -q .; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No src/**/*.csproj found — skipping SBOM."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Setup .NET
-        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        if: steps.detect.outputs.found == 'true'
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68  # v6.0.0
         with:
           dotnet-version: '10.0.x'
 
-      - name: Install CycloneDX
+      - name: Restore CI tools (CycloneDX)
+        if: steps.detect.outputs.found == 'true'
+        # Pinned in .config/dotnet-tools.json; never installed unversioned.
         run: dotnet tool restore
 
-      - name: Restore
-        run: dotnet restore "$PROJ"
+      - name: Restore .NET workloads
+        # Same gate as pr.yaml: only repos with workload-bearing TFMs (net10.0-android,
+        # -ios, -maui, ...) need this, and they need it once, before the per-project restore.
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          if find src -name '*.csproj' -type f -exec grep -lE 'net[0-9]+\.[0-9]+-(android|ios|maccatalyst|maui|tvos|tizen|browser)' {} \; | grep -q .; then
+            echo "Workload-bearing TFMs detected - running dotnet workload restore"
+            dotnet workload restore
+          else
+            echo "No workload-bearing TFMs under src/ - skipping dotnet workload restore"
+          fi
 
-      - name: Generate CycloneDX SBOM (JSON)
-        run: dotnet CycloneDX "$PROJ" --output sbom --json
+      - name: Generate CycloneDX SBOMs (JSON)
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          mkdir -p sbom
+          while IFS= read -r proj; do
+            name=$(basename "$proj" .csproj)
+            echo "== $proj =="
+            dotnet restore "$proj"
+            dotnet CycloneDX "$proj" --output "sbom/$name" --json
+          done < <(git ls-files 'src/**/*.csproj' 'src/*.csproj')
 
-      - name: Upload SBOM
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - name: Upload SBOMs
+        if: steps.detect.outputs.found == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
           name: sbom
           path: sbom/
