@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789614132762,
+  "lastUpdate": 1790100568419,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1188,6 +1188,42 @@ window.BENCHMARK_DATA = {
             "value": 8.188600411017736,
             "unit": "ns",
             "range": "± 0.07772748104424299"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83c31a62e21a922d99fc4366d2bdbdbf3b7337ba",
+          "message": "ci(config): Stryker restores every TFM before it runs; LangVersion latestMajor (#336)\n\nConfiguration-only, stacked on the scripts pass.\n\nstryker.yaml (repo-template#624 / #629)\n  Stryker analyses the mutated project for EVERY TargetFramework and rebuilds\n  the solution, so on a cold runner the per-TFM analysis failed without a full\n  restore and every mutant came back a compile error - a 0 % score that is\n  really a build problem. Adds the restore step. Also stops the .NET Framework\n  detection exiting 123 on a Linux-only solution (grep finds nothing, xargs\n  propagates 123) and moves the run to windows-latest whenever any project in\n  the solution targets net4x, because Stryker's initial build is the whole\n  solution.\n\nDirectory.Build.props\n  LangVersion latestMajor instead of latest: latest also picks up preview\n  language features when a preview SDK is installed, so the same source can\n  compile on one machine and fail on the next. Only this property changes -\n  package versions are Dependabot's, and nothing else in the file is touched.\n\nCo-authored-by: Claude Opus 5 <noreply@anthropic.com>",
+          "timestamp": "2026-09-22T14:07:58-04:00",
+          "tree_id": "e6fdd297b6ff628c14bd0f36c7373423dc9d2b3d",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/83c31a62e21a922d99fc4366d2bdbdbf3b7337ba"
+        },
+        "date": 1790100565614,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.8200939645369845,
+            "unit": "ns",
+            "range": "± 0.03159429564300101"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 7.875862727562587,
+            "unit": "ns",
+            "range": "± 0.03890379066147876"
           }
         ]
       }
