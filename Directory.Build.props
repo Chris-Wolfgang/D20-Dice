@@ -1,5 +1,11 @@
 <Project>
   <PropertyGroup>
+    <!-- latestMajor: the newest GA major language version the installed SDK
+         supports, never a preview. `latest` would also pick up preview
+         features when a preview SDK is on the machine, so the same source
+         could compile on one box and fail on the next. -->
+    <LangVersion>latestMajor</LangVersion>
+
     <!-- Enable nullable reference types for every SDK-style C# project.
          The condition excludes:
            - F# (.fsproj) and VB (.vbproj) — by the .csproj check
@@ -65,13 +71,13 @@
     </PackageReference>
 
     <!-- Meziantou - Comprehensive code quality -->
-    <PackageReference Include="Meziantou.Analyzer" Version="3.0.200">
+    <PackageReference Include="Meziantou.Analyzer" Version="3.0.270">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 
     <!-- SonarAnalyzer - Industry-standard analysis -->
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.33.0.1635">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.34.0.3385">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -131,7 +137,7 @@
   <ItemGroup>
     <!-- SourceLink: embed source provenance into PDBs so debuggers can step
          into NuGet package code from GitHub. -->
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.400">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
