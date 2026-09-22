@@ -437,3 +437,17 @@ docs/*
 # Architecture Decision Records are hand-written source, not generated output.
 !docs/adr/
 !docs/adr/**
+
+# DocFX generated files (any depth)
+_site/
+
+# Auto-generated API metadata: `docfx metadata` writes <Type>.yml and toc.yml
+# under docfx_project/api/ for every public type extracted from src/. Keep
+# these out of the repo so a careless `git add -A` after running docfx
+# metadata locally doesn't commit generated files. The hand-written
+# index.md and README.md in api/ are intentionally tracked.
+docfx_project/api/*.yml
+
+# scripts/upgrade.ps1 writes <file>.template sidecars for files that need a manual
+# merge; resolve them into the real file and delete them, never commit them.
+*.template
