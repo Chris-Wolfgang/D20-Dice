@@ -54,12 +54,9 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
             throw new ArgumentOutOfRangeException(nameof(dieCount));
         }
 
-        // Die validates sideCount; surface the same ArgumentOutOfRangeException parameter name.
-        if (sideCount < 2)
-        {
-            throw new ArgumentOutOfRangeException(nameof(sideCount));
-        }
-
+        // sideCount is validated by the Die constructor, which throws the same
+        // ArgumentOutOfRangeException with the same parameter name. dieCount >= 1
+        // guarantees the loop constructs at least one Die, so no invalid value escapes.
         for (var i = 0; i < dieCount; i++)
         {
             _dice.Add(new Die(sideCount));

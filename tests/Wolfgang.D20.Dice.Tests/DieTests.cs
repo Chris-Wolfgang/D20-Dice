@@ -238,6 +238,14 @@ public class DieTests
 
 
     [Fact]
+    public void GetHashCode_when_SideCount_differs_returns_different_hash_codes()
+    {
+        Assert.NotEqual(new Die(6).GetHashCode(), new Die(8).GetHashCode());
+    }
+
+
+
+    [Fact]
     public void Die_can_be_cast_to_IDie()
     {
         IDie die = new Die();

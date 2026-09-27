@@ -69,6 +69,26 @@ public class DiceTests
 
 
     [Fact]
+    public void Constructor_when_sideCount_is_less_than_2_reports_sideCount_as_the_parameter_name()
+    {
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: 3, sideCount: 1));
+
+        Assert.Equal("sideCount", exception.ParamName);
+    }
+
+
+
+    [Fact]
+    public void Constructor_when_sideCount_is_2_creates_two_sided_dice()
+    {
+        var dice = new Dice(dieCount: 1, sideCount: 2);
+
+        Assert.Equal(2, dice.MaxValue);
+    }
+
+
+
+    [Fact]
     public void Convenience_constructor_builds_homogeneous_dice()
     {
         // Arrange & Act
@@ -141,7 +161,10 @@ public class DiceTests
         // and can't legally hold a null element.
         // ReSharper disable once RedundantExplicitArrayCreation
         var source = new Die?[] { new Die(6), null };
-        Assert.Throws<ArgumentException>(() => new Dice(source!));
+        var exception = Assert.Throws<ArgumentException>(() => new Dice(source!));
+
+        Assert.Equal("dice", exception.ParamName);
+        Assert.StartsWith("Sequence cannot contain a null die.", exception.Message, StringComparison.Ordinal);
     }
 
 
@@ -549,6 +572,17 @@ public class DiceTests
 
 
     [Fact]
+    public void GetHashCode_combines_modifier_die_count_and_side_sum()
+    {
+        // ((modifier * 397) ^ dieCount) * 397 ^ sideSum, with modifier 3, dieCount 2, sideSum 6 + 6.
+        // Pinning the exact value catches arithmetic changes to the combination that
+        // a "same inputs, same hash" check cannot see.
+        Assert.Equal(472045, new Dice(2, 6, 3).GetHashCode());
+    }
+
+
+
+    [Fact]
     public void Dice_can_be_cast_to_IDice()
     {
         IDice dice = new Dice();
@@ -582,6 +616,7 @@ public class DiceTests
 
     [Theory]
     [InlineData("1d6", 1, 0, "1d6")]
+    [InlineData("1d2", 1, 0, "1d2")]       // smallest valid side count
     [InlineData("2d8+3", 2, 3, "2d8+3")]
     [InlineData("2d10-1", 2, -1, "2d10-1")]
     [InlineData("2d10-1+2", 2, 1, "2d10+1")]
