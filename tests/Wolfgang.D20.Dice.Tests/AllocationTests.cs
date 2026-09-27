@@ -1,5 +1,5 @@
 #if NET6_0_OR_GREATER
-// ReSharper disable once RedundantUsingDirective — required on TFMs where Verify.Xunit's global usings aren't in play (net10.0 only pulls Verify.Xunit)
+using System;
 using Xunit;
 // ReSharper disable RedundantArgumentDefaultValue — explicit `Die(6)` documents the heterogeneous d6+d6+d4 pool under measurement.
 

@@ -1,4 +1,5 @@
-// ReSharper disable once RedundantUsingDirective — required on TFMs where Verify.Xunit's global usings aren't in play (net10.0 only pulls Verify.Xunit)
+using System;
+using System.Collections.Generic;
 using Xunit;
 // ReSharper disable RedundantArgumentDefaultValue
 
