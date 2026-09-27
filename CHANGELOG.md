@@ -81,6 +81,11 @@ D20 consumers through `Dice.TryParse`. D20's own public API is unchanged
   intentional, used to run trusted config from `main` against untrusted PR
   heads).
 
+### Internal
+
+- The `Dice` constructor no longer repeats the side-count check that `Die` already performs; the exception type, parameter name and message are unchanged. The ten surviving Stryker mutants are killed, raising the mutation score to 100%. (#345)
+- Multi-target projects no longer use implicit/global usings; every source file declares the `using` directives it needs on every target framework. (#343)
+
 ## [0.8.0] - 2026-07-17
 
 `Dice` becomes an **immutable value type** (#239) — a breaking API change, shipped as a MINOR
