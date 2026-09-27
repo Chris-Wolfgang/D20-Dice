@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790489268689,
+  "lastUpdate": 1790548073582,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "Mutation score": [
@@ -26,6 +26,33 @@ window.BENCHMARK_DATA = {
           {
             "name": "Mutation score",
             "value": 93.24,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang",
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "196db8916105bb6731ec7015265d24de71fadacc",
+          "message": "test: kill the 10 Stryker survivors in #341 (#345)\n\n- Dice ctor: drop the sideCount < 2 check that duplicated Die's own\n  validation. Die throws the same ArgumentOutOfRangeException with the\n  same parameter name, and dieCount >= 1 guarantees at least one Die is\n  constructed, so the removed statement was an equivalent mutant no test\n  could kill. New tests pin ParamName and the sideCount == 2 boundary.\n- Null-die ArgumentException: assert ParamName and the message.\n- Dice.GetHashCode: pin the exact value for (2, 6, 3) so arithmetic and\n  bitwise mutations of the combination are caught.\n- TryParse: add a 1d2 case (smallest valid side count).\n- Die.GetHashCode: different SideCounts hash differently.\n\nLocal Stryker (net10.0): 142 killed, 0 survived, 100.00 % (was 93.24 %).\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-09-27T22:18:10Z",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/196db8916105bb6731ec7015265d24de71fadacc"
+        },
+        "date": 1790548067951,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "Mutation score",
+            "value": 100,
             "unit": "%"
           }
         ]
