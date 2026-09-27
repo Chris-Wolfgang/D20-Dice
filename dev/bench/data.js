@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790543649593,
+  "lastUpdate": 1790547561731,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1296,6 +1296,42 @@ window.BENCHMARK_DATA = {
             "value": 3.965024401744207,
             "unit": "ns",
             "range": "± 0.06176524471250756"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "196db8916105bb6731ec7015265d24de71fadacc",
+          "message": "test: kill the 10 Stryker survivors in #341 (#345)\n\n- Dice ctor: drop the sideCount < 2 check that duplicated Die's own\n  validation. Die throws the same ArgumentOutOfRangeException with the\n  same parameter name, and dieCount >= 1 guarantees at least one Die is\n  constructed, so the removed statement was an equivalent mutant no test\n  could kill. New tests pin ParamName and the sideCount == 2 boundary.\n- Null-die ArgumentException: assert ParamName and the message.\n- Dice.GetHashCode: pin the exact value for (2, 6, 3) so arithmetic and\n  bitwise mutations of the combination are caught.\n- TryParse: add a 1d2 case (smallest valid side count).\n- Die.GetHashCode: different SideCounts hash differently.\n\nLocal Stryker (net10.0): 142 killed, 0 survived, 100.00 % (was 93.24 %).\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-09-27T18:18:10-04:00",
+          "tree_id": "9e105d78c878ac9bac200ceaf7719f23c82b1246",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/196db8916105bb6731ec7015265d24de71fadacc"
+        },
+        "date": 1790547559459,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.882332473993301,
+            "unit": "ns",
+            "range": "± 0.033995469734369885"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 8.017420132954916,
+            "unit": "ns",
+            "range": "± 0.054218835088364274"
           }
         ]
       }
