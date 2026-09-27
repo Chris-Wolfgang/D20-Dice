@@ -1,25 +1,34 @@
 Summary
-  Generated on: 7/17/2026 - 12:50:04 PM
-  Coverage date: 7/17/2026 - 12:49:59 PM
+  Generated on: 9/27/2026 - 11:08:47 PM
+  Coverage date: 9/27/2026 - 11:08:44 PM
   Parser: Cobertura
-  Assemblies: 1
-  Classes: 3
-  Files: 3
+  Assemblies: 2
+  Classes: 10
+  Files: 10
   Line coverage: 100%
-  Covered lines: 179
+  Covered lines: 632
   Uncovered lines: 0
-  Coverable lines: 179
-  Total lines: 921
-  Branch coverage: 100% (102 of 102)
-  Covered branches: 102
-  Total branches: 102
-  Method coverage: 100% (37 of 37)
-  Full method coverage: 100% (37 of 37)
-  Covered methods: 37
-  Fully covered methods: 37
-  Total methods: 37
+  Coverable lines: 632
+  Total lines: 2431
+  Branch coverage: 94.3% (117 of 124)
+  Covered branches: 117
+  Total branches: 124
+  Method coverage: 100% (147 of 147)
+  Full method coverage: 100% (147 of 147)
+  Covered methods: 147
+  Fully covered methods: 147
+  Total methods: 147
 
-Wolfgang.D20.Dice                       100%
-  Wolfgang.D20.AverageRollExtensions    100%
-  Wolfgang.D20.Dice                     100%
-  Wolfgang.D20.Die                      100%
+Wolfgang.D20.Dice                                       100%
+  Wolfgang.D20.AverageRollExtensions                    100%
+  Wolfgang.D20.Dice                                     100%
+  Wolfgang.D20.Die                                      100%
+
+Wolfgang.D20.Dice.Tests.Unit                            100%
+  Wolfgang.D20.Tests.Unit.AllocationTests               100%
+  Wolfgang.D20.Tests.Unit.AverageRollExtensionsTests    100%
+  Wolfgang.D20.Tests.Unit.DiceTests                     100%
+  Wolfgang.D20.Tests.Unit.DieTests                      100%
+  Wolfgang.D20.Tests.Unit.GlobalizationTests            100%
+  Wolfgang.D20.Tests.Unit.PropertyTests                 100%
+  Wolfgang.D20.Tests.Unit.SnapshotTests                 100%

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<coverage version="1.0" date="2026-09-27_23-08-47" tag="">
+  <assembly name="Wolfgang.D20.Dice">
+    <class name="Wolfgang.D20.AverageRollExtensions" coveredlines="13" coverablelines="13" totallines="130" coveredbranches="8" totalbranches="8" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+    <class name="Wolfgang.D20.Dice" coveredlines="140" coverablelines="140" totallines="631" coveredbranches="80" totalbranches="80" coveredcodeelements="23" fullcoveredcodeelements="23" totalcodeelements="23" />
+    <class name="Wolfgang.D20.Die" coveredlines="24" coverablelines="24" totallines="169" coveredbranches="12" totalbranches="12" coveredcodeelements="9" fullcoveredcodeelements="9" totalcodeelements="9" />
+  </assembly>
+  <assembly name="Wolfgang.D20.Dice.Tests.Unit">
+    <class name="Wolfgang.D20.Tests.Unit.AllocationTests" coveredlines="18" coverablelines="18" totallines="85" coveredbranches="4" totalbranches="4" coveredcodeelements="4" fullcoveredcodeelements="4" totalcodeelements="4" />
+    <class name="Wolfgang.D20.Tests.Unit.AverageRollExtensionsTests" coveredlines="31" coverablelines="31" totallines="153" coveredbranches="0" totalbranches="0" coveredcodeelements="9" fullcoveredcodeelements="9" totalcodeelements="9" />
+    <class name="Wolfgang.D20.Tests.Unit.DiceTests" coveredlines="231" coverablelines="231" totallines="758" coveredbranches="8" totalbranches="12" coveredcodeelements="63" fullcoveredcodeelements="63" totalcodeelements="63" />
+    <class name="Wolfgang.D20.Tests.Unit.DieTests" coveredlines="76" coverablelines="76" totallines="268" coveredbranches="2" totalbranches="2" coveredcodeelements="21" fullcoveredcodeelements="21" totalcodeelements="21" />
+    <class name="Wolfgang.D20.Tests.Unit.GlobalizationTests" coveredlines="64" coverablelines="64" totallines="126" coveredbranches="0" totalbranches="0" coveredcodeelements="6" fullcoveredcodeelements="6" totalcodeelements="6" />
+    <class name="Wolfgang.D20.Tests.Unit.PropertyTests" coveredlines="23" coverablelines="23" totallines="69" coveredbranches="3" totalbranches="6" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+    <class name="Wolfgang.D20.Tests.Unit.SnapshotTests" coveredlines="12" coverablelines="12" totallines="42" coveredbranches="0" totalbranches="0" coveredcodeelements="2" fullcoveredcodeelements="2" totalcodeelements="2" />
+  </assembly>
+</coverage>
