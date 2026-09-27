@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790542117011,
+  "lastUpdate": 1790543649593,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1260,6 +1260,42 @@ window.BENCHMARK_DATA = {
             "value": 7.837109888593356,
             "unit": "ns",
             "range": "± 0.014134577043415239"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0d8de8ca3b0a07a1a1ef3867dcbc02f4cbf84612",
+          "message": "chore: explicit usings on every TFM (no implicit usings in multi-TFM projects) (#343)\n\nRemove <ImplicitUsings>enable</ImplicitUsings> from the two multi-target\nprojects (src: net462;netstandard2.0;net8.0;net10.0, tests: net462..net10.0)\nand add the explicit using directives each file needs. With implicit usings\non, the modern slices got System/System.Linq/etc. globally, so single-slice\nInspectCode flagged usings the older TFMs need as RedundantUsingDirective.\n\nDisabling ImplicitUsings also turns off Verify.Xunit's injected global usings\n(its props are conditioned on ImplicitUsings), so SnapshotTests now states\nXunit and static VerifyXunit.Verifier itself, and the stale ReSharper\nRedundantUsingDirective comments that worked around that are removed.\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-09-27T17:13:07-04:00",
+          "tree_id": "24fb52edc126d1bb53e53b10bb1c7cd19f447ea0",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/0d8de8ca3b0a07a1a1ef3867dcbc02f4cbf84612"
+        },
+        "date": 1790543647339,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 3.883064366877079,
+            "unit": "ns",
+            "range": "± 0.014357679463124811"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 3.965024401744207,
+            "unit": "ns",
+            "range": "± 0.06176524471250756"
           }
         ]
       }
