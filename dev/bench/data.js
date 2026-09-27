@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790100568419,
+  "lastUpdate": 1790542117011,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1224,6 +1224,42 @@ window.BENCHMARK_DATA = {
             "value": 7.875862727562587,
             "unit": "ns",
             "range": "± 0.03890379066147876"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e4c941aada9233863dbe5ac0ca3885b05b032e7",
+          "message": "release: v0.9.0 — Wolfgang.TryPattern 0.5.0 (#342)\n\nMINOR: the TryPattern dependency moves 0.4.1 -> 0.5.0 (D20 0.8.0 shipped on 0.3.4). TryPattern 0.4.0 made Result.ErrorMessage null on success, which reaches consumers through Dice.TryParse, so the CHANGELOG carries a migration note. D20's public API is unchanged; AssemblyVersion stays 1.0.0.0; baseline stays 0.8.0 until after publish.\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-09-27T16:47:31-04:00",
+          "tree_id": "f7790bde7e508dff0f735b78ce9dce1cce38d4f6",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/7e4c941aada9233863dbe5ac0ca3885b05b032e7"
+        },
+        "date": 1790542114770,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.8717669894297915,
+            "unit": "ns",
+            "range": "± 0.05423583920894802"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 7.837109888593356,
+            "unit": "ns",
+            "range": "± 0.014134577043415239"
           }
         ]
       }
