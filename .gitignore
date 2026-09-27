@@ -437,6 +437,9 @@ docs/*
 # Architecture Decision Records are hand-written source, not generated output.
 !docs/adr/
 !docs/adr/**
+# Migration guides are hand-written source too.
+!docs/migrations/
+!docs/migrations/**
 
 # DocFX generated files (any depth)
 _site/
