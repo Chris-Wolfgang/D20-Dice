@@ -1,6 +1,8 @@
 #if NET10_0_OR_GREATER
 using System.Text;
-// Xunit and static VerifyXunit.Verifier are auto-injected by Verify.Xunit's global usings on net10.0, this file's only TFM.
+using System.Threading.Tasks;
+using Xunit;
+using static VerifyXunit.Verifier;
 // ReSharper disable RedundantArgumentDefaultValue — explicit `sideCount: 6` / `dieCount: 1` labels each snapshot row with the dice configuration under test.
 
 namespace Wolfgang.D20.Tests.Unit;
