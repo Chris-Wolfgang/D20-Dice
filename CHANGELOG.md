@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-09-27
+
+MINOR, driven by a dependency: `Wolfgang.TryPattern` moves from 0.4.1 to
+0.5.0, and TryPattern 0.4.0 changed a runtime behaviour that reaches
+D20 consumers through `Dice.TryParse`. D20's own public API is unchanged
+(no PublicAPI baseline edits), and `AssemblyVersion` stays `1.0.0.0`.
+
 ### Added
 
 - **#262 / #272** — `PublicAPI.Shipped.txt` and `PublicAPI.Unshipped.txt` for
@@ -15,6 +22,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   accidental breaking-change removals (RS0017) going forward.
 
 ### Changed
+
+- **Dependency: `Wolfgang.TryPattern` 0.4.1 → 0.5.0.** Two things reach
+  D20 consumers:
+  - **Runtime behaviour: `ErrorMessage` is `null` on success** (it was
+    `string.Empty` up to TryPattern 0.3.x, which D20 0.8.0 shipped against).
+    `Dice.TryParse` returns `Result<Dice?>`, so code that reads
+    `ErrorMessage` without first checking `Failed` sees the change.
+    Migration: check `Failed` before reading `ErrorMessage` (it is still
+    non-null on failure), or use `result.ErrorMessage ?? string.Empty`.
+    `string.IsNullOrEmpty(result.ErrorMessage)` behaves as before.
+  - TryPattern's net8.0+ assemblies are now trim- and Native
+    AOT-compatible (`IsAotCompatible` / `IsTrimmable`).
 
 - **#282** — `Microsoft.CodeAnalysis.PublicApiAnalyzers` `PackageReference` in
   `Directory.Build.props` is now gated on `Exists('PublicAPI.Shipped.txt')`,
@@ -27,10 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **#277** — Bumped the github-actions dependency group (Dependabot):
   `actions/checkout`, `actions/setup-dotnet`, `github/codeql-action/*`, and
   other workflow actions moved to fresh SHA pins.
-
-### Deprecated
-
-### Removed
 
 ### Fixed
 
@@ -52,20 +67,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-- **#284** — NuGet restores are now pinned by content hash. Every project sets
-  `RestorePackagesWithLockFile` and carries a committed `packages.lock.json`,
-  plus `RestoreLockedMode` gated on `ContinuousIntegrationBuild`, so CI
-  restores fail with `NU1004` if a lock file is stale while local development
-  is unaffected. Closes the seven OSSF Scorecard `PinnedDependenciesID`
-  "nugetCommand not pinned by hash" alerts. Two supporting changes keep the
-  restore graph identical across hosts: `Microsoft.NETFramework.ReferenceAssemblies`
-  is now referenced explicitly for the .NET Framework targets (the SDK otherwise
-  injects it only on non-Windows hosts), and `RuntimeIdentifiers=win-x64` is
-  declared on the AOT smoke consumer and the library it references, so the
-  `dotnet publish -r win-x64` in `aot-smoke.yaml` restores against a lock file
-  that records that RID. After changing a `PackageReference`, run
-  `dotnet restore -p:RestoreForceEvaluate=true` and commit the updated lock
-  file.
+- **#284 / #309** — NuGet lock-file pinning (#284) was added and then
+  removed again (#309) in favour of the fleet-wide policy. No lock files
+  or `RestoreLockedMode` ship in this release.
 
 - **#271** — Umbrella code-scanning cleanup landed. Fleet-audit baseline of
   331 open alerts (223 InspectCode / 62 Scorecard / 46 zizmor on 2026-08-13)
