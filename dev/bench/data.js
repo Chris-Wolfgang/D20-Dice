@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790547561731,
+  "lastUpdate": 1790552314858,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1332,6 +1332,42 @@ window.BENCHMARK_DATA = {
             "value": 8.017420132954916,
             "unit": "ns",
             "range": "± 0.054218835088364274"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "02fd4a9045f30fb5d14f75efee7808a958d795aa",
+          "message": "chore(pack): advance PackageValidation baseline to 0.9.0 (#347)\n\nv0.9.0 is published and indexed on the NuGet flatcontainer (23:22 UTC),\nso the next release is compat-checked against it. No PublicAPI fold\nneeded: PublicAPI.Unshipped.txt has no pending entries.\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-09-27T19:37:18-04:00",
+          "tree_id": "339d0da549c502a502c3129c464c72363f5f226d",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/02fd4a9045f30fb5d14f75efee7808a958d795aa"
+        },
+        "date": 1790552310767,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 5.178788344065349,
+            "unit": "ns",
+            "range": "± 0.027432157901238166"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 6.0567198892434435,
+            "unit": "ns",
+            "range": "± 0.01906587531764033"
           }
         ]
       }
