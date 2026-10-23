@@ -1,40 +1,66 @@
 using System;
+using System.Globalization;
 using Wolfgang.D20;
 
 namespace Example1_Console
 {
     internal static class Program
     {
-        private static void Main()
+        private static int Main()
         {
+            Console.Write("Enter dice notation (e.g. 2d6+1d4+3), or press Enter to build the dice step by step: ");
+            var notation = ReadLine();
 
-            Console.Write("Enter the number of sides: ");
-            var sideCount = int.Parse(Console.ReadLine() ?? string.Empty, System.Globalization.CultureInfo.InvariantCulture);
-
-            Console.Write("Enter the number of dice: ");
-            var dieCount = int.Parse(Console.ReadLine() ?? string.Empty, System.Globalization.CultureInfo.InvariantCulture);
-
-            Console.Write("Enter a modifier (default 0): ");
-            var modifier = int.Parse(Console.ReadLine() ?? string.Empty, System.Globalization.CultureInfo.InvariantCulture);
-
-            var dice = new Dice(dieCount, sideCount, modifier);
-
-            string modifierString;
-            if (modifier > 0)
+            Dice dice;
+            if (notation.Length > 0)
             {
-                modifierString = $"+{modifier}";
-            }
-            else if (modifier < 0)
-            {
-                modifierString = modifier.ToString();
+                // TryParse never throws: a failed Result carries the reason, which is what to show the user.
+                var parsed = Dice.TryParse(notation);
+                if (parsed.Failed)
+                {
+                    Console.WriteLine($"Could not parse \"{notation}\": {parsed.ErrorMessage}");
+                    return 1;
+                }
+                dice = parsed.Value;
             }
             else
             {
-                modifierString = "";
+                var sideCount = ReadInt32("Enter the number of sides (default 6): ", 6);
+                var dieCount = ReadInt32("Enter the number of dice (default 1): ", 1);
+                var modifier = ReadInt32("Enter a modifier (default 0): ", 0);
+                dice = new Dice(dieCount, sideCount, modifier);
             }
 
-            Console.WriteLine($"Rolling {dieCount}d{sideCount}{modifierString}:");
+            // Dice.ToString() renders standard notation ("2d6+1d4+3"), always with invariant-culture
+            // digits and sign, so there is nothing to hand-format here (the previous version formatted
+            // the modifier with the current culture, which is exactly what ADR-0004 removed from the library).
+            Console.WriteLine($"Rolling {dice} (range {dice.MinValue} to {dice.MaxValue}):");
             Console.WriteLine($"Result: {dice.Roll()}");
+            return 0;
+        }
+
+
+
+        /// <summary>
+        /// Reads a line, treating end-of-input (redirected or closed stdin, where ReadLine returns null) as
+        /// an empty line rather than a crash.
+        /// </summary>
+        private static string ReadLine()
+        {
+            return (Console.ReadLine() ?? string.Empty).Trim();
+        }
+
+
+
+        /// <summary>
+        /// Prompts for a whole number; an empty answer yields <paramref name="defaultValue"/>, as the prompt
+        /// promises. Digits are parsed with the invariant culture, matching the notation the library emits.
+        /// </summary>
+        private static int ReadInt32(string prompt, int defaultValue)
+        {
+            Console.Write(prompt);
+            var input = ReadLine();
+            return input.Length == 0 ? defaultValue : int.Parse(input, CultureInfo.InvariantCulture);
         }
     }
 }
