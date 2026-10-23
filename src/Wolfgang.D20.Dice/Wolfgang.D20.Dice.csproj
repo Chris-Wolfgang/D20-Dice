@@ -71,8 +71,9 @@
 
   <!-- The .NET SDK adds this implicitly when targeting .NET Framework on a host without
        the targeting packs (i.e. the Linux CI runners), which makes the restore graph
-       host-dependent and breaks locked-mode restore against a Windows-authored lock
-       file. Referencing it explicitly keeps the graph identical on every host. -->
+       host-dependent. Referencing it explicitly keeps the graph identical on every host,
+       so Windows and Linux compile against the same reference assemblies: one of the
+       inputs the cross-OS reproducible build depends on (#378). -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
       <PrivateAssets>all</PrivateAssets>
