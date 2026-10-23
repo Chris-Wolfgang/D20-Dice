@@ -17,12 +17,11 @@
          graph from a plain restore: the SDK pulls in the ILCompiler packs and
          resolves a runtime identifier, and that RID is the *host* one, so the graph
          reads `win-x64` on the Windows runners and `linux-x64;win-x64` on the Linux
-         ones. No single committed lock file can satisfy both shapes, and enumerating
-         every host RID would drag a per-RID ILCompiler runtime pack into every
-         restore on every runner. Gating on _IsPublishing (set by the CLI for
+         ones. Letting that into every ordinary `dotnet restore` / `dotnet build`
+         would drag a per-RID ILCompiler runtime pack into the graph and make it
+         differ per host. Gating on _IsPublishing (set by the CLI for
          `dotnet publish`) keeps every ordinary restore RID-agnostic and identical
-         across hosts; aot-smoke.yaml still publishes with PublishAot in force, and
-         that one step opts out of locked mode. -->
+         across hosts; aot-smoke.yaml still publishes with PublishAot in force. -->
     <PublishAot Condition="'$(_IsPublishing)' == 'true'">true</PublishAot>
     <IsPackable>false</IsPackable>
     <IsTestProject>false</IsTestProject>
