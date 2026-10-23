@@ -413,6 +413,25 @@ public class DiceTests
 
 
 
+    [Fact]
+    public void Roll_when_called_concurrently_stays_random_and_within_bounds()
+    {
+        // Arrange - a heterogeneous pool with a modifier: every die shares the one System.Random on the
+        // legacy targets, so concurrent pool rolls contend on it from several dice per call.
+        var dice = new Dice(new[] { new Die(6), new Die(6), new Die(4) }, 2);
+
+        // Act
+        var tail = DieTests.RollUnderContention(dice.Roll, dice.MinValue, dice.MaxValue, out var outOfRange);
+
+        // Assert
+        Assert.Equal(0, outOfRange);
+        Assert.All(tail, roll => Assert.InRange(roll, dice.MinValue, dice.MaxValue));
+        // A stuck System.Random makes every die return 1, so the whole pool returns MinValue forever.
+        Assert.True(tail.Distinct().Count() > 1, "Roll() is stuck on one value after concurrent use.");
+    }
+
+
+
     // ---- ToString ----
 
     [Theory]
