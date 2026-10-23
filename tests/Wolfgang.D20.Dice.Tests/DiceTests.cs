@@ -57,6 +57,101 @@ public class DiceTests
 
 
 
+    // ---- Die-count cap (ADR-0009) ----
+
+    [Fact]
+    public void MaxDieCount_is_10000()
+    {
+        Assert.Equal(10_000, Dice.MaxDieCount);
+    }
+
+
+
+    [Fact]
+    public void Constructor_when_dieCount_equals_MaxDieCount_creates_the_pool()
+    {
+        var dice = new Dice(dieCount: Dice.MaxDieCount, sideCount: 6);
+
+        Assert.Equal(Dice.MaxDieCount, dice.DieCount);
+    }
+
+
+
+    [Fact]
+    public void Constructor_when_dieCount_exceeds_MaxDieCount_throws_ArgumentOutOfRangeException()
+    {
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Dice(dieCount: Dice.MaxDieCount + 1, sideCount: 6));
+
+        Assert.Equal("dieCount", exception.ParamName);
+        Assert.Equal(Dice.MaxDieCount + 1, exception.ActualValue);
+        Assert.StartsWith("Die count must be at most 10000.", exception.Message, StringComparison.Ordinal);
+    }
+
+
+
+    [Fact]
+    public void Constructed_from_sequence_of_MaxDieCount_dice_creates_the_pool()
+    {
+        var dice = new Dice(Enumerable.Repeat(new Die(6), Dice.MaxDieCount));
+
+        Assert.Equal(Dice.MaxDieCount, dice.DieCount);
+    }
+
+
+
+    [Fact]
+    public void Constructed_from_sequence_longer_than_MaxDieCount_throws_ArgumentException()
+    {
+        var exception = Assert.Throws<ArgumentException>(() => new Dice(Enumerable.Repeat(new Die(6), Dice.MaxDieCount + 1)));
+
+        Assert.Equal("dice", exception.ParamName);
+        Assert.StartsWith("Sequence cannot contain more than 10000 dice.", exception.Message, StringComparison.Ordinal);
+    }
+
+
+
+    [Fact]
+    public void Constructed_from_infinite_sequence_throws_instead_of_hanging()
+    {
+        // The cap is enforced per element, so an endless sequence is rejected at the limit rather than
+        // enumerated forever.
+        static IEnumerable<Die> Forever()
+        {
+            while (true)
+            {
+                yield return new Die(6);
+            }
+        }
+
+        Assert.Throws<ArgumentException>(() => new Dice(Forever()));
+    }
+
+
+
+    [Fact]
+    public void WithDie_when_pool_already_holds_MaxDieCount_dice_throws_InvalidOperationException()
+    {
+        var full = new Dice(dieCount: Dice.MaxDieCount, sideCount: 6);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => full.WithDie(new Die(4)));
+
+        Assert.Equal("Sequence cannot contain more than 10000 dice.", exception.Message);
+    }
+
+
+
+    [Fact]
+    public void WithDie_when_pool_holds_one_less_than_MaxDieCount_adds_the_die()
+    {
+        var almostFull = new Dice(dieCount: Dice.MaxDieCount - 1, sideCount: 6);
+
+        var full = almostFull.WithDie(new Die(4));
+
+        Assert.Equal(Dice.MaxDieCount, full.DieCount);
+    }
+
+
+
     [Fact]
     public void SideCount_less_than_2_throws_ArgumentOutOfRangeException()
     {
@@ -723,6 +818,34 @@ public class DiceTests
 
         Assert.True(result.Failed);
         Assert.Equal("Die count value is out of range.", result.ErrorMessage);
+    }
+
+
+
+    [Theory]
+    [InlineData("10000d6", 10_000)]       // exactly the cap
+    [InlineData("9999d6+1d4", 10_000)]    // the cap reached across two terms
+    public void TryParse_when_die_count_is_within_MaxDieCount_returns_new_Dice(string notation, int dieCount)
+    {
+        var result = Dice.TryParse(notation);
+
+        Assert.True(result.Succeeded);
+        Assert.Equal(dieCount, result.Value!.DieCount);
+    }
+
+
+
+    [Theory]
+    [InlineData("10001d6")]               // one over the cap in a single term
+    [InlineData("9999d6+2d4")]            // one over the cap across two terms
+    [InlineData("5000d6+5001d4")]         // each term valid alone, together over the cap
+    [InlineData("2000000000d6")]          // the untrusted-input case: must fail, not allocate
+    public void TryParse_when_die_count_exceeds_MaxDieCount_returns_failure(string notation)
+    {
+        var result = Dice.TryParse(notation);
+
+        Assert.True(result.Failed);
+        Assert.Equal("Die count must be at most 10000.", result.ErrorMessage);
     }
 
 
