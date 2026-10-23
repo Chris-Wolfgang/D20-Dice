@@ -57,6 +57,9 @@ was built from this repository and not tampered with:
 - **SBOM** — a CycloneDX Software Bill of Materials (`Wolfgang.D20.Dice.bom.json`) is
   generated at release time and attached to the GitHub Release, giving a machine-readable
   inventory of the package's full dependency closure.
+- **Reproducible build** — the assemblies and symbols inside every package can be rebuilt
+  byte-for-byte from the tagged source on Linux or Windows; [REPRODUCIBLE-BUILD.md](REPRODUCIBLE-BUILD.md)
+  explains the guarantee, how CI checks it, and how to verify a release yourself.
 
 > **Not yet author-signed.** The `.nupkg` does not currently carry a NuGet author signature
 > (`nuget verify` / trusted-signers), because that requires a code-signing certificate. NuGet
