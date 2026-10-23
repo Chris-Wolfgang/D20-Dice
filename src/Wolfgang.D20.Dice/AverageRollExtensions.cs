@@ -13,7 +13,6 @@ namespace Wolfgang.D20;
 /// </remarks>
 public static class AverageRollExtensions
 {
-
     /// <summary>
     /// Returns the average roll of the die, rounded up to the nearest whole number.
     /// </summary>
@@ -126,5 +125,4 @@ public static class AverageRollExtensions
         // Promote to decimal before adding so the sum cannot overflow int and the .0 / .5 result stays exact.
         return ((decimal)minValue + maxValue) / 2m;
     }
-
 }

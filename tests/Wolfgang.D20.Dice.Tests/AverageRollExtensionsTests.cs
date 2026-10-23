@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Xunit;
-// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue — explicit `Dice(2, 6, 0)` keeps the modifier visible next to the expected average.
 
 namespace Wolfgang.D20.Tests.Unit;
 

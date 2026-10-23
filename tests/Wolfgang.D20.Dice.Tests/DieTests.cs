@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Xunit;
-// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue — explicit `Die(6)` spells out the side count each test is about.
 
 namespace Wolfgang.D20.Tests.Unit;
 
