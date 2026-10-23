@@ -198,11 +198,12 @@ API or runtime behavior change vs 0.7.0.**
   culture, so dice notation always uses ASCII digits and an ASCII `-` sign and round-trips
   through `Dice.TryParse` regardless of the current thread culture.
 
-## [0.6.1] - 2026-07-06
+## [0.6.1] - 2026-07-11
 
 ### Changed
 
 - Dependabot bump: dotnet-dependencies group (5 packages).
+
 ## [0.6.0] - 2026-06-19
 
 `Dice` is now a collection of individual `Die`, enabling heterogeneous
@@ -236,7 +237,7 @@ rolls such as `2d6+1d4+3`. See #48.
 - **#48 (breaking)** — `Dice` no longer implements `IEqualityComparer<Dice>`.
 - **#48 (breaking)** — `IDice.SideCount` has been removed from the interface.
 
-## [0.5.1] - 2026-05-31
+## [0.5.1] - 2026-06-01
 
 Canonical maintenance round + binding-stability fix. No public API or
 runtime behavior change vs v0.5.0.
@@ -287,10 +288,15 @@ runtime behavior change vs v0.5.0.
   See DateTime-Extensions v1.3.1 post-mortem for what happens when this
   pin is dropped and SDK-derived AssemblyVersion changes per release.
 
-[Unreleased]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.8.0...HEAD
+Releases before 0.5.1 (`v0.1.0` through `v0.5.0`, July 2025 to May 2026) predate this file;
+their notes are on the [GitHub Releases page](https://github.com/Chris-Wolfgang/D20-Dice/releases).
+
+[Unreleased]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.2...v0.8.0
 [0.7.2]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.6.0...v0.6.1
-[0.6.0]: https://github.com/Chris-Wolfgang/D20-Dice/releases/tag/v0.6.0
+[0.6.0]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.5.1...v0.6.0
+[0.5.1]: https://github.com/Chris-Wolfgang/D20-Dice/compare/v0.5.0...v0.5.1
