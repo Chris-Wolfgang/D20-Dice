@@ -58,7 +58,7 @@ if (parseResult.Succeeded)
 
 ### Parsing fails for valid-looking notation
 
-`Dice.TryParse` expects the format `XdY`, `XdY+Z`, or `XdY-Z` where X is optional (defaults to 1). The die count must be at least 1 and the side count at least 2. Check `result.ErrorMessage` for details on why parsing failed.
+`Dice.TryParse` accepts any number of dice terms (`XdY`, where X is optional and defaults to 1, and `d` or `D`) and flat modifiers (`+Z` / `-Z`) in any order, ignoring whitespace: `2d6+1d4+3`, `d20-1`, `2D6` and a modifier-only `+3` all parse. A negative dice term (`-1d6`) is rejected, the die count must be at least 1, the side count at least 2, and the dice in the whole notation may not exceed `Dice.MaxDieCount` (10,000). Check `result.ErrorMessage` for the reason a parse failed.
 
 ### Modifier can be negative
 
