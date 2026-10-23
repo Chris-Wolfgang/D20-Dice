@@ -129,6 +129,30 @@ public class AverageRollExtensionsTests
 
 
     [Fact]
+    public void Dice_AverageRoundedUp_when_heterogeneous_midpoint_is_a_half_rounds_up()
+    {
+        // Arrange - 1d4 + 1d6 + 1d8: min 3, max 18, avg 10.5
+        var dice = new Dice(new List<Die> { new(4), new(6), new(8) });
+
+        // Act & Assert
+        Assert.Equal(11, dice.AverageRoundedUp());
+    }
+
+
+
+    [Fact]
+    public void Dice_AverageRoundedDown_accounts_for_heterogeneous_dice()
+    {
+        // Arrange - 1d4 + 1d6 + 1d8: min 3, max 18, avg 10.5 -> 10
+        var dice = new Dice(new List<Die> { new(4), new(6), new(8) });
+
+        // Act & Assert
+        Assert.Equal(10, dice.AverageRoundedDown());
+    }
+
+
+
+    [Fact]
     public void Dice_AverageRoundedUp_null_throws_ArgumentNullException()
     {
         // Arrange
