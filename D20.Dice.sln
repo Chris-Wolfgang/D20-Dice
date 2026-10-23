@@ -35,18 +35,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{FC15
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEMPLATE", "{D2C1A433-884B-49F1-BE0B-80D221D52774}"
 	ProjectSection(SolutionItems) = preProject
-		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
 		.github\ISSUE_TEMPLATE\BUG_REPORT.yaml = .github\ISSUE_TEMPLATE\BUG_REPORT.yaml
-		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
+		.github\ISSUE_TEMPLATE\feature_request.yaml = .github\ISSUE_TEMPLATE\feature_request.yaml
+		.github\ISSUE_TEMPLATE\maintenance-task.yaml = .github\ISSUE_TEMPLATE\maintenance-task.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{0F96FD9E-FD99-476A-99F7-DA4AE26D5359}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\create-labels.yaml = .github\workflows\create-labels.yaml
+		.github\workflows\actions-audit.yaml = .github\workflows\actions-audit.yaml
+		.github\workflows\aot-smoke.yaml = .github\workflows\aot-smoke.yaml
+		.github\workflows\benchmarks.yaml = .github\workflows\benchmarks.yaml
+		.github\workflows\build-all-versions.yaml = .github\workflows\build-all-versions.yaml
+		.github\workflows\codeql.yaml = .github\workflows\codeql.yaml
 		.github\workflows\docfx.yaml = .github\workflows\docfx.yaml
+		.github\workflows\license-audit.yaml = .github\workflows\license-audit.yaml
+		.github\workflows\perf-regression.yaml = .github\workflows\perf-regression.yaml
 		.github\workflows\pr.yaml = .github\workflows\pr.yaml
+		.github\workflows\protected-files.yaml = .github\workflows\protected-files.yaml
 		.github\workflows\release.yaml = .github\workflows\release.yaml
-		.github\workflows\security-scanning.yml = .github\workflows\security-scanning.yml
+		.github\workflows\reproducible-build.yaml = .github\workflows\reproducible-build.yaml
+		.github\workflows\sbom.yaml = .github\workflows\sbom.yaml
+		.github\workflows\scorecard.yaml = .github\workflows\scorecard.yaml
+		.github\workflows\security-alerts.yml = .github\workflows\security-alerts.yml
+		.github\workflows\semgrep.yaml = .github\workflows\semgrep.yaml
+		.github\workflows\sourcelink.yaml = .github\workflows\sourcelink.yaml
+		.github\workflows\stryker.yaml = .github\workflows\stryker.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{AFF42F38-A00E-4301-9B46-26E6EAF26B42}"
