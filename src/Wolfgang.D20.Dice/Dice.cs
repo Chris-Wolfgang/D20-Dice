@@ -179,6 +179,10 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     /// The sum of an independent roll of each die in the collection plus <see cref="Modifier"/>.
     /// Always between <see cref="MinValue"/> and <see cref="MaxValue"/> inclusive.
     /// </returns>
+    /// <remarks>
+    /// Safe to call concurrently from any number of threads on every target framework; see
+    /// <see cref="Die.Roll"/>.
+    /// </remarks>
     /// <example>
     /// <code>
     /// var dice = new Dice(3, 6); // 3d6
