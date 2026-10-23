@@ -10,19 +10,7 @@ namespace Wolfgang.D20.Tests.Unit;
 public class DieTests
 {
     [Fact]
-    public void Can_create_instance()
-    {
-        // Arrange & Act
-        var die = new Die();
-
-        // Assert
-        Assert.NotNull(die);
-    }
-
-
-
-    [Fact]
-    public void When_not_specified_SideCount_defaults_to_6()
+    public void Constructor_when_sideCount_is_not_specified_defaults_to_6()
     {
         // Arrange & Act
         var die = new Die();
@@ -37,7 +25,7 @@ public class DieTests
     [InlineData(2)]
     [InlineData(10)]
     [InlineData(20)]
-    public void Can_specify_the_number_of_sides(int sideCount)
+    public void Constructor_when_sideCount_is_given_stores_it(int sideCount)
     {
         // Arrange & Act
         var die = new Die(sideCount);
@@ -52,7 +40,7 @@ public class DieTests
     [InlineData(0)]
     [InlineData(1)]
     [InlineData(-1)]
-    public void SideCount_less_than_2_throws_ArgumentOutOfRangeException(int sideCount)
+    public void Constructor_when_sideCount_is_less_than_2_throws_ArgumentOutOfRangeException(int sideCount)
     {
         // Arrange & Act & Assert
         Assert.Throws<ArgumentOutOfRangeException>(() => new Die(sideCount));
@@ -88,7 +76,7 @@ public class DieTests
 
 
     [Fact]
-    public void Can_roll_die()
+    public void Roll_when_default_die_returns_value_within_bounds()
     {
         // Arrange
         var die = new Die();
@@ -216,7 +204,7 @@ public class DieTests
 
 
     [Fact]
-    public void Two_dice_with_same_SideCount_are_equal()
+    public void Equals_when_SideCount_matches_returns_true()
     {
         // Arrange
         var die1 = new Die(6);
@@ -229,7 +217,7 @@ public class DieTests
 
 
     [Fact]
-    public void Two_dice_with_different_SideCount_are_not_equal()
+    public void Equals_when_SideCount_differs_returns_false()
     {
         // Arrange
         var die1 = new Die(6);
@@ -242,7 +230,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsDie_Null_ReturnsFalse()
+    public void Equals_when_other_Die_is_null_returns_false()
     {
         var die = new Die(6);
         Die? other = null;
@@ -255,7 +243,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsDie_SameReference_ReturnsTrue()
+    public void Equals_when_other_Die_is_the_same_reference_returns_true()
     {
         var die = new Die(6);
         Assert.True(die.Equals(die));
@@ -264,7 +252,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsObject_Null_ReturnsFalse()
+    public void Equals_when_other_object_is_null_returns_false()
     {
         var die = new Die(6);
         object? other = null;
@@ -276,7 +264,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsObject_SameReference_ReturnsTrue()
+    public void Equals_when_other_object_is_the_same_reference_returns_true()
     {
         var die = new Die(6);
         Assert.True(die.Equals((object)die));
@@ -285,7 +273,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsObject_DifferentType_ReturnsFalse()
+    public void Equals_when_other_object_is_a_different_type_returns_false()
     {
         var die = new Die(6);
         var notDie = new { SideCount = 6 };
@@ -295,7 +283,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsObject_SameValues_ReturnsTrue()
+    public void Equals_when_other_object_is_an_equal_Die_returns_true()
     {
         var die1 = new Die(8);
         var die2 = new Die(8);
@@ -305,7 +293,7 @@ public class DieTests
 
 
     [Fact]
-    public void Two_dice_with_the_same_SideCount_have_the_same_hash_code()
+    public void GetHashCode_when_SideCount_matches_returns_the_same_value()
     {
         var die1 = new Die(6);
         var die2 = new Die(6);
@@ -323,7 +311,7 @@ public class DieTests
 
 
     [Fact]
-    public void Die_can_be_cast_to_IDie()
+    public void Die_implements_IDie()
     {
         IDie die = new Die();
         Assert.NotNull(die);
@@ -333,13 +321,10 @@ public class DieTests
 
 
     [Fact]
-    public void Die_can_be_cast_to_IEquatable_Die()
+    public void Die_implements_IEquatable_Die()
     {
         IEquatable<Die> die = new Die();
         Assert.NotNull(die);
         Assert.IsType<Die>(die);
     }
-
-
-
 }
