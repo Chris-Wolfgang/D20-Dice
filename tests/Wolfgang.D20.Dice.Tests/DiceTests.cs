@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue — explicit `Dice(1, 6, 0)` / `Die(6)` spell out the configuration each test is about.
 
 namespace Wolfgang.D20.Tests.Unit;
 
