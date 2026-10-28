@@ -1,0 +1,5 @@
+# semgrep 1.181.0 (and the latest, 1.182.1) pins mcp==1.29.0. mcp >= 1.8.0, < 1.30.0 lets
+# StreamableHTTP sessions accumulate without bound (GHSA-84m7-p3x7-pcfv, Dependabot alerts
+# 35/37, fixed in 1.30.0). semgrep.yaml installs with --no-deps, so this override lifts mcp
+# past semgrep's pin. Drop this file once semgrep's own pins allow mcp >= 1.30.0.
+mcp>=1.30.0,<2
