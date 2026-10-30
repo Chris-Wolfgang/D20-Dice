@@ -1,6 +1,7 @@
 <#
 .SYNOPSIS
-    Compares two .nupkg files entry by entry.
+    Compares a .nupkg you built against a published package, or against a release's
+    reproducible-build manifest, entry by entry.
 
 .DESCRIPTION
     Two packs of the same commit are never byte-identical as FILES: a .nupkg is a zip and
@@ -16,7 +17,8 @@
                             packed does not. Ignored.
       *.psmdcp              OPC core properties. The FILE NAME is a GUID on some NuGet
                             versions and the fixed 'nuget.psmdcp' on others, so the entry
-                            is compared under a stable key instead of its name.
+                            is compared under a stable key instead of its name - and is
+                            dropped entirely in -Manifest mode, which does not list it.
 
     Exits 0 when every remaining entry matches, 1 otherwise, listing what differed.
 
@@ -24,12 +26,22 @@
     The package you built.
 
 .PARAMETER Published
-    The package to compare against - typically downloaded from nuget.org.
+    A package to compare against - typically downloaded from nuget.org. Mutually exclusive
+    with -Manifest.
+
+.PARAMETER Manifest
+    A release's reproducible-build-manifest.json to compare against. Mutually exclusive
+    with -Published.
 
 .EXAMPLE
     pwsh ./scripts/compare-package-entries.ps1 `
         -Mine ./packages/Wolfgang.D20.Dice.<version>.nupkg `
         -Published ./wolfgang.d20.dice.<version>.nupkg
+
+.EXAMPLE
+    pwsh ./scripts/compare-package-entries.ps1 `
+        -Mine ./packages/Wolfgang.D20.Dice.<version>.nupkg `
+        -Manifest ./reproducible-build-manifest.json
 
 .NOTES
     See REPRODUCIBLE-BUILD.md for the full verification procedure, including which
@@ -39,10 +51,17 @@
 param
 (
     [Parameter(Mandatory)] [string] $Mine,
-    [Parameter(Mandatory)] [string] $Published
+    [string] $Published,
+    [string] $Manifest
 )
 
 $ErrorActionPreference = 'Stop'
+
+if (($Published -and $Manifest) -or (-not $Published -and -not $Manifest))
+{
+    throw 'Pass exactly one of -Published (another .nupkg) or -Manifest (a release manifest).'
+}
+
 $sha256 = [System.Security.Cryptography.SHA256]::Create()
 
 function Get-PackageEntryHashes([string] $package)
@@ -80,11 +99,45 @@ function Get-PackageEntryHashes([string] $package)
     return $hashes
 }
 
+function Get-ManifestEntryHashes([string] $manifest, [string] $packageName)
+{
+    $document = Get-Content -LiteralPath $manifest -Raw | ConvertFrom-Json
+    $package = @($document.packages | Where-Object { $_.file -eq $packageName })
+
+    if ($package.Count -ne 1)
+    {
+        throw "The manifest does not list '$packageName'. It lists: $(@($document.packages.file) -join ', ')"
+    }
+
+    $hashes = @{}
+
+    foreach ($entry in $package[0].entries.PSObject.Properties)
+    {
+        $hashes[$entry.Name] = $entry.Value
+    }
+
+    return $hashes
+}
+
 # Deliberately not $mine / $published: PowerShell variable names are case-insensitive, so
 # assigning to those would assign THROUGH the [string] parameters above and silently
 # stringify the hashtables.
 $mineHashes = Get-PackageEntryHashes $Mine
-$publishedHashes = Get-PackageEntryHashes $Published
+$against = if ($Published) { $Published } else { $Manifest }
+
+if ($Published)
+{
+    $publishedHashes = Get-PackageEntryHashes $Published
+}
+else
+{
+    $publishedHashes = Get-ManifestEntryHashes $Manifest (Split-Path -Leaf $Mine)
+
+    # The manifest deliberately does not list the .psmdcp - its entry name is not stable
+    # across NuGet versions - so drop the key this script folds it into rather than
+    # reporting an omission as a difference.
+    $mineHashes.Remove('OPC core properties')
+}
 
 $differences = @(
     @($mineHashes.Keys) + @($publishedHashes.Keys) |
@@ -94,11 +147,11 @@ $differences = @(
 
 if ($differences.Count -eq 0)
 {
-    Write-Host "All $($mineHashes.Count) package entries are identical."
+    Write-Host "All $($mineHashes.Count) entries of $(Split-Path -Leaf $Mine) match $(Split-Path -Leaf $against)."
     exit 0
 }
 
-Write-Host "$($differences.Count) of $($mineHashes.Count) entries differ:"
+Write-Host "$($differences.Count) of $($mineHashes.Count) entries differ between $(Split-Path -Leaf $Mine) and $(Split-Path -Leaf $against):"
 
 foreach ($difference in $differences)
 {
