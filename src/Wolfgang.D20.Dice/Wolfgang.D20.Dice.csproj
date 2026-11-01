@@ -25,7 +25,7 @@
 	  <RepositoryUrl>https://github.com/Chris-Wolfgang/D20-Dice.git</RepositoryUrl>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	  <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
 	  <SignAssembly>False</SignAssembly>
 
