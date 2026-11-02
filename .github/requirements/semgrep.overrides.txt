@@ -3,3 +3,14 @@
 # 35/37, fixed in 1.30.0). semgrep.yaml installs with --no-deps, so this override lifts mcp
 # past semgrep's pin. Drop this file once semgrep's own pins allow mcp >= 1.30.0.
 mcp>=1.30.0,<2
+
+# semgrep 1.181.0 (and 1.182.1) pins the opentelemetry 1.37.0 / 0.58b0 family.
+# opentelemetry-api <= 1.45.0 has unbounded tracestate parsing (GHSA-xcq7-p3pf-p88h,
+# Dependabot alerts 39/40, fixed in 1.45.1). These overrides lift the whole family
+# together (api/sdk/exporter at 1.45.x pull the matching 0.66b instrumentation packages).
+# Drop them once semgrep's own pins allow opentelemetry-api >= 1.45.1.
+opentelemetry-api>=1.45.1,<2
+opentelemetry-sdk>=1.45.1,<2
+opentelemetry-exporter-otlp-proto-http>=1.45.1,<2
+opentelemetry-instrumentation-requests
+opentelemetry-instrumentation-threading
