@@ -197,6 +197,23 @@ public class DieTests
 
 
 
+    [Fact]
+    public void RollUnderContention_when_roll_is_out_of_range_counts_every_contended_result()
+    {
+        // Arrange
+        // A stand-in roll that is always above the range, so every call made under contention is a
+        // violation. Without this the counting branch only runs when Die.Roll is broken.
+        Func<int> roll = () => 7;
+
+        // Act
+        RollUnderContention(roll, 1, 6, out var outOfRange);
+
+        // Assert
+        Assert.Equal(8 * 250_000, outOfRange);
+    }
+
+
+
     [Theory]
     [InlineData(2, "d2")]
     [InlineData(6, "d6")]
