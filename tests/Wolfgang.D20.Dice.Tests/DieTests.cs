@@ -1,26 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using Xunit;
-// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue — explicit `Die(6)` spells out the side count each test is about.
 
 namespace Wolfgang.D20.Tests.Unit;
 
 public class DieTests
 {
     [Fact]
-    public void Can_create_instance()
-    {
-        // Arrange & Act
-        var die = new Die();
-
-        // Assert
-        Assert.NotNull(die);
-    }
-
-
-
-    [Fact]
-    public void When_not_specified_SideCount_defaults_to_6()
+    public void Constructor_when_sideCount_is_not_specified_defaults_to_6()
     {
         // Arrange & Act
         var die = new Die();
@@ -35,7 +25,7 @@ public class DieTests
     [InlineData(2)]
     [InlineData(10)]
     [InlineData(20)]
-    public void Can_specify_the_number_of_sides(int sideCount)
+    public void Constructor_when_sideCount_is_given_stores_it(int sideCount)
     {
         // Arrange & Act
         var die = new Die(sideCount);
@@ -50,7 +40,7 @@ public class DieTests
     [InlineData(0)]
     [InlineData(1)]
     [InlineData(-1)]
-    public void SideCount_less_than_2_throws_ArgumentOutOfRangeException(int sideCount)
+    public void Constructor_when_sideCount_is_less_than_2_throws_ArgumentOutOfRangeException(int sideCount)
     {
         // Arrange & Act & Assert
         Assert.Throws<ArgumentOutOfRangeException>(() => new Die(sideCount));
@@ -86,7 +76,7 @@ public class DieTests
 
 
     [Fact]
-    public void Can_roll_die()
+    public void Roll_when_default_die_returns_value_within_bounds()
     {
         // Arrange
         var die = new Die();
@@ -120,6 +110,81 @@ public class DieTests
 
 
 
+    [Fact]
+    public void Roll_when_called_concurrently_stays_random_and_within_bounds()
+    {
+        // Arrange - every Roll on net462 / netstandard2.0 goes through one shared System.Random, which is
+        // not thread-safe; the lock around it is what this test guards. (On net6.0+ Random.Shared is
+        // thread-safe by contract, so the test simply passes there.)
+        var die = new Die(6);
+
+        // Act
+        var tail = RollUnderContention(die.Roll, die.MinValue, die.MaxValue, out var outOfRange);
+
+        // Assert
+        Assert.Equal(0, outOfRange);
+        Assert.All(tail, roll => Assert.InRange(roll, die.MinValue, die.MaxValue));
+        // A System.Random corrupted by concurrent use returns its minimum forever. 100 identical d6
+        // rolls from a healthy die have probability 6^-99, so a single-valued tail means it is stuck.
+        Assert.True(tail.Distinct().Count() > 1, "Roll() is stuck on one value after concurrent use.");
+    }
+
+
+
+    /// <summary>
+    /// Calls <paramref name="roll"/> from several threads started together, then returns 100 further
+    /// results taken on the calling thread. Results produced during the contention are checked against
+    /// [<paramref name="minValue"/>, <paramref name="maxValue"/>] and the violations counted in
+    /// <paramref name="outOfRangeCount"/>. The tail is for the real failure mode: a shared
+    /// <see cref="Random"/> whose state is corrupted by concurrent use settles on returning its minimum
+    /// forever, which stays in range but is no longer random. Measured on net462 without the lock in
+    /// <c>Die.Roll</c>: 8 threads x 100,000 rolls left the instance stuck in 9 of 10 trials, and
+    /// 8 x 500,000 in 10 of 10.
+    /// </summary>
+    internal static int[] RollUnderContention(Func<int> roll, int minValue, int maxValue, out int outOfRangeCount)
+    {
+        const int threadCount = 8;
+        const int rollsPerThread = 250_000;
+        const int tailLength = 100;
+        var outOfRange = 0;
+        using var start = new ManualResetEventSlim(false);
+
+        var threads = new Thread[threadCount];
+        for (var t = 0; t < threadCount; t++)
+        {
+            threads[t] = new Thread(() =>
+            {
+                start.Wait();
+                for (var i = 0; i < rollsPerThread; i++)
+                {
+                    var result = roll();
+                    if (result < minValue || result > maxValue)
+                    {
+                        Interlocked.Increment(ref outOfRange);
+                    }
+                }
+            });
+            threads[t].Start();
+        }
+
+        // Release every thread at once so the rolls genuinely overlap.
+        start.Set();
+        foreach (var thread in threads)
+        {
+            thread.Join();
+        }
+
+        outOfRangeCount = outOfRange;
+        var tail = new int[tailLength];
+        for (var i = 0; i < tailLength; i++)
+        {
+            tail[i] = roll();
+        }
+        return tail;
+    }
+
+
+
     [Theory]
     [InlineData(2, "d2")]
     [InlineData(6, "d6")]
@@ -139,7 +204,7 @@ public class DieTests
 
 
     [Fact]
-    public void Two_dice_with_same_SideCount_are_equal()
+    public void Equals_when_SideCount_matches_returns_true()
     {
         // Arrange
         var die1 = new Die(6);
@@ -152,7 +217,7 @@ public class DieTests
 
 
     [Fact]
-    public void Two_dice_with_different_SideCount_are_not_equal()
+    public void Equals_when_SideCount_differs_returns_false()
     {
         // Arrange
         var die1 = new Die(6);
@@ -165,7 +230,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsDie_Null_ReturnsFalse()
+    public void Equals_when_other_Die_is_null_returns_false()
     {
         var die = new Die(6);
         Die? other = null;
@@ -178,7 +243,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsDie_SameReference_ReturnsTrue()
+    public void Equals_when_other_Die_is_the_same_reference_returns_true()
     {
         var die = new Die(6);
         Assert.True(die.Equals(die));
@@ -187,7 +252,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsObject_Null_ReturnsFalse()
+    public void Equals_when_other_object_is_null_returns_false()
     {
         var die = new Die(6);
         object? other = null;
@@ -199,7 +264,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsObject_SameReference_ReturnsTrue()
+    public void Equals_when_other_object_is_the_same_reference_returns_true()
     {
         var die = new Die(6);
         Assert.True(die.Equals((object)die));
@@ -208,7 +273,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsObject_DifferentType_ReturnsFalse()
+    public void Equals_when_other_object_is_a_different_type_returns_false()
     {
         var die = new Die(6);
         var notDie = new { SideCount = 6 };
@@ -218,7 +283,7 @@ public class DieTests
 
 
     [Fact]
-    public void EqualsObject_SameValues_ReturnsTrue()
+    public void Equals_when_other_object_is_an_equal_Die_returns_true()
     {
         var die1 = new Die(8);
         var die2 = new Die(8);
@@ -228,7 +293,7 @@ public class DieTests
 
 
     [Fact]
-    public void Two_dice_with_the_same_SideCount_have_the_same_hash_code()
+    public void GetHashCode_when_SideCount_matches_returns_the_same_value()
     {
         var die1 = new Die(6);
         var die2 = new Die(6);
@@ -246,7 +311,7 @@ public class DieTests
 
 
     [Fact]
-    public void Die_can_be_cast_to_IDie()
+    public void Die_implements_IDie()
     {
         IDie die = new Die();
         Assert.NotNull(die);
@@ -256,13 +321,10 @@ public class DieTests
 
 
     [Fact]
-    public void Die_can_be_cast_to_IEquatable_Die()
+    public void Die_implements_IEquatable_Die()
     {
         IEquatable<Die> die = new Die();
         Assert.NotNull(die);
         Assert.IsType<Die>(die);
     }
-
-
-
 }

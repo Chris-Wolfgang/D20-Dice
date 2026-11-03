@@ -9,7 +9,13 @@ namespace Wolfgang.D20;
 public sealed class Die : IDie, IEquatable<Die>
 {
 #if !NET6_0_OR_GREATER
+    // Before .NET 6 there is no Random.Shared, and System.Random is not thread-safe: concurrent
+    // Next calls race on its internal index pair, and once they collide the sampler returns 0
+    // forever, so every later Roll is MinValue and the die has silently stopped being random.
+    // Every Roll on these targets therefore takes SharedRandomLock around the one Next call. The
+    // critical section allocates nothing, so the hot path stays allocation-free (ADR-0003).
     private static readonly Random SharedRandom = new();
+    private static readonly object SharedRandomLock = new();
 #endif
 
 
@@ -67,6 +73,11 @@ public sealed class Die : IDie, IEquatable<Die>
     /// <returns>
     /// A uniform random value in [<see cref="MinValue"/>, <see cref="MaxValue"/>] inclusive.
     /// </returns>
+    /// <remarks>
+    /// Safe to call concurrently from any number of threads on every target framework. On .NET 6 and
+    /// later the roll uses <c>Random.Shared</c>; on .NET Framework and .NET Standard 2.0 a single
+    /// process-wide <see cref="Random"/> is shared under a lock.
+    /// </remarks>
     /// <example>
     /// <code>
     /// var d6 = new Die(6);
@@ -76,11 +87,13 @@ public sealed class Die : IDie, IEquatable<Die>
     public int Roll()
     {
 #if NET6_0_OR_GREATER
-        var random = Random.Shared;
+        return Random.Shared.Next(1, SideCount + 1);
 #else
-        var random = SharedRandom;
+        lock (SharedRandomLock)
+        {
+            return SharedRandom.Next(1, SideCount + 1);
+        }
 #endif
-        return random.Next(1, SideCount + 1);
     }
 
 
