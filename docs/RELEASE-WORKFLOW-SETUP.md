@@ -7,7 +7,7 @@ This guide explains how to configure a repository to use the standard `release.y
 The release workflow triggers when you **publish a GitHub Release** and implements a comprehensive validation and automatic deployment process that:
 - ✅ Checks the release tag matches a `<Version>` (or `<PackageVersion>`) declared in `src/`
 - ✅ Tests all target frameworks per test project on Windows
-- ✅ Enforces the 90 % line-coverage gate (`CODECOV_MINIMUM`)
+- ✅ Enforces the 95 % line-coverage gate (`CODECOV_MINIMUM`)
 - ✅ Validates NuGet package integrity with smoke tests and generates a CycloneDX SBOM
 - ✅ Builds the DocFX documentation before publishing, so a docs failure blocks the package
 - ✅ Records a SLSA build-provenance attestation for every package (`gh attestation verify`)
@@ -87,7 +87,7 @@ Ensure the following settings are enabled:
 1. **validate-release** (3-10 minutes, Windows)
    - Checks the tag against the `<Version>` / `<PackageVersion>` values found in `src/`
    - Runs every target framework of every test project with coverage
-   - Enforces the 90 % coverage gate and uploads the report
+   - Enforces the 95 % coverage gate and uploads the report
 
 2. **pack-and-validate** (2-5 minutes, Windows)
    - Packs NuGet packages, smoke-tests installing each one into a scratch project
@@ -147,7 +147,7 @@ Ensure the following settings are enabled:
 **Problem:** The workflow fails at "Verify coverage threshold".
 
 **Solution:**
-1. Review the `CoverageReport/Summary.txt` artifact — the gate is 90 % line coverage per assembly (the PR workflow additionally holds test assemblies to 100 %)
+1. Review the `CoverageReport/Summary.txt` artifact — the gate is 95 % line coverage per assembly (the PR workflow additionally holds test assemblies to 100 %)
 2. Add tests for the uncovered paths, or delete unreachable test helpers
 3. Ensure tests actually run on every framework — a framework with zero tests fails on its own
 4. Push the fix, then re-publish the release (or re-run the workflow from the Actions tab)
@@ -198,7 +198,7 @@ Before publishing a production GitHub Release (for example `v1.0.0`):
 │  • Tag == a <Version> / <PackageVersion> under src/           │
 │  • Restore & Build (Release)                                 │
 │  • Test every TFM of every test project, with coverage       │
-│  • Coverage gate: 90 % line coverage                         │
+│  • Coverage gate: 95 % line coverage                         │
 └──────────────────────────────────────────────────────────────┘
                             │
                             ▼ (only if tests pass)
