@@ -113,17 +113,25 @@ public class DiceTests
     [Fact]
     public void Constructed_from_infinite_sequence_throws_instead_of_hanging()
     {
-        // The cap is enforced per element, so an endless sequence is rejected at the limit rather than
-        // enumerated forever.
-        static IEnumerable<Die> Forever()
-        {
-            while (true)
+        // The cap is enforced per element, so an effectively endless sequence (int.MaxValue dice) is
+        // rejected at the limit rather than enumerated to the end. Counting the pulls proves the
+        // constructor stops at the first die past the cap instead of materialising the sequence first.
+        var pulled = 0;
+        var endless = Enumerable
+            .Range(0, int.MaxValue)
+            .Select(_ =>
             {
-                yield return new Die(6);
-            }
-        }
+                pulled++;
+                return new Die(6);
+            });
 
-        Assert.Throws<ArgumentException>(() => new Dice(Forever()));
+        Assert.Throws<ArgumentException>(() => new Dice(endless));
+
+        Assert.Equal
+        (
+            Dice.MaxDieCount + 1,
+            pulled
+        );
     }
 
 
