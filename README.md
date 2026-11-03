@@ -4,7 +4,7 @@ A random number generator that simulates dice rolls using standard `XdY+Z` notat
 
 [![NuGet](https://img.shields.io/nuget/v/Wolfgang.D20.Dice.svg?logo=nuget&label=NuGet)](https://www.nuget.org/packages/Wolfgang.D20.Dice)
 [![NuGet downloads](https://img.shields.io/nuget/dt/Wolfgang.D20.Dice.svg?logo=nuget&label=downloads)](https://www.nuget.org/packages/Wolfgang.D20.Dice)
-[![PR build](https://img.shields.io/github/actions/workflow/status/Chris-Wolfgang/D20-Dice/pr.yaml?event=pull_request_target&label=PR%20build&logo=github)](https://github.com/Chris-Wolfgang/D20-Dice/actions/workflows/pr.yaml)
+[![Build](https://img.shields.io/github/actions/workflow/status/Chris-Wolfgang/D20-Dice/pr.yaml?branch=main&label=build&logo=github)](https://github.com/Chris-Wolfgang/D20-Dice/actions/workflows/pr.yaml)
 [![Release](https://img.shields.io/github/actions/workflow/status/Chris-Wolfgang/D20-Dice/release.yaml?label=release&logo=github)](https://github.com/Chris-Wolfgang/D20-Dice/actions/workflows/release.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-Multi--Targeted-purple.svg)](https://dotnet.microsoft.com/)
@@ -57,11 +57,12 @@ Console.WriteLine($"Range: {attackRoll.MinValue}–{attackRoll.MaxValue}");  // 
 var parseResult = Dice.TryParse("1d20+5");
 if (parseResult.Succeeded)
 {
-    Console.WriteLine($"Parsed: {parseResult.Value} → {parseResult.Value.Roll()}");
+    // Value is Dice? (null only on failure), so it is safe to dereference once Succeeded is true.
+    Console.WriteLine($"Parsed: {parseResult.Value} → {parseResult.Value!.Roll()}");
 }
 
 // Heterogeneous dice — Dice is an immutable value; the "with" builders return a new pool
-var pool = Dice.TryParse("2d6+1d4+3").Value;   // mixed dice plus a flat modifier
+var pool = Dice.TryParse("2d6+1d4+3").Value!;  // mixed dice plus a flat modifier
 var bigger = pool.WithDie(new Die(8));         // returns a new pool with a d8 added (pool is unchanged)
 Console.WriteLine($"{bigger}: {bigger.Roll()}"); // e.g. "2d6+1d4+1d8+3: 19"
 ```
@@ -80,7 +81,7 @@ Console.WriteLine($"{bigger}: {bigger.Roll()}"); // e.g. "2d6+1d4+1d8+3: 19"
 | Modifiers | Positive, negative, or zero flat modifiers supported |
 | Equality | Full `IEquatable<Dice>` / `IEquatable<Die>` support (dice pools compare order-independently) |
 | ToString | Formats back to dice notation (`2d6+1d4+3`, `1d20`, `3d8-2`) |
-| Multi-TFM | Targets .NET Framework 4.6.2+, .NET Standard 2.0, and .NET 5.0–10.0 |
+| Multi-TFM | Targets .NET Framework 4.6.2, .NET Standard 2.0, .NET 8.0 and .NET 10.0 |
 
 **Examples:**
 
@@ -94,7 +95,7 @@ var penalty = new Dice(1, 8, -2);    // 1d8-2
 var result = Dice.TryParse("4d6+1");
 if (result.Succeeded)
 {
-    var dice = result.Value;
+    var dice = result.Value!;
     Console.WriteLine($"{dice} range: {dice.MinValue}–{dice.MaxValue}");
     Console.WriteLine($"Rolled: {dice.Roll()}");
 }
@@ -123,6 +124,8 @@ This project is held to the canonical analyzer set used across all `Chris-Wolfga
 
 ### Analyzers in Use
 
+Seven analyzers run unconditionally; the eighth, `PublicApiAnalyzers`, activates on a project that carries the `PublicAPI.*.txt` baseline files (`CONTRIBUTING.md` describes the seven).
+
 1. **Microsoft.CodeAnalysis.NetAnalyzers** — built-in .NET analyzers (correctness and performance)
 2. **Roslynator.Analyzers** — refactoring and code quality
 3. **AsyncFixer** — async/await best practices
@@ -130,7 +133,7 @@ This project is held to the canonical analyzer set used across all `Chris-Wolfga
 5. **Microsoft.CodeAnalysis.BannedApiAnalyzers** — enforces the `BannedSymbols.txt` policy
 6. **Meziantou.Analyzer** — broad code-quality rules
 7. **SonarAnalyzer.CSharp** — industry-standard analysis
-8. **Microsoft.CodeAnalysis.PublicApiAnalyzers** — scaffolded. Activates when `PublicAPI.Shipped.txt` / `PublicAPI.Unshipped.txt` files are present alongside a src csproj; the baseline for this repo will be added in a follow-up using the IDE "Add to public API" code fix.
+8. **Microsoft.CodeAnalysis.PublicApiAnalyzers** — active since 0.9.0 (#262 / #272). The baseline lives in `src/Wolfgang.D20.Dice/PublicAPI.Shipped.txt` and `PublicAPI.Unshipped.txt`; a new public member must be added to `PublicAPI.Unshipped.txt` (the IDE's "Add to public API" code fix does it) or the build fails with RS0016.
 
 ### Banned-API policy
 
@@ -143,7 +146,7 @@ This project is held to the canonical analyzer set used across all `Chris-Wolfga
 ### Prerequisites
 - [.NET 10.0 SDK](https://dotnet.microsoft.com/download) to build the highest-targeted TFM
 - Building the `net462` target also requires the .NET Framework 4.6.2 reference assemblies / targeting pack (typically installed via Visual Studio's ".NET desktop development" workload on Windows; the SDK alone does not include them, and `net462` builds are Windows-only)
-- The `netstandard2.0` and `net8.0` targets build with the .NET 10 SDK alone on any OS
+- The `netstandard2.0`, `net8.0` and `net10.0` targets build with the .NET 10 SDK alone on any OS
 - Optional: [PowerShell Core](https://github.com/PowerShell/PowerShell) for `scripts/format.ps1`
 
 ### Build Steps
@@ -182,37 +185,36 @@ See [README-FORMATTING.md](docs/README-FORMATTING.md) for detailed formatting gu
 
 ### Building Documentation
 
-This project uses [DocFX](https://dotnet.github.io/docfx/) to generate API documentation:
+API documentation is generated with [DocFX](https://dotnet.github.io/docfx/), pinned as a local tool in `.config/dotnet-tools.json` so contributors build with the same version CI does:
 
 ```bash
-# Install DocFX (one-time setup)
-dotnet tool install -g docfx
+# Restore the pinned tools (one-time per clone)
+dotnet tool restore
 
-# Generate API metadata and build documentation
+# Generate API metadata and build the site
 cd docfx_project
-docfx metadata  # Extract API metadata from source code
-docfx build     # Build HTML documentation
-
-# Documentation is generated in the docs/ folder at the repository root
+dotnet docfx metadata   # Extract API metadata from src/ into docfx_project/api/
+dotnet docfx build      # Build the HTML site into docfx_project/_site/
 ```
 
-The documentation is automatically built and deployed to GitHub Pages when changes are pushed to the `main` branch.
+`.github/workflows/docfx.yaml` builds and deploys the versioned site to GitHub Pages; `release.yaml` calls it for every published release, and it can be run on demand from the Actions tab.
 
 **Local Preview:**
 ```bash
-# Serve documentation locally (with live reload)
+# Serve the site locally (with live reload)
 cd docfx_project
-docfx build --serve
+dotnet docfx build --serve
 
 # Open http://localhost:8080 in your browser
 ```
 
 **Documentation Structure:**
-- `docfx_project/` - DocFX configuration and source files
-- `docs/` - Generated HTML documentation (published to GitHub Pages)
+- `docfx_project/` - DocFX configuration and article sources
 - `docfx_project/index.md` - Main landing page content
 - `docfx_project/docs/` - Additional documentation articles
-- `docfx_project/api/` - Auto-generated API reference YAML files
+- `docfx_project/api/` - API reference metadata written by `dotnet docfx metadata` (git-ignored)
+- `docfx_project/_site/` - The generated site that GitHub Pages serves (git-ignored)
+- `docs/` - Committed project documentation: architecture decision records (`docs/adr/`), migration guides (`docs/migrations/`), and the workflow and formatting notes
 
 ---
 

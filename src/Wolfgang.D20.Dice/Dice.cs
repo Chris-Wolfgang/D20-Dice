@@ -18,11 +18,53 @@ namespace Wolfgang.D20;
 /// side counts, for example <c>2d6+1d4+3</c>. <see cref="Dice"/> is immutable: the "with" builders
 /// (<see cref="WithDie"/>, <see cref="Without"/>, <see cref="WithModifier"/>) return a new instance
 /// rather than modifying the current one, so an instance is safe to use as a dictionary key and to
-/// share across threads.
+/// share across threads. A pool holds at most <see cref="MaxDieCount"/> dice.
 /// </remarks>
-public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
+public sealed partial class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
 {
+    // One place for the number, so the limit and every message that quotes it cannot drift apart.
+    private const int MaxDieCountValue = 10_000;
+
+    // Tokeniser for TryParse: anchored at the current position (\G), one dice term (XdY, X optional,
+    // d or D) or one signed flat modifier per match.
+    private const string TokenPattern = @"\G(?<sign>[+-]?)(?:(?<dieCount>\d*)[dD](?<sideCount>\d+)|(?<modifier>\d+))";
+
     private readonly List<Die> _dice = new();
+
+
+
+#if NET7_0_OR_GREATER
+    // Source-generated: the matcher is emitted at compile time, so it runs at full speed under
+    // Native AOT (the net8.0 / net10.0 targets are IsAotCompatible). RegexOptions.Compiled would be
+    // silently ignored there (no Reflection.Emit) and the pattern would fall back to the interpreter.
+    [GeneratedRegex(TokenPattern, RegexOptions.None, matchTimeoutMilliseconds: 1000)]
+    private static partial Regex TokenRegex();
+#else
+    // RegexOptions.Compiled costs a one-off JIT of the pattern on first parse; worth it for a
+    // long-lived process, and these targets never run under Native AOT.
+    private static readonly Regex TokenRegexInstance = new(TokenPattern, RegexOptions.Compiled, TimeSpan.FromSeconds(1));
+
+    private static Regex TokenRegex()
+    {
+        return TokenRegexInstance;
+    }
+#endif
+
+
+
+    /// <summary>
+    /// The largest number of dice a <see cref="Dice"/> can hold: 10,000.
+    /// </summary>
+    /// <remarks>
+    /// Each die in a pool is a reference in a list and is rolled individually, so an unbounded count
+    /// would let <c>Dice.TryParse("2000000000d6")</c> (12 characters of untrusted input) allocate a
+    /// two-billion-element list and stall every <see cref="Roll"/>. The constructors throw and
+    /// <see cref="TryParse"/> fails for anything larger; see
+    /// <a href="https://github.com/Chris-Wolfgang/D20-Dice/blob/main/docs/adr/0009-bounded-die-count.md">ADR-0009</a>.
+    /// 10,000 is far beyond any tabletop pool (a 20th-level fireball is 20d6) while keeping the worst
+    /// case to tens of kilobytes and a few microseconds.
+    /// </remarks>
+    public static int MaxDieCount => MaxDieCountValue;
 
 
 
@@ -33,7 +75,7 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     /// <param name="dieCount">The number of dice</param>
     /// <param name="sideCount">The number of sides on each die</param>
     /// <param name="modifier">An optional modifier to add to the result</param>
-    /// <exception cref="ArgumentOutOfRangeException">dieCount is less than 1</exception>
+    /// <exception cref="ArgumentOutOfRangeException">dieCount is less than 1 or greater than <see cref="MaxDieCount"/></exception>
     /// <exception cref="ArgumentOutOfRangeException">sideCount is less than 2</exception>
     /// <remarks>
     /// This convenience constructor builds a homogeneous collection of <paramref name="dieCount"/> dice,
@@ -46,12 +88,17 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     /// int total = attack.Roll(); // a value in [5, 15]
     /// </code>
     /// </example>
-    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple overloads with optional parameters", Justification = "This constructor was released in 0.8.0 alongside the (IEnumerable<Die>, int) overload; changing either signature is a SemVer breaking change.")]
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple overloads with optional parameters", Justification = "Both constructors are shipped public API: this one predates 0.6.0 and the (IEnumerable<Die>, int) overload shipped in 0.6.0 (#48). Changing either signature is a SemVer breaking change.")]
     public Dice(int dieCount = 1, int sideCount = 6, int modifier = 0)
     {
         if (dieCount < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(dieCount));
+        }
+
+        if (dieCount > MaxDieCountValue)
+        {
+            throw new ArgumentOutOfRangeException(nameof(dieCount), dieCount, DieCountTooLargeMessage);
         }
 
         // sideCount is validated by the Die constructor, which throws the same
@@ -73,14 +120,16 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     /// <param name="dice">The dice to include in the collection</param>
     /// <param name="modifier">An optional modifier to add to the result</param>
     /// <exception cref="ArgumentNullException"><paramref name="dice"/> is null</exception>
-    /// <exception cref="ArgumentException"><paramref name="dice"/> contains a null element</exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="dice"/> contains a null element, or more than <see cref="MaxDieCount"/> dice
+    /// </exception>
     /// <example>
     /// <code>
     /// // 1d6+1d4+1: a heterogeneous pool built from individual dice.
     /// var dice = new Dice(new[] { new Die(6), new Die(4) }, modifier: 1);
     /// </code>
     /// </example>
-    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple overloads with optional parameters", Justification = "This constructor was released in 0.8.0 alongside the (int, int, int) overload; changing either signature is a SemVer breaking change.")]
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple overloads with optional parameters", Justification = "Both constructors are shipped public API: this overload shipped in 0.6.0 (#48) next to the pre-existing (int, int, int) one. Changing either signature is a SemVer breaking change.")]
     public Dice(IEnumerable<Die> dice, int modifier = 0)
     {
         if (dice is null)
@@ -93,6 +142,13 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
             if (die is null)
             {
                 throw new ArgumentException("Sequence cannot contain a null die.", nameof(dice));
+            }
+
+            // Checked per element rather than after the loop so an unbounded (or infinite) sequence
+            // is rejected at the limit instead of being materialised first.
+            if (_dice.Count == MaxDieCountValue)
+            {
+                throw new ArgumentException(SequenceTooLargeMessage, nameof(dice));
             }
             _dice.Add(die);
         }
@@ -179,6 +235,10 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     /// The sum of an independent roll of each die in the collection plus <see cref="Modifier"/>.
     /// Always between <see cref="MinValue"/> and <see cref="MaxValue"/> inclusive.
     /// </returns>
+    /// <remarks>
+    /// Safe to call concurrently from any number of threads on every target framework; see
+    /// <see cref="Die.Roll"/>.
+    /// </remarks>
     /// <example>
     /// <code>
     /// var dice = new Dice(3, 6); // 3d6
@@ -210,6 +270,7 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     /// <param name="die">The die to add.</param>
     /// <returns>A new <see cref="Dice"/> with <paramref name="die"/> appended.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="die"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">This instance already holds <see cref="MaxDieCount"/> dice.</exception>
     /// <example>
     /// <code>
     /// var pool = new Dice(2, 6).WithDie(new Die(4)); // 2d6 -> 2d6+1d4
@@ -220,6 +281,11 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
         if (die is null)
         {
             throw new ArgumentNullException(nameof(die));
+        }
+
+        if (_dice.Count == MaxDieCountValue)
+        {
+            throw new InvalidOperationException(SequenceTooLargeMessage);
         }
 
         // The Dice(IEnumerable<Die>, int) constructor copies the sequence, so the new instance
@@ -309,6 +375,8 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
 
         // Dice order is not significant (1d4+1d8 == 1d8+1d4); group by side count in the order each
         // side count first appears. The flat modifier, if any, always comes last.
+        // ToString is deliberately exempt from the no-LINQ rule that Roll and MaxValue follow
+        // (ADR-0003): it is not a hot path, and GroupBy reads better than a hand-rolled grouping.
         var groups = _dice.GroupBy(die => die.SideCount);
 
         var first = true;
@@ -422,7 +490,8 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
     {
         unchecked
         {
-            // Order-independent: sum the per-die hashes so equal multisets hash identically.
+            // Order-independent: sum the side counts (not the per-die hashes) so equal multisets hash
+            // identically. Die.GetHashCode happens to equal SideCount today; nothing here relies on it.
             var hashCode = Modifier;
             var sideSum = 0;
             foreach (var die in _dice)
@@ -437,21 +506,13 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
 
 
 
-    private static readonly Regex TokenRegex = new
-    (
-        @"\G(?<sign>[+-]?)(?:(?<dieCount>\d*)[dD](?<sideCount>\d+)|(?<modifier>\d+))",
-        RegexOptions.Compiled,
-        TimeSpan.FromSeconds(1)
-    );
-
-
-
     /// <summary>
     /// Tries to parse a string representation of dice notation into a <see cref="Dice"/> instance.
     /// </summary>
     /// <param name="notation">
     /// The dice notation to parse, for example <c>2d6+1d4+3</c>. Whitespace is ignored. The notation may
-    /// contain any number of dice terms (<c>XdY</c>) and flat modifiers (<c>+Z</c> / <c>-Z</c>).
+    /// contain any number of dice terms (<c>XdY</c>) and flat modifiers (<c>+Z</c> / <c>-Z</c>), as long
+    /// as the dice add up to no more than <see cref="MaxDieCount"/>.
     /// </param>
     /// <returns>
     /// A <see cref="Result{T}"/> containing the parsed <see cref="Dice"/> instance if successful;
@@ -502,7 +563,7 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
 
         while (position < text.Length)
         {
-            var match = TokenRegex.Match(text, position);
+            var match = TokenRegex().Match(text, position);
             if (!match.Success || match.Index != position)
             {
                 return Result<Dice?>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
@@ -558,6 +619,14 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
         if (dieCountResult.Failed)
         {
             return Result<int>.Failure(dieCountResult.ErrorMessage!);
+        }
+
+        // The cap applies to the whole pool, so a term that is valid on its own ("5001d4") can still
+        // push an accumulated "5000d6+5001d4" over it. Subtracting first cannot overflow: both operands
+        // are non-negative ints.
+        if (dieCountResult.Value > MaxDieCountValue - dice.Count)
+        {
+            return Result<int>.Failure(DieCountTooLargeMessage);
         }
 
         var sideCountResult = TryGetSideCount(match.Groups["sideCount"].Value);
@@ -628,4 +697,14 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
         // itself never exceeds int.MaxValue here, so negation is always safe.
         return Result<int>.Success(negative ? -modifierValue : modifierValue);
     }
+
+
+
+    // Error texts that quote the limit, built once. MaxDieCountValue is formatted with the invariant
+    // culture so the message reads the same (ASCII digits, no grouping) under every thread culture.
+    private static readonly string DieCountTooLargeMessage =
+        "Die count must be at most " + MaxDieCountValue.ToString(CultureInfo.InvariantCulture) + ".";
+
+    private static readonly string SequenceTooLargeMessage =
+        "Sequence cannot contain more than " + MaxDieCountValue.ToString(CultureInfo.InvariantCulture) + " dice.";
 }
