@@ -11,7 +11,6 @@ namespace Wolfgang.D20;
 /// </example>
 public interface IDie
 {
-
     /// <summary>
     /// The number of sides on the die. Must be at least 2.
     /// </summary>
@@ -21,16 +20,19 @@ public interface IDie
     int SideCount { get; }
 
 
+
     /// <summary>
     /// The minimum value that can be rolled on the die. Always 1.
     /// </summary>
     int MinValue { get; }
 
 
+
     /// <summary>
     /// The maximum value that can be rolled on the die. Equal to <see cref="SideCount"/>.
     /// </summary>
     int MaxValue { get; }
+
 
 
     /// <summary>
@@ -42,10 +44,15 @@ public interface IDie
     int Roll();
 
 
+
     /// <summary>
     /// Returns a string representation of the die in the format "dY" where Y is the number of sides.
     /// </summary>
     /// <returns>The die in standard <c>dY</c> notation.</returns>
+    /// <remarks>
+    /// Declared here only so the notation contract is part of the interface's documentation; it is
+    /// the same member as <see cref="object.ToString"/>. It is shipped public API
+    /// (<c>PublicAPI.Shipped.txt</c>), so removing it would be a breaking change.
+    /// </remarks>
     string ToString();
-
 }
