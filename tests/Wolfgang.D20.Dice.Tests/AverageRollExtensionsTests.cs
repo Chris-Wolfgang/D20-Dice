@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Xunit;
-// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantArgumentDefaultValue — explicit `Dice(2, 6, 0)` keeps the modifier visible next to the expected average.
 
 namespace Wolfgang.D20.Tests.Unit;
 
@@ -124,6 +124,30 @@ public class AverageRollExtensionsTests
 
         // Act & Assert
         Assert.Equal(6, dice.AverageRoundedUp());
+    }
+
+
+
+    [Fact]
+    public void Dice_AverageRoundedUp_when_heterogeneous_midpoint_is_a_half_rounds_up()
+    {
+        // Arrange - 1d4 + 1d6 + 1d8: min 3, max 18, avg 10.5
+        var dice = new Dice(new List<Die> { new(4), new(6), new(8) });
+
+        // Act & Assert
+        Assert.Equal(11, dice.AverageRoundedUp());
+    }
+
+
+
+    [Fact]
+    public void Dice_AverageRoundedDown_accounts_for_heterogeneous_dice()
+    {
+        // Arrange - 1d4 + 1d6 + 1d8: min 3, max 18, avg 10.5 -> 10
+        var dice = new Dice(new List<Die> { new(4), new(6), new(8) });
+
+        // Act & Assert
+        Assert.Equal(10, dice.AverageRoundedDown());
     }
 
 

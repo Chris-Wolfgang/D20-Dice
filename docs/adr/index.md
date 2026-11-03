@@ -14,3 +14,4 @@ the format to copy when adding one.
 | [0006](0006-api-compat-gate-via-packagevalidation.md) | API/ABI compatibility gate via PackageValidation | Accepted |
 | [0007](0007-mutation-testing-quality-bar.md) | Mutation-testing quality bar (Stryker) | Accepted |
 | [0008](0008-dice-is-an-immutable-value-type.md) | `Dice` is an immutable value type | Accepted |
+| [0009](0009-bounded-die-count.md) | Bounded die count (`Dice.MaxDieCount`) | Accepted |
