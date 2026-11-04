@@ -85,9 +85,10 @@ build.
 
 > **Note on the SDK version.** Reproducibility is guaranteed for a *fixed* .NET SDK. A
 > different SDK / compiler version can legitimately emit different (but still
-> deterministic) bytes. Use the SDK the CI workflow pins (`10.0.x`) when reproducing a
-> release; `dotnet --version` on the release's `Reproducible build` run log shows the exact
-> patch.
+> deterministic) bytes. Use the SDK the release used: it is recorded in the release's
+> `reproducible-build-manifest.json` asset (`toolchain.sdk`, see below). Releases made
+> before that asset existed do not carry it; for those, `dotnet --version` in the
+> release's workflow run log shows the exact patch.
 
 ### Compare whole packages entry by entry
 
@@ -96,7 +97,9 @@ with the published one entry by entry. The package *file* hashes never match (se
 every entry inside them should:
 
 ```bash
-pwsh ./scripts/compare-package-entries.ps1   -Mine ./artifacts/Wolfgang.D20.Dice.<version>.nupkg   -Published ./published.nupkg
+pwsh ./scripts/compare-package-entries.ps1 \
+  -Mine ./artifacts/Wolfgang.D20.Dice.<version>.nupkg \
+  -Published ./published.nupkg
 ```
 
 The script exits 0 when every entry matches and 1 otherwise, listing the entries that differ. It
@@ -110,6 +113,35 @@ handles two entries specially, neither of which comes from the build:
 Releases are packed on Windows. The assemblies and symbols match from any OS, but NuGet writes
 OS-specific newlines into its own metadata entries (`.nuspec`, `.psmdcp`, `_rels/.rels`), so run
 the whole-package comparison on Windows, or expect exactly those entries to differ.
+
+### Or compare against the release manifest
+
+Each release also carries `reproducible-build-manifest.json`, which records the toolchain
+that built it and a SHA-256 for every entry inside every package it shipped. Download it and
+check your rebuild against it without downloading anything from nuget.org:
+
+```bash
+gh release download v<version> --repo Chris-Wolfgang/D20-Dice \
+  --pattern 'reproducible-build-manifest.json'
+pwsh -c '(Get-Content reproducible-build-manifest.json | ConvertFrom-Json).toolchain'
+
+pwsh ./scripts/compare-package-entries.ps1 \
+  -Mine ./artifacts/Wolfgang.D20.Dice.<version>.nupkg \
+  -Manifest ./reproducible-build-manifest.json
+```
+
+Two things to know before reading a difference as one:
+
+- **`sha256IsReproducible` is `false` on each package's own file hash.** It is recorded for
+  completeness. Do not compare it: the package file embeds the pack time.
+- **The manifest does not list every entry.** The `.psmdcp` is omitted, because its entry name
+  is not stable across NuGet versions, and `.signature.p7s` does not exist yet when the
+  manifest is written. The manifest says both in its own `verification.entriesNotListed`.
+
+The manifest is written by the same workflow run that produced the packages, so it is a
+convenience, not independent evidence. If the question is whether *we* published what we said
+we did, compare against nuget.org as above, or verify the provenance attestation, which is
+signed ([SECURITY.md](SECURITY.md#verifying-a-release)).
 
 ## File a discrepancy
 
