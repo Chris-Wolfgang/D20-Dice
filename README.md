@@ -150,7 +150,8 @@ You do not have to take our word for what is in a published package.
   CI builds it on Ubuntu and on Windows and fails if any assembly or PDB differs.
   [REPRODUCIBLE-BUILD.md](REPRODUCIBLE-BUILD.md) has the step-by-step procedure for checking a
   released package against its tag, including which differences are expected and which are worth
-  reporting.
+  reporting. If your rebuild matches, you can record it publicly as a `Verification: v<version>`
+  issue ([how](REPRODUCIBLE-BUILD.md#publish-your-verification)).
 - **Check where it came from.** Each release carries a SLSA build-provenance attestation you can
   verify with `gh attestation verify`. See [Verifying a release](SECURITY.md#verifying-a-release)
   in the security policy.

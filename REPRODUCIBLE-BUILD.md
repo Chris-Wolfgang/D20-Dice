@@ -143,6 +143,28 @@ convenience, not independent evidence. If the question is whether *we* published
 we did, compare against nuget.org as above, or verify the provenance attestation, which is
 signed ([SECURITY.md](SECURITY.md#verifying-a-release)).
 
+## Publish your verification
+
+An independent rebuild is worth more when others can see it. If you rebuilt a release and it
+**matched**, you can record that publicly; this follows the
+[Reproducible Builds](https://reproducible-builds.org/) convention of independent rebuilders
+publishing their results rather than the project vouching for itself.
+
+[Open an issue](https://github.com/Chris-Wolfgang/D20-Dice/issues/new) titled
+`Verification: v<version>` (one issue per release and rebuilder) and include:
+
+- the release tag and the commit it points to (`git rev-parse v<version>`),
+- your `dotnet --version`, OS / architecture, and whether you compared against nuget.org
+  (`-Published`) or the release manifest (`-Manifest`),
+- the full output of `scripts/compare-package-entries.ps1` for the `.nupkg` and the `.snupkg`,
+- optionally, a link to a signed statement of the same result that you control (a signed git
+  tag or commit in your own repository, a Sigstore-signed attestation, or an entry on a
+  third-party rebuilder service), so the claim does not rest on the issue alone.
+
+The issue is the record: it is public, timestamped and attributed to your account. A
+verification issue is not a request
+for action; if your rebuild did **not** match, use the discrepancy procedure below instead.
+
 ## File a discrepancy
 
 If any hash differs and you are using the same SDK version, that is a supply-chain signal
