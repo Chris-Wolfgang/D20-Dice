@@ -1,73 +1,72 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- LangVersion (latestMajor) and Nullable (enable) come from Directory.Build.props and are not
+       repeated here: a per-project `latest` would pick up preview language features whenever a
+       preview SDK is installed. -->
   <PropertyGroup>
-	  <TargetFrameworks>net462;netstandard2.0;net8.0;net10.0</TargetFrameworks>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
-	  <Version>0.9.0</Version>
-	  <!-- API/ABI compatibility gate (#169), implemented with the SDK's ApiCompat-based
-	       PackageValidation: the packed API surface is validated against the last released version at
-	       pack time (including in release.yaml), so an accidental breaking change fails the pack. Bump
-	       the baseline on each release. Waive an intentional break with an ApiCompatSuppressionFile. -->
-	  <EnablePackageValidation>true</EnablePackageValidation>
-	  <PackageValidationBaselineVersion>0.9.0</PackageValidationBaselineVersion>
-	  <!-- Pin AssemblyVersion to a fixed binding-stability baseline so consumers
-	       do not need to recompile / add binding redirects on every minor/patch
-	       bump. Bump only on a deliberate breaking API change. FileVersion +
-	       InformationalVersion (the latter auto-derived from <Version>) carry
-	       the actual release version. -->
-	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
-	  <FileVersion>$([System.Text.RegularExpressions.Regex]::Replace('$(Version)', '[-+].*$', '')).0</FileVersion>
-	  <Title>$(AssemblyName)</Title>
-	  <Description>Contains class for generating random numbers by simulating rolling of dice with various number of sides</Description>
-	  <RootNamespace>Wolfgang.D20</RootNamespace>
-	  <PackageProjectUrl>https://github.com/Chris-Wolfgang/D20-Dice</PackageProjectUrl>
-	  <RepositoryUrl>https://github.com/Chris-Wolfgang/D20-Dice.git</RepositoryUrl>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
-	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
-	  <SignAssembly>False</SignAssembly>
-
+    <!-- netstandard2.1 is deliberately absent: netstandard2.0 already serves every .NET Standard
+         consumer and net8.0 / net10.0 give the modern runtimes their own assets, so a 2.1 build
+         would add a TFM with nothing to express (recorded for #391; the fleet's default list
+         includes it). -->
+    <TargetFrameworks>net462;netstandard2.0;net8.0;net10.0</TargetFrameworks>
+    <Version>0.9.0</Version>
+    <!-- API/ABI compatibility gate (#169), implemented with the SDK's ApiCompat-based
+         PackageValidation: the packed API surface is validated against the last released version at
+         pack time (including in release.yaml), so an accidental breaking change fails the pack. Bump
+         the baseline on each release. Waive an intentional break with an ApiCompatSuppressionFile. -->
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>0.9.0</PackageValidationBaselineVersion>
+    <!-- Pin AssemblyVersion to a fixed binding-stability baseline so consumers
+         do not need to recompile / add binding redirects on every minor/patch
+         bump. Bump only on a deliberate breaking API change. FileVersion +
+         InformationalVersion (the latter auto-derived from <Version>) carry
+         the actual release version. -->
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>$([System.Text.RegularExpressions.Regex]::Replace('$(Version)', '[-+].*$', '')).0</FileVersion>
+    <Title>$(AssemblyName)</Title>
+    <Description>Contains class for generating random numbers by simulating rolling of dice with various number of sides</Description>
+    <RootNamespace>Wolfgang.D20</RootNamespace>
+    <PackageProjectUrl>https://github.com/Chris-Wolfgang/D20-Dice</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Chris-Wolfgang/D20-Dice.git</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
-	<!-- Trim / AOT compatibility gate (#175): on the modern TFMs, enable the trim, AOT and
-	     single-file analyzers so an AOT-incompatible change surfaces as an IL2xxx/IL3xxx warning
-	     (and fails the build under TreatWarningsAsErrors). A library can't be AOT-published on its
-	     own, so this static analysis is the recommended verification. IsAotCompatible is only valid
-	     on net8.0+, so it is scoped away from net462 / netstandard2.0. -->
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net10.0'">
-		<IsAotCompatible>true</IsAotCompatible>
-	</PropertyGroup>
+  <!-- Trim / AOT compatibility gate (#175): on the modern TFMs, enable the trim, AOT and
+       single-file analyzers so an AOT-incompatible change surfaces as an IL2xxx/IL3xxx warning
+       (and fails the build under TreatWarningsAsErrors). A library can't be AOT-published on its
+       own, so this static analysis is the recommended verification. IsAotCompatible is only valid
+       on net8.0+, so it is scoped away from net462 / netstandard2.0. -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net10.0'">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
 
-	<PropertyGroup>
-		<PackageTags>d20;dice</PackageTags>
-		<ApplicationIcon>assets\d20-dice.ico</ApplicationIcon>
-		<PackageIcon>d20-dice.png</PackageIcon>
-	</PropertyGroup>
+  <PropertyGroup>
+    <PackageTags>d20;dice</PackageTags>
+    <PackageIcon>d20-dice.png</PackageIcon>
+  </PropertyGroup>
 
-	<ItemGroup>
-	  <Content Include="assets\d20-dice.ico" />
-	</ItemGroup>
+  <ItemGroup>
+    <!-- The .ico is the repository's icon source only. A library has no application icon, the
+         package icon is the .png below, and as an SDK Content item it was being packed into the
+         nupkg under content/ and contentFiles/ for every TFM (#391). -->
+    <None Include="assets\d20-dice.ico" Pack="false" />
+    <None Include="assets\d20-dice.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
-	<ItemGroup>
-		<None Include="..\..\README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="assets\d20-dice.png">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="Wolfgang.TryPattern" Version="0.5.0" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Wolfgang.TryPattern" Version="0.5.0" />
+  </ItemGroup>
 
   <!-- The .NET SDK adds this implicitly when targeting .NET Framework on a host without
        the targeting packs (i.e. the Linux CI runners), which makes the restore graph
