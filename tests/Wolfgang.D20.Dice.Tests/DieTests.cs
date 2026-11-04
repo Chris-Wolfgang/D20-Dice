@@ -147,31 +147,39 @@ public class DieTests
         const int rollsPerThread = 250_000;
         const int tailLength = 100;
         var outOfRange = 0;
-        using var start = new ManualResetEventSlim(false);
-
-        var threads = new Thread[threadCount];
-        for (var t = 0; t < threadCount; t++)
+        // Disposed in the finally only after every thread has been joined, so no thread can still be
+        // waiting on it; a `using var` here reads as disposing the captured event in the outer scope.
+        var start = new ManualResetEventSlim(false);
+        try
         {
-            threads[t] = new Thread(() =>
+            var threads = new Thread[threadCount];
+            for (var t = 0; t < threadCount; t++)
             {
-                start.Wait();
-                for (var i = 0; i < rollsPerThread; i++)
+                threads[t] = new Thread(() =>
                 {
-                    var result = roll();
-                    if (result < minValue || result > maxValue)
+                    start.Wait();
+                    for (var i = 0; i < rollsPerThread; i++)
                     {
-                        Interlocked.Increment(ref outOfRange);
+                        var result = roll();
+                        if (result < minValue || result > maxValue)
+                        {
+                            Interlocked.Increment(ref outOfRange);
+                        }
                     }
-                }
-            });
-            threads[t].Start();
-        }
+                });
+                threads[t].Start();
+            }
 
-        // Release every thread at once so the rolls genuinely overlap.
-        start.Set();
-        foreach (var thread in threads)
+            // Release every thread at once so the rolls genuinely overlap.
+            start.Set();
+            foreach (var thread in threads)
+            {
+                thread.Join();
+            }
+        }
+        finally
         {
-            thread.Join();
+            start.Dispose();
         }
 
         outOfRangeCount = outOfRange;
