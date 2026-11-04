@@ -561,6 +561,103 @@ jobs:
           }
 
 
+      # Reproducible-build manifest - the expected hashes a third party compares against
+      # after rebuilding this tag. See REPRODUCIBLE-BUILD.md for the procedure.
+      #
+      # Entry-level, not file-level: a .nupkg is a zip and NuGet stamps every entry with
+      # its mtime, so two packs of the same commit produce different FILES with identical
+      # contents. The file hash is recorded so a verifier can see it was not forgotten,
+      # flagged as not reproducible so nobody compares it and concludes tampering.
+      #
+      # The manifest is a convenience, not a second root of trust: the run that produced
+      # the packages produced it, so it vouches for nothing on its own. A verifier who
+      # does not want to trust it compares against the copy on nuget.org instead, which
+      # is exactly what the script in the manifest does.
+      - name: Generate the reproducible-build manifest
+        if: steps.check-packages.outputs.has-packages == 'true'
+        shell: pwsh
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $sha256 = [System.Security.Cryptography.SHA256]::Create()
+          $packagesPath = Join-Path $PWD 'nuget-packages'
+          $packages = @()
+
+          foreach ($package in @(Get-ChildItem -Path (Join-Path $packagesPath '*') -Include *.nupkg, *.snupkg -File | Sort-Object Name))
+          {
+              $entries = [ordered]@{}
+              $archive = [System.IO.Compression.ZipFile]::OpenRead($package.FullName)
+
+              try
+              {
+                  foreach ($entry in @($archive.Entries | Sort-Object FullName))
+                  {
+                      # Excluded deliberately: the .psmdcp entry's FILE NAME is a GUID on some
+                      # NuGet versions and the fixed 'nuget.psmdcp' on others, so it is not a
+                      # stable key to publish hashes under.
+                      if ($entry.FullName.EndsWith('.psmdcp'))
+                      {
+                          continue
+                      }
+
+                      $stream = $entry.Open()
+
+                      try
+                      {
+                          $entries[$entry.FullName] = (($sha256.ComputeHash($stream) | ForEach-Object { $_.ToString('x2') }) -join '')
+                      }
+                      finally
+                      {
+                          $stream.Dispose()
+                      }
+                  }
+              }
+              finally
+              {
+                  $archive.Dispose()
+              }
+
+              $packages += [ordered]@{
+                  file = $package.Name
+                  sha256 = (Get-FileHash -LiteralPath $package.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+                  sha256IsReproducible = $false
+                  entries = $entries
+              }
+          }
+
+          if ($packages.Count -eq 0)
+          {
+              throw 'No packages found to fingerprint - the pack step reported packages but none are on disk.'
+          }
+
+          $manifest = [ordered]@{
+              schemaVersion = 1
+              repository = $env:GITHUB_REPOSITORY
+              tag = $env:TAG_NAME
+              commit = $env:GITHUB_SHA
+              toolchain = [ordered]@{
+                  sdk = (dotnet --version)
+                  os = $env:RUNNER_OS
+                  continuousIntegrationBuild = ($env:CI -eq 'true')
+              }
+              verification = [ordered]@{
+                  document = 'REPRODUCIBLE-BUILD.md'
+                  command = 'pwsh ./scripts/compare-package-entries.ps1 -Mine <the package you built> -Published <this release''s package>'
+                  fileHashIsNotReproducible = 'A .nupkg is a zip whose entry timestamps differ between two packs of the same commit. Compare the entries, not the file.'
+                  entriesNotListed = [ordered]@{
+                      '*.psmdcp' = 'OPC core properties; the entry file name is not stable across NuGet versions.'
+                      '.signature.p7s' = 'Not present at pack time - nuget.org adds its repository signature after publish, so a downloaded package has one entry more than this manifest lists.'
+                  }
+              }
+              packages = $packages
+          }
+
+          $manifestPath = Join-Path $packagesPath 'reproducible-build-manifest.json'
+          $manifest | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $manifestPath
+          Write-Host "Wrote reproducible-build-manifest.json for $($packages.Count) package(s)."
+
       - name: Upload NuGet packages
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -795,9 +892,16 @@ jobs:
           # can legitimately be absent — nullglob drops the pattern instead
           # of passing gh the literal unmatched glob string.
           shopt -s nullglob
-          gh release upload "$TAG_NAME" \
-            ./nuget-packages/*.nupkg \
-            ./nuget-packages/*.snupkg \
-            ./nuget-packages/*.bom.json \
-            release-coverage.zip \
-            --clobber
+          files=(./nuget-packages/*.nupkg ./nuget-packages/*.snupkg ./nuget-packages/*.bom.json release-coverage.zip)
+          # nullglob only drops unmatched *patterns*; a literal name stays and would make
+          # `gh release upload` fail. The packages are already on NuGet.org by now, so a
+          # missing reproducible-build manifest must not fail the upload and leave the
+          # release page without its packages.
+          manifest=./nuget-packages/reproducible-build-manifest.json
+          if [ -f "$manifest" ]; then
+            files+=("$manifest")
+          else
+            echo "::warning::No reproducible-build manifest to attach - see REPRODUCIBLE-BUILD.md for verifying this release without one."
+          fi
+          echo "Uploading ${#files[@]} asset(s) to release $TAG_NAME"
+          gh release upload "$TAG_NAME" "${files[@]}" --clobber
