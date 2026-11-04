@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793756865062,
+  "lastUpdate": 1793760296327,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1434,6 +1434,72 @@ window.BENCHMARK_DATA = {
             "value": 2.7099336038033166,
             "unit": "ns",
             "range": "± 0.006656142816030494"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b0bcbc0b1e1a88eea72d98e203a13752ae867801",
+          "message": "chore: project-file hygiene - inherit LangVersion/Nullable, stop packing the .ico, fleet xunit runner pins, real sln items, dependabot groups (#403)\n\nEvery project dropped its LangVersion=latest / Nullable overrides of\nDirectory.Build.props (latest picks up preview features on a preview\nSDK); the test and benchmark projects lose their stale Version and\nhardcoded Copyright. The library's .ico was an SDK Content item and\nshipped in the nupkg under content/ and contentFiles/ for every TFM; it\nis now None with Pack=false and ApplicationIcon is gone. The test\nproject follows the fleet runner rule (3.0.1 uncapped on net8.0+, 2.x\ncapped on the legacy slots, net5.0 below 2.5) and drops the packages the\nxunit metapackage already brings. The solution lists only files that\nexist; dependabot names the benchmarks group after what it groups and\nkeeps one pip entry per directory.\n\nFixes #391\n\nCo-authored-by: Claude Fable 5.1 <noreply@anthropic.com>",
+          "timestamp": "2026-11-03T21:43:02-05:00",
+          "tree_id": "87aef520c2a4e75fd44907ebd1a815871fb058f3",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/b0bcbc0b1e1a88eea72d98e203a13752ae867801"
+        },
+        "date": 1793760293973,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 4.132792231937249,
+            "unit": "ns",
+            "range": "± 0.09185824421290764"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 4.182717010378838,
+            "unit": "ns",
+            "range": "± 0.08826729391757267"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollHeterogeneous",
+            "value": 11.651257514953613,
+            "unit": "ns",
+            "range": "± 0.06184454745312119"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.TryParse",
+            "value": 868.1047264734904,
+            "unit": "ns",
+            "range": "± 24.984894904575427"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.ToStringNotation",
+            "value": 138.52158149083456,
+            "unit": "ns",
+            "range": "± 0.7885095585313991"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.EqualsHeterogeneous",
+            "value": 175.2478794256846,
+            "unit": "ns",
+            "range": "± 1.4653263576784958"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.GetHashCodeHeterogeneous",
+            "value": 1.7117093726992607,
+            "unit": "ns",
+            "range": "± 0.01309489405973685"
           }
         ]
       }
