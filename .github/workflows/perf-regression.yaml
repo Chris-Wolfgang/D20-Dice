@@ -75,12 +75,12 @@ jobs:
           echo "report=benchmarks/Wolfgang.D20.Dice.Benchmarks/benchmarks-result.json" >> "$GITHUB_OUTPUT"
 
       - name: Restore tracked files before gh-pages switch
-        # `dotnet restore`/`build` above can rewrite packages.lock.json
-        # (RestorePackagesWithLockFile, #284): the Linux runner regenerates the
-        # Windows-authored lock files. The compare action below runs
-        # `git switch gh-pages`, which aborts on a dirty tree. Revert the
-        # tracked-file churn; the untracked benchmark outputs
-        # (benchmarks-result.json, BenchmarkDotNet.Artifacts/) are preserved.
+        # Defensive: the compare action below runs `git switch gh-pages`, which
+        # aborts on a dirty tree, so any tracked file the restore/build/run above
+        # happened to modify would fail the job. Reverting tracked files costs
+        # nothing; the untracked benchmark outputs (benchmarks-result.json,
+        # BenchmarkDotNet.Artifacts/) are preserved. (The original reason, lock
+        # files rewritten on the Linux runner, went away with #309.)
         run: git checkout -- .
 
       - name: Compare against gh-pages baseline
