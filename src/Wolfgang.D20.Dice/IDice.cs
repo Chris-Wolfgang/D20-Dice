@@ -15,11 +15,11 @@ namespace Wolfgang.D20;
 /// </example>
 public interface IDice
 {
-
     /// <summary>
     /// The number of dice in the collection.
     /// </summary>
     int DieCount { get; }
+
 
 
     /// <summary>
@@ -31,16 +31,19 @@ public interface IDice
     int Modifier { get; }
 
 
+
     /// <summary>
     /// The minimum value that can be rolled with the dice in the collection and the modifier.
     /// </summary>
     int MinValue { get; }
 
 
+
     /// <summary>
     /// The maximum value that can be rolled with the dice in the collection and the modifier.
     /// </summary>
     int MaxValue { get; }
+
 
 
     /// <summary>
@@ -53,6 +56,7 @@ public interface IDice
     int Roll();
 
 
+
     /// <summary>
     /// Returns a string representation of the dice in standard dice notation, for example <c>2d6+1d4+3</c>.
     /// </summary>
@@ -60,6 +64,10 @@ public interface IDice
     /// The dice grouped by side count, followed by the modifier; dice order is not significant, and the
     /// modifier (omitted when zero, leading minus when negative) always comes last.
     /// </returns>
+    /// <remarks>
+    /// Declared here only so the notation contract is part of the interface's documentation; it is
+    /// the same member as <see cref="object.ToString"/>. It is shipped public API
+    /// (<c>PublicAPI.Shipped.txt</c>), so removing it would be a breaking change.
+    /// </remarks>
     string ToString();
-
 }

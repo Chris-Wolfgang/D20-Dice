@@ -88,7 +88,7 @@ public sealed partial class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<D
     /// int total = attack.Roll(); // a value in [5, 15]
     /// </code>
     /// </example>
-    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple overloads with optional parameters", Justification = "This constructor was released in 0.8.0 alongside the (IEnumerable<Die>, int) overload; changing either signature is a SemVer breaking change.")]
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple overloads with optional parameters", Justification = "Both constructors are shipped public API: this one predates 0.6.0 and the (IEnumerable<Die>, int) overload shipped in 0.6.0 (#48). Changing either signature is a SemVer breaking change.")]
     public Dice(int dieCount = 1, int sideCount = 6, int modifier = 0)
     {
         if (dieCount < 1)
@@ -129,7 +129,7 @@ public sealed partial class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<D
     /// var dice = new Dice(new[] { new Die(6), new Die(4) }, modifier: 1);
     /// </code>
     /// </example>
-    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple overloads with optional parameters", Justification = "This constructor was released in 0.8.0 alongside the (int, int, int) overload; changing either signature is a SemVer breaking change.")]
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple overloads with optional parameters", Justification = "Both constructors are shipped public API: this overload shipped in 0.6.0 (#48) next to the pre-existing (int, int, int) one. Changing either signature is a SemVer breaking change.")]
     public Dice(IEnumerable<Die> dice, int modifier = 0)
     {
         if (dice is null)
@@ -375,6 +375,8 @@ public sealed partial class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<D
 
         // Dice order is not significant (1d4+1d8 == 1d8+1d4); group by side count in the order each
         // side count first appears. The flat modifier, if any, always comes last.
+        // ToString is deliberately exempt from the no-LINQ rule that Roll and MaxValue follow
+        // (ADR-0003): it is not a hot path, and GroupBy reads better than a hand-rolled grouping.
         var groups = _dice.GroupBy(die => die.SideCount);
 
         var first = true;
@@ -488,7 +490,8 @@ public sealed partial class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<D
     {
         unchecked
         {
-            // Order-independent: sum the per-die hashes so equal multisets hash identically.
+            // Order-independent: sum the side counts (not the per-die hashes) so equal multisets hash
+            // identically. Die.GetHashCode happens to equal SideCount today; nothing here relies on it.
             var hashCode = Modifier;
             var sideSum = 0;
             foreach (var die in _dice)
