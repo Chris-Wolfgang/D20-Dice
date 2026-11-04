@@ -35,6 +35,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 - **API Documentation:** https://Chris-Wolfgang.github.io/D20-Dice/
 - **Formatting Guide:** [README-FORMATTING.md](docs/README-FORMATTING.md)
 - **Contributing Guide:** [CONTRIBUTING.md](CONTRIBUTING.md)
+- **Reproducible Builds:** [REPRODUCIBLE-BUILD.md](REPRODUCIBLE-BUILD.md)
 
 ---
 
@@ -138,6 +139,21 @@ Seven analyzers run unconditionally; the eighth, `PublicApiAnalyzers`, activates
 ### Banned-API policy
 
 `BannedSymbols.txt` is the canonical fleet baseline. The same policy is applied to every Wolfgang.* library — including this one, even though `Dice` itself exposes a synchronous API surface. Banned categories include blocking sync-over-async (`Task.Result`, `Task.Wait()`), `Thread.Sleep`, synchronous file I/O, and several legacy / deprecated APIs.
+
+---
+
+## 🔐 Verify the build
+
+You do not have to take our word for what is in a published package.
+
+- **Rebuild it yourself.** Every commit is verified to be *reproducible*, not merely deterministic:
+  CI builds it on Ubuntu and on Windows and fails if any assembly or PDB differs.
+  [REPRODUCIBLE-BUILD.md](REPRODUCIBLE-BUILD.md) has the step-by-step procedure for checking a
+  released package against its tag, including which differences are expected and which are worth
+  reporting.
+- **Check where it came from.** Each release carries a SLSA build-provenance attestation you can
+  verify with `gh attestation verify`. See [Verifying a release](SECURITY.md#verifying-a-release)
+  in the security policy.
 
 ---
 

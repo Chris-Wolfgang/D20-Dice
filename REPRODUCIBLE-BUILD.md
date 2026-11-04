@@ -89,6 +89,28 @@ build.
 > release; `dotnet --version` on the release's `Reproducible build` run log shows the exact
 > patch.
 
+### Compare whole packages entry by entry
+
+The steps above check one assembly. To check everything a package ships, compare your package
+with the published one entry by entry. The package *file* hashes never match (see above), but
+every entry inside them should:
+
+```bash
+pwsh ./scripts/compare-package-entries.ps1   -Mine ./artifacts/Wolfgang.D20.Dice.<version>.nupkg   -Published ./published.nupkg
+```
+
+The script exits 0 when every entry matches and 1 otherwise, listing the entries that differ. It
+handles two entries specially, neither of which comes from the build:
+
+| Entry | Handling |
+| --- | --- |
+| `.signature.p7s` | **Skipped.** nuget.org's repository signature, added after the build. Present in the downloaded package, absent from yours. |
+| `*.psmdcp` | **Compared** under a stable key rather than by name: OPC core properties, whose *file name* is a GUID on some NuGet versions and the fixed `nuget.psmdcp` on others. |
+
+Releases are packed on Windows. The assemblies and symbols match from any OS, but NuGet writes
+OS-specific newlines into its own metadata entries (`.nuspec`, `.psmdcp`, `_rels/.rels`), so run
+the whole-package comparison on Windows, or expect exactly those entries to differ.
+
 ## File a discrepancy
 
 If any hash differs and you are using the same SDK version, that is a supply-chain signal
