@@ -20,12 +20,35 @@ namespace Wolfgang.D20;
 /// rather than modifying the current one, so an instance is safe to use as a dictionary key and to
 /// share across threads. A pool holds at most <see cref="MaxDieCount"/> dice.
 /// </remarks>
-public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
+public sealed partial class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
 {
     // One place for the number, so the limit and every message that quotes it cannot drift apart.
     private const int MaxDieCountValue = 10_000;
 
+    // Tokeniser for TryParse: anchored at the current position (\G), one dice term (XdY, X optional,
+    // d or D) or one signed flat modifier per match.
+    private const string TokenPattern = @"\G(?<sign>[+-]?)(?:(?<dieCount>\d*)[dD](?<sideCount>\d+)|(?<modifier>\d+))";
+
     private readonly List<Die> _dice = new();
+
+
+
+#if NET7_0_OR_GREATER
+    // Source-generated: the matcher is emitted at compile time, so it runs at full speed under
+    // Native AOT (the net8.0 / net10.0 targets are IsAotCompatible). RegexOptions.Compiled would be
+    // silently ignored there (no Reflection.Emit) and the pattern would fall back to the interpreter.
+    [GeneratedRegex(TokenPattern, RegexOptions.None, matchTimeoutMilliseconds: 1000)]
+    private static partial Regex TokenRegex();
+#else
+    // RegexOptions.Compiled costs a one-off JIT of the pattern on first parse; worth it for a
+    // long-lived process, and these targets never run under Native AOT.
+    private static readonly Regex TokenRegexInstance = new(TokenPattern, RegexOptions.Compiled, TimeSpan.FromSeconds(1));
+
+    private static Regex TokenRegex()
+    {
+        return TokenRegexInstance;
+    }
+#endif
 
 
 
@@ -480,15 +503,6 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
 
 
 
-    private static readonly Regex TokenRegex = new
-    (
-        @"\G(?<sign>[+-]?)(?:(?<dieCount>\d*)[dD](?<sideCount>\d+)|(?<modifier>\d+))",
-        RegexOptions.Compiled,
-        TimeSpan.FromSeconds(1)
-    );
-
-
-
     /// <summary>
     /// Tries to parse a string representation of dice notation into a <see cref="Dice"/> instance.
     /// </summary>
@@ -546,7 +560,7 @@ public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
 
         while (position < text.Length)
         {
-            var match = TokenRegex.Match(text, position);
+            var match = TokenRegex().Match(text, position);
             if (!match.Success || match.Index != position)
             {
                 return Result<Dice?>.Failure("Invalid dice notation format. Value must be in XdY+Z format.");
