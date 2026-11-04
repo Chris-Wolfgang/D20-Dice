@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790552314858,
+  "lastUpdate": 1793756865062,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1368,6 +1368,72 @@ window.BENCHMARK_DATA = {
             "value": 6.0567198892434435,
             "unit": "ns",
             "range": "± 0.01906587531764033"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "666ea723ba2854edc5b17456ea9885b9914a5209",
+          "message": "docs: bring workflow-security, release-setup, Copilot and DocFX articles up to the current code and CI (#401)\n\nWORKFLOW_SECURITY.md described the pre-protected-files pull_request_target\nmodel and RELEASE-WORKFLOW-SETUP.md told maintainers to create a\nNUGET_API_KEY secret the OIDC release path never reads; both are replaced\nwith repo-template's current text, adapted to this repository (its guard\nlist, its 14 required contexts, linear history on, release.yaml's 90 %\ngate and no THIRD-PARTY-NOTICES step). copilot-instructions.md regains a\nKey Types section generated from PublicAPI.Shipped.txt (IEqualityComparer\nand IDice.SideCount left in 0.6.0) and names the real #if branches. The\nDocFX introduction and getting-started articles now describe Die,\nheterogeneous immutable pools, the averages and what TryParse accepts.\nADR-0007 gets a dated amendment for stryker.yaml's pull_request trigger.\n\nFixes #385\n\nCo-authored-by: Claude Fable 5.1 <noreply@anthropic.com>",
+          "timestamp": "2026-11-03T20:45:24-05:00",
+          "tree_id": "9d222eccb7870afdf30c995666ad91895751af0c",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/666ea723ba2854edc5b17456ea9885b9914a5209"
+        },
+        "date": 1793756862655,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 4.527703734735648,
+            "unit": "ns",
+            "range": "± 0.00626742499223352"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 4.511991125841935,
+            "unit": "ns",
+            "range": "± 0.00287995330373051"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollHeterogeneous",
+            "value": 11.066242024302483,
+            "unit": "ns",
+            "range": "± 0.005726909784068835"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.TryParse",
+            "value": 992.311138788859,
+            "unit": "ns",
+            "range": "± 5.692547150005678"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.ToStringNotation",
+            "value": 194.10709222157797,
+            "unit": "ns",
+            "range": "± 2.815407183889954"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.EqualsHeterogeneous",
+            "value": 211.1239620844523,
+            "unit": "ns",
+            "range": "± 3.4623841016320207"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.GetHashCodeHeterogeneous",
+            "value": 2.7099336038033166,
+            "unit": "ns",
+            "range": "± 0.006656142816030494"
           }
         ]
       }
