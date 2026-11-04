@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793760296327,
+  "lastUpdate": 1793800862696,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1500,6 +1500,72 @@ window.BENCHMARK_DATA = {
             "value": 1.7117093726992607,
             "unit": "ns",
             "range": "± 0.01309489405973685"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef8aefd32e131259d49768b723932fc77f40731d",
+          "message": "docs: let third parties publish a 'Verification: v<version>' result (#422)\n\nThe third-party attestation part of #187: REPRODUCIBLE-BUILD.md describes how an\nindependent rebuilder records a matching rebuild as a 'Verification: v<version>'\nissue (tag, commit, SDK, OS, script output, optional link to a signed statement\nthey control), and the README's 'Verify the build' section links it.\n\nRefs #187\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-11-04T08:58:49-05:00",
+          "tree_id": "b4cc49e63a7f34fee83f5b1acce4b227b95a5de4",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/ef8aefd32e131259d49768b723932fc77f40731d"
+        },
+        "date": 1793800858819,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 7.905179465810458,
+            "unit": "ns",
+            "range": "± 0.042784276595691305"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 8.186911071340242,
+            "unit": "ns",
+            "range": "± 0.03600082801119199"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollHeterogeneous",
+            "value": 21.757252862056095,
+            "unit": "ns",
+            "range": "± 0.3823899776142282"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.TryParse",
+            "value": 1562.0895894368489,
+            "unit": "ns",
+            "range": "± 26.928868222759743"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.ToStringNotation",
+            "value": 261.32552035649616,
+            "unit": "ns",
+            "range": "± 2.2967633847885547"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.EqualsHeterogeneous",
+            "value": 289.6490122477214,
+            "unit": "ns",
+            "range": "± 1.3030846097345428"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.GetHashCodeHeterogeneous",
+            "value": 3.8480275372664132,
+            "unit": "ns",
+            "range": "± 0.006087609141356017"
           }
         ]
       }
