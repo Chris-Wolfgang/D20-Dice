@@ -14,7 +14,7 @@
 
   <!-- Microsoft.NETFramework.ReferenceAssemblies below is referenced explicitly rather
        than left to the SDK's implicit non-Windows-host injection, which would make the
-       restore graph host-dependent and break locked-mode restore. -->
+       restore graph host-dependent. -->
   <!-- .NET Framework 4.6.2 - 4.8.1 specific packages -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net481'">
   	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
