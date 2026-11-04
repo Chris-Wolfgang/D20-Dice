@@ -43,7 +43,8 @@ Console.WriteLine($"Range: {attackRoll.MinValue}–{attackRoll.MaxValue}");
 var parseResult = Dice.TryParse("1d20+5");
 if (parseResult.Succeeded)
 {
-    Console.WriteLine($"Parsed: {parseResult.Value} → {parseResult.Value.Roll()}");
+    // Value is Dice? (null only on failure), so it is safe to dereference once Succeeded is true.
+    Console.WriteLine($"Parsed: {parseResult.Value} → {parseResult.Value!.Roll()}");
 }
 ```
 
