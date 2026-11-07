@@ -40,21 +40,10 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Publish (native AOT, win-x64)
-        # RestoreLockedMode is off for this one step (#284). A PublishAot publish
-        # restores a different package graph from an ordinary restore -- it adds the
-        # ILCompiler packs and a runtime identifier -- so the committed
-        # packages.lock.json, which records the RID-agnostic graph every other job
-        # restores, cannot also describe this one. Every other restore in CI stays
-        # locked.
-        #
-        # RestorePackagesWithLockFile cannot ALSO be forced off here (NuGet
-        # NU1005: "Invalid restore input where RestorePackagesWithLockFile property
-        # is set to false but a packages lock file exists"), so we accept that this
-        # publish MAY rewrite the checked-out lock file in the runner. That rewrite
-        # never leaves CI. Local `dotnet publish` of the AotSmoke project will do
-        # the same to your working-copy lock file — `git checkout` it before
-        # committing.
-        run: dotnet publish aot-smoke/Wolfgang.D20.Dice.AotSmoke/Wolfgang.D20.Dice.AotSmoke.csproj -c Release -r win-x64 -p:RestoreLockedMode=false
+        # The AotSmoke csproj turns PublishAot on only while publishing (_IsPublishing),
+        # so this is the one restore in CI that pulls the ILCompiler packs and a runtime
+        # identifier into the graph; every other restore stays RID-agnostic.
+        run: dotnet publish aot-smoke/Wolfgang.D20.Dice.AotSmoke/Wolfgang.D20.Dice.AotSmoke.csproj -c Release -r win-x64
 
       - name: Run native binary
         shell: bash
