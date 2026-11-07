@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793800862696,
+  "lastUpdate": 1794084296039,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1566,6 +1566,72 @@ window.BENCHMARK_DATA = {
             "value": 3.8480275372664132,
             "unit": "ns",
             "range": "± 0.006087609141356017"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "154f00ea74c3ba1d42493ec7b83131c861724b08",
+          "message": "ci: drop the lock-file (#284) rationale and the no-op RestoreLockedMode flag (re-land #405) (#445)\n\nRe-lands #405 (e8b521f) unchanged. #405 was merged into a stacked branch\nthat ended up under PR #434, which had already been closed unmerged, so\nthe change never reached main.\n\nLock files left with #309, but aot-smoke.yaml still explained a locked-\nmode opt-out and passed -p:RestoreLockedMode=false (inert without\nRestorePackagesWithLockFile), and benchmarks.yaml / perf-regression.yaml\njustified their pre-switch `git checkout -- .` by lock files the Linux\nrunner would rewrite. The checkout stays as a cheap defence against a\ndirty tree; the comments now say so.\n\nFixes #390\n\nCo-authored-by: Claude Fable 5.1 <noreply@anthropic.com>",
+          "timestamp": "2026-11-07T15:43:04-05:00",
+          "tree_id": "706dbb447ef325dfeba83fca70d1f4acbf8edef6",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/154f00ea74c3ba1d42493ec7b83131c861724b08"
+        },
+        "date": 1794084293700,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 6.807924747467041,
+            "unit": "ns",
+            "range": "± 0.12878599956534303"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 6.612170000871022,
+            "unit": "ns",
+            "range": "± 0.004769596065227414"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollHeterogeneous",
+            "value": 18.138375490903854,
+            "unit": "ns",
+            "range": "± 0.01143116334777984"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.TryParse",
+            "value": 1152.9030888875325,
+            "unit": "ns",
+            "range": "± 9.14348912182232"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.ToStringNotation",
+            "value": 198.04637598991394,
+            "unit": "ns",
+            "range": "± 3.806071824302051"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.EqualsHeterogeneous",
+            "value": 237.12158433596292,
+            "unit": "ns",
+            "range": "± 2.949252590825505"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.GetHashCodeHeterogeneous",
+            "value": 2.8660018742084503,
+            "unit": "ns",
+            "range": "± 0.005511218662302609"
           }
         ]
       }
