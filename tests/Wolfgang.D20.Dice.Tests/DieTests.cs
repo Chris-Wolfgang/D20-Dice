@@ -157,6 +157,7 @@ public class DieTests
             {
                 threads[t] = new Thread(() =>
                 {
+                    // ReSharper disable once AccessToDisposedClosure — `start` is disposed only in the finally below, after every thread has been joined.
                     start.Wait();
                     for (var i = 0; i < rollsPerThread; i++)
                     {
