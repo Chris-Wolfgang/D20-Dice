@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792304057567,
+  "lastUpdate": 1794140580450,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "Mutation score": [
@@ -129,6 +129,33 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/41a3a8d199c62542745bb22b0740cc91eb0a6c9e"
         },
         "date": 1792304049685,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "Mutation score",
+            "value": 100,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang",
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "154f00ea74c3ba1d42493ec7b83131c861724b08",
+          "message": "ci: drop the lock-file (#284) rationale and the no-op RestoreLockedMode flag (re-land #405) (#445)\n\nRe-lands #405 (e8b521f) unchanged. #405 was merged into a stacked branch\nthat ended up under PR #434, which had already been closed unmerged, so\nthe change never reached main.\n\nLock files left with #309, but aot-smoke.yaml still explained a locked-\nmode opt-out and passed -p:RestoreLockedMode=false (inert without\nRestorePackagesWithLockFile), and benchmarks.yaml / perf-regression.yaml\njustified their pre-switch `git checkout -- .` by lock files the Linux\nrunner would rewrite. The checkout stays as a cheap defence against a\ndirty tree; the comments now say so.\n\nFixes #390\n\nCo-authored-by: Claude Fable 5.1 <noreply@anthropic.com>",
+          "timestamp": "2026-11-07T20:43:04Z",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/154f00ea74c3ba1d42493ec7b83131c861724b08"
+        },
+        "date": 1794140574270,
         "tool": "customBiggerIsBetter",
         "benches": [
           {
