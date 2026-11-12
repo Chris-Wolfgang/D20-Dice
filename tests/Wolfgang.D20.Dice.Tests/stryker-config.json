@@ -1,9 +1,6 @@
 {
   "stryker-config": {
-    "project": "src/Wolfgang.D20.Dice/Wolfgang.D20.Dice.csproj",
-    "test-projects": [
-      "tests/Wolfgang.D20.Dice.Tests/Wolfgang.D20.Dice.Tests.Unit.csproj"
-    ],
+    "project": "Wolfgang.D20.Dice.csproj",
     "target-framework": "net10.0",
     "reporters": [
       "html",
