@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794495850299,
+  "lastUpdate": 1794680308128,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1698,6 +1698,72 @@ window.BENCHMARK_DATA = {
             "value": 3.6935270776351294,
             "unit": "ns",
             "range": "± 0.012037419769295104"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d8238544c8124cb6eac272b80fc3357ffdc33d5a",
+          "message": "fix(build): parse dice notation with one cached Regex on every target (#378) (#471)\n\n[GeneratedRegex] on net8.0/net10.0 made those builds differ between Ubuntu\nand Windows: the regex source generator writes its code during compilation,\nafter NormalizeGeneratedLineEndings has run, so the generated text carries\nthe build machine's line endings. One static readonly Regex\n(RegexOptions.Compiled, 1 s timeout) now serves every target, as net462 and\nnetstandard2.0 already did. Under Native AOT Compiled is ignored and the\ninterpreter runs the pattern. Dice is no longer partial (nothing is\ngenerated into it).\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-11-14T13:12:39-05:00",
+          "tree_id": "5f08fba21666be2efd6dbd913ca695a4c66bb134",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/d8238544c8124cb6eac272b80fc3357ffdc33d5a"
+        },
+        "date": 1794680305617,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 8.124796092510223,
+            "unit": "ns",
+            "range": "± 0.011417290071540694"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 8.194749926527342,
+            "unit": "ns",
+            "range": "± 0.06414027945162365"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollHeterogeneous",
+            "value": 21.39277050892512,
+            "unit": "ns",
+            "range": "± 0.028057597966171657"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.TryParse",
+            "value": 1512.2798659006755,
+            "unit": "ns",
+            "range": "± 20.247899342545118"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.ToStringNotation",
+            "value": 225.8083803653717,
+            "unit": "ns",
+            "range": "± 0.8681518439674734"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.EqualsHeterogeneous",
+            "value": 325.3092152277629,
+            "unit": "ns",
+            "range": "± 2.0014179725498615"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.GetHashCodeHeterogeneous",
+            "value": 3.855520620942116,
+            "unit": "ns",
+            "range": "± 0.020800978865391152"
           }
         ]
       }
