@@ -3,7 +3,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using static VerifyXunit.Verifier;
-// ReSharper disable RedundantArgumentDefaultValue — explicit `sideCount: 6` / `dieCount: 1` labels each snapshot row with the dice configuration under test.
 
 namespace Wolfgang.D20.Tests.Unit;
 
@@ -24,15 +23,16 @@ public class SnapshotTests
 
         void Add(string label, string notation) => builder.AppendLine($"{label,-24} => {notation}");
 
-        Add("Die(6)", new Die(6).ToString());
+        // A bare new Die() / new Dice(n) is the six-sided default; each row's label spells out the configuration.
+        Add("Die(6)", new Die().ToString());
         Add("Die(20)", new Die(20).ToString());
-        Add("Dice(2,6)", new Dice(2, 6).ToString());
+        Add("Dice(2,6)", new Dice(2).ToString());
         Add("Dice(2,6,+3)", new Dice(2, 6, 3).ToString());
         Add("Dice(2,6,-1)", new Dice(2, 6, -1).ToString());
         Add("Dice(1,20)", new Dice(1, 20).ToString());
-        Add("Dice([d6,d6,d4])", new Dice(new[] { new Die(6), new Die(6), new Die(4) }).ToString());
+        Add("Dice([d6,d6,d4])", new Dice(new[] { new Die(), new Die(), new Die(4) }).ToString());
         Add("Dice([d8,d4],+2)", new Dice(new[] { new Die(8), new Die(4) }, 2).ToString());
-        Add("Dice([d10,d10,d6],-2)", new Dice(new[] { new Die(10), new Die(10), new Die(6) }, -2).ToString());
+        Add("Dice([d10,d10,d6],-2)", new Dice(new[] { new Die(10), new Die(10), new Die() }, -2).ToString());
 
         // Keep verified snapshots together under a dedicated Snapshots/ folder.
         return Verify(builder.ToString()).UseDirectory("Snapshots");
