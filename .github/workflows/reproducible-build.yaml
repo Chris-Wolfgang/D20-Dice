@@ -1,13 +1,20 @@
 name: Build Reproducibility
 
-# Deterministic-build verification (#178).
+# Deterministic-build verification (#178; cross-OS since #378).
 #
-# The library builds with Deterministic + ContinuousIntegrationBuild +
-# SourceLink, which should make the compiled assembly byte-for-byte reproducible
-# regardless of the checkout path. This job proves it: check the same commit out
-# to two different directories, build each with ContinuousIntegrationBuild=true
-# (which normalises source paths to /_/), and fail if the produced assemblies
-# don't hash identically.
+# The same commit is packed on ubuntu-latest and on windows-latest with
+# ContinuousIntegrationBuild=true, every produced .dll / .pdb / .nupkg / .snupkg is
+# hashed, and the two manifests are compared. The compiled assemblies and symbols
+# (every TFM) must be byte-identical across operating systems or the job fails.
+# Directory.Build.targets normalizes the SDK-generated sources to LF and the library
+# references Microsoft.NETFramework.ReferenceAssemblies explicitly; those were the
+# two inputs that differed between Linux and Windows. The .nupkg / .snupkg files are
+# NOT compared: NuGet stamps each zip entry with the pack time and writes
+# platform-specific zip attributes into its own metadata, so the same commit gives a
+# different package file on every run, even on one OS. See REPRODUCIBLE-BUILD.md.
+#
+# The final job keeps the name "Reproducible build": it is a required status check in
+# the main-branch ruleset, and a renamed check would never report.
 
 on:
   pull_request:
@@ -23,24 +30,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  reproducible:
-    name: Reproducible build
-    runs-on: ubuntu-latest
+  build:
+    name: Pack (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     env:
-      ASM: src/Wolfgang.D20.Dice/bin/Release/net10.0/Wolfgang.D20.Dice.dll
-      PROJ: src/Wolfgang.D20.Dice/Wolfgang.D20.Dice.csproj
+      # Turns on ContinuousIntegrationBuild in Directory.Build.props, which
+      # enables DeterministicSourcePaths + normalized (SourceLink) path mapping.
+      CI: 'true'
     steps:
-      - name: Checkout (copy A)
+      - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          path: a
-          persist-credentials: false
-
-      - name: Checkout (copy B)
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          path: b
           persist-credentials: false
 
       - name: Setup .NET
@@ -48,20 +53,89 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Build copy A
-        run: dotnet build "a/${{ env.PROJ }}" -c Release -f net10.0 -p:ContinuousIntegrationBuild=true
+      - name: Pack (deterministic)
+        run: >
+          dotnet pack src/Wolfgang.D20.Dice/Wolfgang.D20.Dice.csproj
+          -c Release
+          -p:ContinuousIntegrationBuild=true
+          -p:Deterministic=true
+          -o artifacts
 
-      - name: Build copy B
-        run: dotnet build "b/${{ env.PROJ }}" -c Release -f net10.0 -p:ContinuousIntegrationBuild=true
-
-      - name: Compare assembly hashes
+      - name: Hash outputs
+        shell: bash
+        env:
+          RUNNER_OS_NAME: ${{ matrix.os }}
         run: |
-          ha=$(sha256sum "a/${ASM}" | cut -d' ' -f1)
-          hb=$(sha256sum "b/${ASM}" | cut -d' ' -f1)
-          echo "A: $ha"
-          echo "B: $hb"
-          if [ "$ha" != "$hb" ]; then
-            echo "::error::Build is not reproducible — assembly hashes differ."
+          set -euo pipefail
+          manifest="manifest.txt"
+          : > "$manifest"
+
+          # Packed package(s): key by file name (identical across OS).
+          while IFS= read -r f; do
+            printf '%s  %s\n' "$(sha256sum "$f" | cut -d' ' -f1)" "${f##*/}" >> "$manifest"
+          done < <(find artifacts -type f \( -name '*.nupkg' -o -name '*.snupkg' \) | sort)
+
+          # Compiled library, one per TFM: key by TFM-relative path.
+          base="src/Wolfgang.D20.Dice/bin/Release"
+          while IFS= read -r f; do
+            rel="${f#"$base"/}"
+            printf '%s  %s\n' "$(sha256sum "$f" | cut -d' ' -f1)" "$rel" >> "$manifest"
+          done < <(find "$base" -type f \( -name 'Wolfgang.D20.Dice.dll' -o -name 'Wolfgang.D20.Dice.pdb' \) | sort)
+
+          sort -k2 "$manifest" -o "$manifest"
+          echo "--- ${RUNNER_OS_NAME} output hashes ---"
+          cat "$manifest"
+
+      - name: Upload manifest
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: repro-manifest-${{ matrix.os }}
+          path: manifest.txt
+          if-no-files-found: error
+
+  reproducible:
+    name: Reproducible build
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download Ubuntu manifest
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: repro-manifest-ubuntu-latest
+          path: ubuntu
+
+      - name: Download Windows manifest
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: repro-manifest-windows-latest
+          path: windows
+
+      - name: Compare
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Ubuntu manifest:"
+          cat ubuntu/manifest.txt
+          echo
+          echo "Windows manifest:"
+          cat windows/manifest.txt
+          echo
+          # Hard failure on the compiled outputs. If this fails, diff the per-TFM .pdb documents
+          # and the referenced-assembly records first: a generated source written with a
+          # different newline, or a different reference assembly, was the cause that
+          # Directory.Build.targets and the explicit reference-assemblies package now remove.
+          # Package files are excluded: they embed pack-time timestamps, so they differ on
+          # every run (see the header of this workflow).
+          grep -vE '\.s?nupkg$' ubuntu/manifest.txt > ubuntu/assemblies.txt
+          grep -vE '\.s?nupkg$' windows/manifest.txt > windows/assemblies.txt
+          if [ ! -s ubuntu/assemblies.txt ] || [ ! -s windows/assemblies.txt ]; then
+            echo "::error::A manifest lists no assemblies - the pack produced nothing to compare. Treating as a failure, not a pass."
             exit 1
           fi
-          echo "✅ Reproducible: $ha"
+          if diff -u ubuntu/assemblies.txt windows/assemblies.txt; then
+            echo "✅ Reproducible: Ubuntu and Windows produced byte-identical assemblies and symbols."
+          else
+            echo "::error::Assemblies or symbols differ across runners - the build is not byte-identical cross-OS."
+            exit 1
+          fi
