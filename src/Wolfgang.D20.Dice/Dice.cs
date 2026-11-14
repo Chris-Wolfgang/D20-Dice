@@ -20,7 +20,7 @@ namespace Wolfgang.D20;
 /// rather than modifying the current one, so an instance is safe to use as a dictionary key and to
 /// share across threads. A pool holds at most <see cref="MaxDieCount"/> dice.
 /// </remarks>
-public sealed partial class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
+public sealed class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<Dice>
 {
     // One place for the number, so the limit and every message that quotes it cannot drift apart.
     private const int MaxDieCountValue = 10_000;
@@ -33,22 +33,19 @@ public sealed partial class Dice : IDice, IReadOnlyCollection<Die>, IEquatable<D
 
 
 
-#if NET7_0_OR_GREATER
-    // Source-generated: the matcher is emitted at compile time, so it runs at full speed under
-    // Native AOT (the net8.0 / net10.0 targets are IsAotCompatible). RegexOptions.Compiled would be
-    // silently ignored there (no Reflection.Emit) and the pattern would fall back to the interpreter.
-    [GeneratedRegex(TokenPattern, RegexOptions.None, matchTimeoutMilliseconds: 1000)]
-    private static partial Regex TokenRegex();
-#else
-    // RegexOptions.Compiled costs a one-off JIT of the pattern on first parse; worth it for a
-    // long-lived process, and these targets never run under Native AOT.
+    // One cached Regex for every target. [GeneratedRegex] is deliberately not used on net8.0/net10.0:
+    // the source generator writes its code with the build machine's line endings, so the Ubuntu and
+    // Windows builds of those targets were not byte-identical (#378). RegexOptions.Compiled costs a
+    // one-off JIT of the pattern on first parse; under Native AOT (no Reflection.Emit) the option is
+    // ignored and the interpreter runs the pattern, which is fast enough for dice notation.
     private static readonly Regex TokenRegexInstance = new(TokenPattern, RegexOptions.Compiled, TimeSpan.FromSeconds(1));
+
+
 
     private static Regex TokenRegex()
     {
         return TokenRegexInstance;
     }
-#endif
 
 
 
