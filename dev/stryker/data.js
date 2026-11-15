@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794140580450,
+  "lastUpdate": 1794748092001,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "Mutation score": [
@@ -160,6 +160,33 @@ window.BENCHMARK_DATA = {
         "benches": [
           {
             "name": "Mutation score",
+            "value": 100,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang",
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "9638e8ceb25fe957baea0e5de1d25161f2150429",
+          "message": "ci(reproducible-build): byte-identical .dll/.pdb across Ubuntu and Windows (re-land #406) (#446)\n\nRe-lands #406 (111ed4a) unchanged. #406 was merged into a stacked branch\nthat ended up under PR #434, which had already been closed unmerged, so\nthe change never reached main.\n\nAdds Directory.Build.targets with the NormalizeGeneratedLineEndings task\n(from ETL-Transformers#418): before CoreCompile, packable projects get\ntheir SDK-generated AssemblyInfo / AssemblyAttributes / GlobalUsings\nsources rewritten from CRLF to LF, the one OS-specific input the PDB\nembeds. The library already references the .NET Framework reference\nassemblies explicitly, the other input that differed per OS.\n\nreproducible-build.yaml now packs on ubuntu-latest and windows-latest,\nhashes every .dll / .pdb per TFM plus the packages, and hard-fails on\nany assembly or symbol difference; package files are excluded from the\ncomparison because NuGet stamps pack time into every zip entry. The\nfinal job keeps the required-check name \"Reproducible build\".\n\nFixes #378 (the REPRODUCIBLE-BUILD.md half, #407, is already on main)\n\nCo-authored-by: Claude Fable 5.1 <noreply@anthropic.com>",
+          "timestamp": "2026-11-14T18:34:20Z",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/9638e8ceb25fe957baea0e5de1d25161f2150429"
+        },
+        "date": 1794748084257,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "Mutation score (tests/Wolfgang.D20.Dice.Tests)",
             "value": 100,
             "unit": "%"
           }
