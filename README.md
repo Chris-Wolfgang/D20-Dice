@@ -82,7 +82,7 @@ Console.WriteLine($"{bigger}: {bigger.Roll()}"); // e.g. "2d6+1d4+1d8+3: 19"
 | Modifiers | Positive, negative, or zero flat modifiers supported |
 | Equality | Full `IEquatable<Dice>` / `IEquatable<Die>` support (dice pools compare order-independently) |
 | ToString | Formats back to dice notation (`2d6+1d4+3`, `1d20`, `3d8-2`) |
-| Multi-TFM | Targets .NET Framework 4.6.2, .NET Standard 2.0, .NET 8.0 and .NET 10.0 |
+| Multi-TFM | Targets .NET Framework 4.6.2, .NET Standard 2.0, .NET 8.0, .NET 10.0 and .NET 11.0 |
 
 **Examples:**
 
@@ -115,7 +115,7 @@ This library targets:
 
 - **.NET Framework:** 4.6.2
 - **.NET Standard:** 2.0
-- **.NET:** 8.0, 10.0
+- **.NET:** 8.0, 10.0, 11.0
 
 See the [NuGet package page](https://www.nuget.org/packages/Wolfgang.D20.Dice/) for the authoritative per-TFM compatibility matrix.
 
@@ -163,9 +163,9 @@ You do not have to take our word for what is in a published package.
 ## 🛠️ Building from Source
 
 ### Prerequisites
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download) to build the highest-targeted TFM
+- [.NET 11.0 SDK](https://dotnet.microsoft.com/download) to build the highest-targeted TFM (`global.json` pins the 11.0 SDK)
 - Building the `net462` target also requires the .NET Framework 4.6.2 reference assemblies / targeting pack (typically installed via Visual Studio's ".NET desktop development" workload on Windows; the SDK alone does not include them, and `net462` builds are Windows-only)
-- The `netstandard2.0`, `net8.0` and `net10.0` targets build with the .NET 10 SDK alone on any OS
+- The `netstandard2.0`, `net8.0`, `net10.0` and `net11.0` targets build with the .NET 11 SDK alone on any OS
 - Optional: [PowerShell Core](https://github.com/PowerShell/PowerShell) for `scripts/format.ps1`
 
 ### Build Steps
