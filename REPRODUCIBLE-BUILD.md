@@ -42,16 +42,19 @@ inputs that remained.
 
 ## Continuous verification
 
-The [`Build Reproducibility`](.github/workflows/reproducible-build.yaml) workflow checks
-reproducibility on every pull request and push to `main`:
+The [`Reproducible Build`](.github/workflows/reproducible-build.yaml) workflow (the fleet's
+canonical copy from repo-template) checks reproducibility on every pull request to `main`:
 
-1. It packs the library on **both** `ubuntu-latest` and `windows-latest` with
-   `ContinuousIntegrationBuild=true`.
-2. Each job records the `sha256sum` of every produced `.dll`, `.pdb`, `.nupkg` and
-   `.snupkg`.
-3. The final `Reproducible build` job (a required status check) diffs the two manifests
-   for the `.dll` and `.pdb` files and **fails** if any hash differs. The package files
-   are left out of the comparison because they embed the pack time (see above).
+1. The `Reproducible build` job (a required status check) packs every packable project under
+   `src/` on `ubuntu-latest` with `CI=true` and the SDK from [`global.json`](global.json),
+   removes everything untracked (`git clean -xffd`), and packs again.
+2. It hashes every `.dll` and `.pdb` in `bin/Release/<tfm>/` and every entry inside every
+   `.nupkg` / `.snupkg`, and **fails** if any hash differs between the two packs. The package
+   files themselves are not compared because they embed the pack time (see above).
+3. The `Reproducible build (Windows report)` job packs the same commit on `windows-latest` and
+   prints the differences against the Ubuntu hashes in the job summary. The cross-OS result is
+   reported there, not gated; the guarantee above still holds because the two OS-specific
+   inputs are fixed in the build.
 
 ## Verify it yourself
 
@@ -113,6 +116,27 @@ handles two entries specially, neither of which comes from the build:
 Releases are packed on Windows. The assemblies and symbols match from any OS, but NuGet writes
 OS-specific newlines into its own metadata entries (`.nuspec`, `.psmdcp`, `_rels/.rels`), so run
 the whole-package comparison on Windows, or expect exactly those entries to differ.
+
+### Or compare against SHA256SUMS.txt
+
+Each release also carries `SHA256SUMS.txt` and `BUILD-MANIFEST.txt`, written by the release
+workflow from the exact files it packed and covered by the same signed provenance attestation
+as the packages. `SHA256SUMS.txt` lists the SHA-256 of every `.dll` / `.pdb` per target
+framework (`<tfm>/<file>`) and of each package file; `BUILD-MANIFEST.txt` records the commit,
+the SDK (`dotnet-sdk`) and the runner image the release used.
+
+```bash
+gh release download v<version> --repo Chris-Wolfgang/D20-Dice   --pattern 'SHA256SUMS.txt' --pattern 'BUILD-MANIFEST.txt'
+gh attestation verify SHA256SUMS.txt --repo Chris-Wolfgang/D20-Dice
+cat BUILD-MANIFEST.txt   # build with the dotnet-sdk version it names
+
+# After step 2 above: check the assembly and symbol lines against your build.
+cd src/Wolfgang.D20.Dice/bin/Release
+grep -E '\.(dll|pdb)$' ../../../../SHA256SUMS.txt | sha256sum -c -
+```
+
+Every `.dll` / `.pdb` line should print `OK`. The two package-file lines are left out on
+purpose: the package files embed the pack time and never match a rebuild.
 
 ### Or compare against the release manifest
 
