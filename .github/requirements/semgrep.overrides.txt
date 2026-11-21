@@ -15,3 +15,9 @@ opentelemetry-sdk>=1.45.2,<2
 opentelemetry-exporter-otlp-proto-http>=1.45.2,<2
 opentelemetry-instrumentation-requests
 opentelemetry-instrumentation-threading
+
+# semgrep 1.181.0 (and 1.182.1) pins wcmatch 8.x. wcmatch <= 11.1 has a polynomial-time ReDoS
+# when matching untrusted names against multi-star patterns (GHSA-53pm-wgxf-c6qf, Dependabot
+# alerts 50/51, fixed in 11.2). This override lifts wcmatch past semgrep's pin. Drop it once
+# semgrep's own pins allow wcmatch >= 11.2.
+wcmatch>=11.2,<12
