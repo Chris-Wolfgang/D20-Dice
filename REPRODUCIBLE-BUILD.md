@@ -12,7 +12,7 @@ For a given commit built **with the same .NET SDK**, the following outputs are b
 identical, **on Linux and Windows alike**:
 
 - the compiled assembly `Wolfgang.D20.Dice.dll` (every target framework:
-  `net462`, `netstandard2.0`, `net8.0`, `net10.0`),
+  `net462`, `netstandard2.0`, `net8.0`, `net10.0`, `net11.0`),
 - its debug symbols `Wolfgang.D20.Dice.pdb`.
 
 > **The package files are not byte-reproducible.** The `.nupkg` / `.snupkg` are zip
