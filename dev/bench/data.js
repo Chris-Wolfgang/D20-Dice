@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794680308128,
+  "lastUpdate": 1795267102149,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "BenchmarkDotNet": [
@@ -1764,6 +1764,72 @@ window.BENCHMARK_DATA = {
             "value": 3.855520620942116,
             "unit": "ns",
             "range": "± 0.020800978865391152"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1b7eb6fba4e21828668e4e9902d5b8f7824cde6f",
+          "message": "build: add net11.0 to the package and the unit tests, pin SDK 11 (#458) (#485)\n\n- src: TargetFrameworks gains net11.0; the IsAotCompatible condition\n  includes it.\n- tests: net11.0 appended; it joins the net8.0-net10.0 package group\n  (Test.Sdk, xunit 2.9.3, runner 3.0.1, coverlet, CsCheck) and the\n  Verify.Xunit group, since SnapshotTests.cs is guarded NET10_0_OR_GREATER.\n- global.json: 10.0.100 -> 11.0.100 (latestFeature never crosses a major).\n- README, CONTRIBUTING, REPRODUCIBLE-BUILD.md list net11.0 / the 11 SDK.\n- changelog fragment net11-target.md (type: feature).\n\nCloses #458\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-11-21T08:15:52-05:00",
+          "tree_id": "59ce7c3c846e43057607f9f4ac1e2bbb57779ed6",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/1b7eb6fba4e21828668e4e9902d5b8f7824cde6f"
+        },
+        "date": 1795267099595,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD20",
+            "value": 8.35498990615209,
+            "unit": "ns",
+            "range": "± 0.10979518239686122"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollD6",
+            "value": 8.274342432618141,
+            "unit": "ns",
+            "range": "± 0.038495026460248535"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.RollHeterogeneous",
+            "value": 21.37654172380765,
+            "unit": "ns",
+            "range": "± 0.027557035032759282"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.TryParse",
+            "value": 1512.917948404948,
+            "unit": "ns",
+            "range": "± 9.565904838316385"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.ToStringNotation",
+            "value": 233.9405719836553,
+            "unit": "ns",
+            "range": "± 2.4250164890071297"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.EqualsHeterogeneous",
+            "value": 293.50241390864056,
+            "unit": "ns",
+            "range": "± 1.6983934919817687"
+          },
+          {
+            "name": "Wolfgang.D20.Benchmarks.DiceBenchmarks.GetHashCodeHeterogeneous",
+            "value": 3.8643121793866158,
+            "unit": "ns",
+            "range": "± 0.034729170552600344"
           }
         ]
       }
