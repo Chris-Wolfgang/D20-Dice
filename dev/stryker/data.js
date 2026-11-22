@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794748092001,
+  "lastUpdate": 1795355304232,
   "repoUrl": "https://github.com/Chris-Wolfgang/D20-Dice",
   "entries": {
     "Mutation score": [
@@ -183,6 +183,33 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/9638e8ceb25fe957baea0e5de1d25161f2150429"
         },
         "date": 1794748084257,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "Mutation score (tests/Wolfgang.D20.Dice.Tests)",
+            "value": 100,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang",
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "df7434f3320de1a3f6f79982a7003af7f5010927",
+          "message": "deps(semgrep): override semgrep's wcmatch pin to 11.2 (GHSA-53pm-wgxf-c6qf) (#490)\n\nsemgrep pins wcmatch 8.x; wcmatch <= 11.1 has a polynomial-time ReDoS\n(Dependabot alerts 50/51, fixed in 11.2). Lockfile regenerated with the\nheader command; only wcmatch 8.5.2 -> 11.2 and bracex 3.0.1 -> 3.2.4 change.\n\nCloses #488\nCloses #489\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-11-21T18:52:29Z",
+          "url": "https://github.com/Chris-Wolfgang/D20-Dice/commit/df7434f3320de1a3f6f79982a7003af7f5010927"
+        },
+        "date": 1795355297412,
         "tool": "customBiggerIsBetter",
         "benches": [
           {
