@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Superseded by [0000](0000-record-architecture-decisions.md)
 
 ## Context
 
