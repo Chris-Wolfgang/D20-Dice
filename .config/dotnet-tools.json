@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "cyclonedx": {
-      "version": "6.3.1",
+      "version": "6.3.2",
       "commands": [
         "dotnet-CycloneDX"
       ],
@@ -17,14 +17,14 @@
       "rollForward": true
     },
     "jetbrains.resharper.globaltools": {
-      "version": "2026.3.0",
+      "version": "2026.3.0.2",
       "commands": [
         "jb"
       ],
       "rollForward": true
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "5.6.0",
+      "version": "5.6.1",
       "commands": [
         "reportgenerator"
       ],
