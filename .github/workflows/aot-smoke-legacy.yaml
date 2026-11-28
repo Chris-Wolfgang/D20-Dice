@@ -1,0 +1,137 @@
+name: AOT Smoke (legacy)
+
+# BRIDGE COPY (Tests.Aot conversion plan, 2026-11-20, Group 4). This is the repository's old AOT
+# workflow, moved here from aot-smoke.yaml so that the canonical aot-smoke.yaml can run beside it.
+# The win-x64 job keeps its name, "AOT publish + run", so that required check keeps reporting.
+# Once the canonical "AOT smoke (linux-x64)" / "AOT smoke (linux-arm64)" checks pass on main HEAD
+# and the ruleset requires them instead, delete this file together with the AotSmoke harness.
+#
+# Native-AOT publish-and-run smoke consumer (#220, follow-up to #175).
+#
+# Publishes a tiny console consumer with PublishAot and runs the native binary,
+# so the build fails if the library stops compiling or running under native AOT.
+# This is the *runtime* half of the AOT verification; the *static* half is the
+# IsAotCompatible analyzer gate on the library build (#175).
+#
+# The harness is found by its project file name, not by a fixed path, so it can move from the
+# top-level aot-smoke/ folder into tests/ without another edit to this protected file.
+#
+# windows-latest ships the MSVC "Desktop development with C++" workload that the
+# native linker requires, so no extra toolchain install is needed.
+#
+# Second leg on ubuntu-24.04-arm (fleet standard standards/test-matrix.md item 4, #450): the
+# native binary is per-architecture. It was named "AOT smoke (linux-arm64)", which is now the
+# canonical workflow's job name, so here it is "AOT publish + run (linux-arm64)". It is not a
+# required check. The arm64 runner is free on public repositories only; a private repository
+# skips this leg by condition.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aot-smoke-legacy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  aot-smoke:
+    name: "AOT publish + run"
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      HARNESS: Wolfgang.D20.Dice.AotSmoke
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          dotnet-version: |
+            10.0.x
+            11.0.x
+
+      - name: Publish (native AOT, win-x64) and run
+        # The AotSmoke csproj turns PublishAot on only while publishing (_IsPublishing),
+        # so this is the one restore in CI that pulls the ILCompiler packs and a runtime
+        # identifier into the graph; every other restore stays RID-agnostic.
+        shell: bash
+        run: |
+          set -euo pipefail
+          proj=$(git ls-files "*/$HARNESS.csproj")
+          if [ "$(printf '%s\n' "$proj" | grep -c .)" -ne 1 ]; then
+            echo "::error::Expected exactly one $HARNESS.csproj, found: '$proj'"
+            exit 1
+          fi
+          out="$RUNNER_TEMP/aot-legacy/win-x64"
+          dotnet publish "$proj" -c Release -r win-x64 -o "$out"
+          EXE="$out/$HARNESS.exe"
+          echo "Running: $EXE"
+          "$EXE"
+
+  aot-smoke-linux-arm64:
+    name: AOT publish + run (linux-arm64)
+    runs-on: ubuntu-24.04-arm
+    if: ${{ !github.event.repository.private }}
+    timeout-minutes: 30
+    env:
+      HARNESS: Wolfgang.D20.Dice.AotSmoke
+      DOTNET_NOLOGO: 'true'
+      DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          dotnet-version: |
+            10.0.x
+            11.0.x
+
+      # Same step as repo-template's aot-smoke.yaml: the runner image normally ships clang and
+      # zlib1g-dev, so apt runs only as a fallback, with retries, because a single
+      # `apt-get update` fails the job whenever the runner cannot resolve the Ubuntu mirrors.
+      - name: Install Native AOT prerequisites
+        run: |
+          set -euo pipefail
+          if command -v clang >/dev/null 2>&1 \
+            && dpkg-query -W -f='${Status}' zlib1g-dev 2>/dev/null | grep -q 'install ok installed'; then
+            echo "clang ($(clang --version | head -n 1)) and zlib1g-dev are on the runner image; apt not needed."
+            exit 0
+          fi
+          for attempt in 1 2 3; do
+            if sudo apt-get -o Acquire::Retries=3 update \
+              && sudo apt-get -o Acquire::Retries=3 install -y clang zlib1g-dev; then
+              exit 0
+            fi
+            echo "::warning::apt attempt $attempt of 3 failed; retrying in $((attempt * 30)) s."
+            sleep $((attempt * 30))
+          done
+          echo "::error::clang and zlib1g-dev could not be installed after 3 apt attempts."
+          exit 1
+
+      - name: Publish (native AOT, linux-arm64) and run
+        # PublishAot is on only while publishing (_IsPublishing); see the win-x64 leg.
+        shell: bash
+        run: |
+          set -euo pipefail
+          proj=$(git ls-files "*/$HARNESS.csproj")
+          if [ "$(printf '%s\n' "$proj" | grep -c .)" -ne 1 ]; then
+            echo "::error::Expected exactly one $HARNESS.csproj, found: '$proj'"
+            exit 1
+          fi
+          out="$RUNNER_TEMP/aot-legacy/linux-arm64"
+          dotnet publish "$proj" -c Release -r linux-arm64 -o "$out"
+          BIN="$out/$HARNESS"
+          echo "Running: $BIN"
+          "$BIN" < /dev/null

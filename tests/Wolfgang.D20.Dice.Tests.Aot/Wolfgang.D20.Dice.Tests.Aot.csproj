@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Native AOT test run (standards/aot-smoke.md; Tests.Aot conversion plan, 2026-11-20).
+
+    Runs the SAME unit tests as Wolfgang.D20.Dice.Tests.Unit, compiled as a Native AOT
+    executable with xUnit v3. The 2.x project stays as it is for every TFM; this one exists only
+    to prove the library under trimming + AOT, which a JIT test run cannot. net10.0 only, like
+    the canonical aot-smoke.yaml.
+
+    The test sources are linked, not copied: fix a test in Tests.Unit and it is fixed here.
+    xUnit v3's in-process console runner makes this project its own executable (no
+    Microsoft.NET.Test.Sdk), and with PublishAot that executable is a native binary.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>Wolfgang.D20.Tests.Unit</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <!-- Not a dotnet-test project: build-pr.ps1 and the pr.yaml test stages run `dotnet test`
+         only on IsTestProject / Microsoft.NET.Test.Sdk projects. This one is published and
+         executed by the canonical aot-smoke.yaml. -->
+    <IsTestProject>false</IsTestProject>
+    <!-- Also set by the *.Tests.Aot block in Directory.Build.props. Repeated here because
+         pull-request CI builds with main's Directory.Build.props; drop the duplicates once
+         the block has merged. -->
+    <PublishAot>true</PublishAot>
+    <PublishTrimmed>true</PublishTrimmed>
+    <IsAotCompatible>true</IsAotCompatible>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <!-- GlobalizationTests switch CurrentCulture to real cultures (tr-TR, ar-SA, ...), so ICU is
+         required: InvariantGlobalization must stay OFF for this project. -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The AOT (source-generated) edition of xUnit.net v3: test discovery, theory data and
+         attribute configuration are resolved at build time, so no reflection is needed at run
+         time. The plain `xunit.v3` package is reflection-based and cannot run under Native AOT. -->
+    <PackageReference Include="xunit.v3.aot" Version="4.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Wolfgang.D20.Dice\Wolfgang.D20.Dice.csproj" />
+  </ItemGroup>
+
+  <!-- The unit tests themselves, linked from the 2.x project. Two files are left out:
+       - SnapshotTests.cs uses Verify.Xunit, which is built on xUnit v2 and reads its .verified.txt
+         file from the source tree, which a published binary run from the runner's temp directory
+         cannot find.
+       - PropertyTests.cs uses CsCheck, whose generator types recurse generically: ILC reports
+         IL3054 (generic expansion aborted) for CsCheck.GenList`1, an AOT analysis error. -->
+  <ItemGroup>
+    <Compile Include="..\Wolfgang.D20.Dice.Tests\*.cs"
+             Exclude="..\Wolfgang.D20.Dice.Tests\SnapshotTests.cs;..\Wolfgang.D20.Dice.Tests\PropertyTests.cs"
+             Link="Unit\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>
